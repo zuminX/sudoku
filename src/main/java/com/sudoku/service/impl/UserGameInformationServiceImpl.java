@@ -9,6 +9,7 @@ import com.sudoku.convert.UserGameInformationConvert;
 import com.sudoku.mapper.SudokuLevelMapper;
 import com.sudoku.mapper.UserGameInformationMapper;
 import com.sudoku.model.dto.GameRecordDTO;
+import com.sudoku.model.dto.RankItemDTO;
 import com.sudoku.model.po.SudokuLevel;
 import com.sudoku.model.po.UserGameInformation;
 import com.sudoku.model.vo.RankDataVO;
@@ -166,7 +167,8 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    * @return 排行数据显示层
    */
   private RankDataVO<Integer> getCorrectNumberRankingList() {
-    var list = userGameInformationMapper.selectLimitNumberGroupBySlidOrderByCorrectNumber(SettingParameter.RANKING_NUMBER);
+    List<RankItemDTO<Integer>> list = userGameInformationMapper
+        .selectLimitNumberGroupBySlidOrderByCorrectNumber(SettingParameter.RANKING_NUMBER);
     return RankDataConvert.INSTANCE.convert(list, RankDataName.CORRECT_NUMBER);
   }
 
@@ -176,7 +178,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    * @return 排行数据显示层
    */
   private RankDataVO<Integer> getMinSpendTimeRankingList() {
-    var list = userGameInformationMapper.selectLimitNumberGroupBySlidOrderByMinSpendTime(SettingParameter.RANKING_NUMBER);
+    List<RankItemDTO<Integer>> list = userGameInformationMapper.selectLimitNumberGroupBySlidOrderByMinSpendTime(SettingParameter.RANKING_NUMBER);
     return RankDataConvert.INSTANCE.convert(list, RankDataName.MIN_SPEND_TIME);
   }
 
@@ -186,7 +188,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    * @return 排行数据显示层
    */
   private RankDataVO<Integer> getAverageSpendTimeRankingList() {
-    var list = userGameInformationMapper.selectLimitNumberGroupBySlidOrderByAverageSpendTime(SettingParameter.RANKING_NUMBER);
+    List<RankItemDTO<Integer>> list = userGameInformationMapper.selectLimitNumberGroupBySlidOrderByAverageSpendTime(SettingParameter.RANKING_NUMBER);
     return RankDataConvert.INSTANCE.convert(list, RankDataName.AVERAGE_SPEND_TIME);
   }
 }

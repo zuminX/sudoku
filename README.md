@@ -47,7 +47,7 @@
 ## 后端
 
 1. 克隆后端项目到本地
-2. 由于在项目中使用了`var`关键字，故要求$Java版本 \ge10$。若本机使用的是$8 \le java版本 \le 9$，可以手动将所有的`var`关键字改为其类型
+2. 要求本机使用的$8 \le java版本$
 3. 执行项目根目录下的`sudoku.sql`
 4. 打开系统属性的环境变量，在**系统变量**中添加变量名为`SUDOKU_MYSQL_PASSWORD`，变量值为自己本地MySQL数据库的root密码，并**重启计算机**。若不想要这么麻烦，则在`resources
 `目录下的 `application.yml`文件中修改`datasource.password`为自己的root密码

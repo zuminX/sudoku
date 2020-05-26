@@ -28,7 +28,7 @@ public interface RankDataConvert {
    * @return 排行数据显示层对象
    */
   default <T> RankDataVO<T> convert(List<RankItemDTO<T>> rankItemDTOList, String rankDataName) {
-    var rankItemMap = new LinkedHashMap<String, List<RankItemVO<T>>>();
+    LinkedHashMap<String, List<RankItemVO<T>>> rankItemMap = new LinkedHashMap<>();
     ArrayList<RankItemVO<T>> rankItemVOList = new ArrayList<>(SettingParameter.RANKING_NUMBER);
     for (int i = 0, size = rankItemDTOList.size(); i < size; i++) {
       RankItemDTO<T> rankItemDTO = rankItemDTOList.get(i);
