@@ -1,6 +1,6 @@
 package com.sudoku.mapper;
 
-import com.sudoku.model.po.SudokuLevel;
+import com.sudoku.model.entity.SudokuLevel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

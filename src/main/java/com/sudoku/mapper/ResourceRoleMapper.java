@@ -1,6 +1,6 @@
 package com.sudoku.mapper;
 
-import com.sudoku.model.po.ResourceRole;
+import com.sudoku.model.entity.ResourceRole;
 
 /**
  * 资源角色持久层

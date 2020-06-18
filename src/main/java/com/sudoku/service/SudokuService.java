@@ -1,8 +1,8 @@
 package com.sudoku.service;
 
-import com.sudoku.model.dto.SudokuDataDTO;
-import com.sudoku.model.dto.SudokuGridInformationDTO;
-import com.sudoku.model.po.SudokuLevel;
+import com.sudoku.model.bo.SudokuDataBO;
+import com.sudoku.model.bo.SudokuGridInformationBO;
+import com.sudoku.model.entity.SudokuLevel;
 import com.sudoku.model.vo.SubmitSudokuInformationVO;
 import java.util.ArrayList;
 
@@ -18,7 +18,7 @@ public interface SudokuService {
    * @param isRecord    是否记录
    * @return 数独题目
    */
-  SudokuDataDTO generateSudokuTopic(SudokuLevel sudokuLevel, Boolean isRecord);
+  SudokuDataBO generateSudokuTopic(SudokuLevel sudokuLevel, Boolean isRecord);
 
   /**
    * 获取提示信息
@@ -26,7 +26,7 @@ public interface SudokuService {
    * @param userMatrix 用户的数独矩阵数据
    * @return 提示信息
    */
-  SudokuGridInformationDTO getHelp(ArrayList<ArrayList<Integer>> userMatrix);
+  SudokuGridInformationBO getHelp(ArrayList<ArrayList<Integer>> userMatrix);
 
   /**
    * 检查用户的数独数据

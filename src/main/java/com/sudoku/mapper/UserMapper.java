@@ -1,8 +1,6 @@
 package com.sudoku.mapper;
 
-import com.sudoku.model.po.Role;
-import com.sudoku.model.po.User;
-import java.util.List;
+import com.sudoku.model.entity.User;
 
 /**
  * 用户持久层
@@ -22,7 +20,4 @@ public interface UserMapper {
   int updateByPrimaryKey(User record);
 
   User findByUsername(String username);
-
-  List<Role> getUserRolesById(Integer id);
-
 }

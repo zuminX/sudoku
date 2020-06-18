@@ -1,4 +1,4 @@
-package com.sudoku.config;
+package com.sudoku.config.security;
 
 import java.util.Collection;
 import org.springframework.security.access.AccessDecisionManager;
@@ -10,7 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 /**
- * 访问管理器
+ * 自定义访问管理器
  */
 @Component
 public class CustomUrlDecisionManager implements AccessDecisionManager {

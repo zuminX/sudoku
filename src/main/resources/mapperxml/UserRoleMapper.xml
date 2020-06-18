@@ -1,37 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sudoku.mapper.UserRoleMapper">
-  <resultMap id="BaseResultMap" type="com.sudoku.model.po.UserRole">
-    <!--@mbg.generated-->
-    <!--@Table user_role-->
-    <id column="id" jdbcType="INTEGER" property="id"/>
-    <result column="uid" jdbcType="INTEGER" property="uid"/>
-    <result column="rid" jdbcType="INTEGER" property="rid"/>
-  </resultMap>
-  <sql id="Base_Column_List">
-    <!--@mbg.generated-->
-    id, `uid`, rid
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    <!--@mbg.generated-->
-    select
-    <include refid="Base_Column_List"/>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete
     from user_role
     where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    <!--@mbg.generated-->
-    delete from user_role
-    where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.po.UserRole" useGeneratedKeys="true">
-    <!--@mbg.generated-->
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.entity.UserRole" useGeneratedKeys="true">
     insert into user_role (`uid`, rid)
     values (#{uid,jdbcType=INTEGER}, #{rid,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.po.UserRole"
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.entity.UserRole"
     useGeneratedKeys="true">
-    <!--@mbg.generated-->
     insert into user_role
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="uid != null">
@@ -50,8 +30,37 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sudoku.model.po.UserRole">
-    <!--@mbg.generated-->
+  <insert id="batchInsert" parameterType="list">
+    insert into user_role (`uid`, rid)
+      values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.uid,jdbcType=INTEGER}, #{item.rid,jdbcType=INTEGER})
+    </foreach>
+  </insert>
+  <resultMap id="BaseResultMap" type="com.sudoku.model.entity.UserRole">
+    <!--@Table user_role-->
+    <id column="id" jdbcType="INTEGER" property="id"/>
+    <result column="uid" jdbcType="INTEGER" property="uid"/>
+    <result column="rid" jdbcType="INTEGER" property="rid"/>
+  </resultMap>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from user_role
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <sql id="Base_Column_List">
+    id,
+    `uid`,
+    rid
+  </sql>
+  <update id="updateByPrimaryKey" parameterType="com.sudoku.model.entity.UserRole">
+    update user_role
+    set `uid` = #{uid,jdbcType=INTEGER},
+        rid   = #{rid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sudoku.model.entity.UserRole">
     update user_role
     <set>
       <if test="uid != null">
@@ -63,18 +72,4 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sudoku.model.po.UserRole">
-    <!--@mbg.generated-->
-    update user_role
-    set `uid` = #{uid,jdbcType=INTEGER},
-    rid = #{rid,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <insert id="batchInsert" parameterType="list">
-    insert into user_role (`uid`, rid)
-    values
-    <foreach collection="list" item="item" separator=",">
-      (#{item.uid,jdbcType=INTEGER}, #{item.rid,jdbcType=INTEGER})
-    </foreach>
-  </insert>
 </mapper>

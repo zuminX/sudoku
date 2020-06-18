@@ -1,4 +1,4 @@
-package com.sudoku.model.po;
+package com.sudoku.model.entity;
 
 import java.io.Serializable;
 import java.util.List;

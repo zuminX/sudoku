@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * 路由控制层
+ * 路由控制类
  */
 @RestController
 @Api(tags = "路由API接口")

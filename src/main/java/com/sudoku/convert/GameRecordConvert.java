@@ -1,7 +1,7 @@
 package com.sudoku.convert;
 
-import com.sudoku.model.dto.GameRecordDTO;
-import com.sudoku.model.po.GameRecord;
+import com.sudoku.model.bo.GameRecordBO;
+import com.sudoku.model.entity.GameRecord;
 import com.sudoku.utils.PublicUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -20,10 +20,10 @@ public interface GameRecordConvert {
    * <p>
    * 将数独数据中的数独矩阵和题目空缺数组转换为字符串
    *
-   * @param gameRecordDTO 提交数独信息传输层对象
+   * @param gameRecord 提交数独信息传输层对象
    * @return 游戏记录表对应的对象
    */
-  @Mapping(target = "sudokuMatrix", expression = "java(PublicUtils.compressionMatrix(gameRecordDTO.getSudokuDataDTO().getMatrix()))")
-  @Mapping(target = "sudokuHoles", expression = "java(PublicUtils.compressionMatrix(gameRecordDTO.getSudokuDataDTO().getHoles()))")
-  GameRecord convert(GameRecordDTO gameRecordDTO);
+  @Mapping(target = "sudokuMatrix", expression = "java(PublicUtils.compressionMatrix(gameRecord.getSudokuDataBO().getMatrix()))")
+  @Mapping(target = "sudokuHoles", expression = "java(PublicUtils.compressionMatrix(gameRecord.getSudokuDataBO().getHoles()))")
+  GameRecord convert(GameRecordBO gameRecord);
 }

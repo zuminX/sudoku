@@ -4,11 +4,12 @@ import com.sudoku.constant.consist.RoleName;
 import com.sudoku.constant.enums.StatusCode;
 import com.sudoku.convert.UserConvert;
 import com.sudoku.exception.UserException;
+import com.sudoku.log.Log;
 import com.sudoku.mapper.RoleMapper;
 import com.sudoku.mapper.UserMapper;
 import com.sudoku.mapper.UserRoleMapper;
-import com.sudoku.model.po.User;
-import com.sudoku.model.po.UserRole;
+import com.sudoku.model.entity.User;
+import com.sudoku.model.entity.UserRole;
 import com.sudoku.model.vo.RegisterUserVO;
 import com.sudoku.model.vo.UserVO;
 import com.sudoku.service.UserService;
@@ -38,8 +39,9 @@ public class UserServiceImpl implements UserService {
    * @param registerUserVO 注册用户对象
    * @return 用户显示层对象
    */
-  @Override
   @Transactional
+  @Log("注册用户")
+  @Override
   public UserVO registerUser(RegisterUserVO registerUserVO) {
     if (!registerUserVO.getPassword().equals(registerUserVO.getRepeatPassword())) {
       throw new UserException(StatusCode.USER_REPEAT_PASSWORD_ERROR);
@@ -51,7 +53,7 @@ public class UserServiceImpl implements UserService {
     }
     //新增用户信息
     userMapper.insert(user);
-    //新增用户与角色管理
+    //新增用户的角色信息
     insertUserRole(user);
     return UserConvert.INSTANCE.convert(user);
   }

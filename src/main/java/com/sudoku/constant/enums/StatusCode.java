@@ -6,7 +6,7 @@ import lombok.ToString;
 import org.springframework.http.HttpStatus;
 
 /**
- * 状态编码
+ * 响应状态编码
  */
 @AllArgsConstructor
 @Getter

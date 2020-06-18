@@ -1,6 +1,6 @@
 package com.sudoku.mapper;
 
-import com.sudoku.model.po.UserRole;
+import com.sudoku.model.entity.UserRole;
 import java.util.List;
 
 /**

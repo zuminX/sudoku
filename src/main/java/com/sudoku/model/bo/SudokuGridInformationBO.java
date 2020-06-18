@@ -1,4 +1,4 @@
-package com.sudoku.model.dto;
+package com.sudoku.model.bo;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class SudokuGridInformationDTO implements Serializable {
+public class SudokuGridInformationBO implements Serializable {
 
   private static final long serialVersionUID = -4914426979421357329L;
   /**

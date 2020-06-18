@@ -1,37 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sudoku.mapper.RoleMapper">
-  <resultMap id="BaseResultMap" type="com.sudoku.model.po.Role">
-    <!--@mbg.generated-->
-    <!--@Table `role`-->
-    <id column="id" jdbcType="INTEGER" property="id"/>
-    <result column="name" jdbcType="VARCHAR" property="name"/>
-    <result column="nameZh" jdbcType="VARCHAR" property="nameZh"/>
-  </resultMap>
-  <sql id="Base_Column_List">
-    <!--@mbg.generated-->
-    id, `name`, nameZh
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    <!--@mbg.generated-->
-    select
-    <include refid="Base_Column_List"/>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete
     from `role`
     where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    <!--@mbg.generated-->
-    delete from `role`
-    where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.po.Role" useGeneratedKeys="true">
-    <!--@mbg.generated-->
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.entity.Role" useGeneratedKeys="true">
     insert into `role` (`name`, nameZh)
     values (#{name,jdbcType=VARCHAR}, #{nameZh,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.po.Role"
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.entity.Role"
     useGeneratedKeys="true">
-    <!--@mbg.generated-->
     insert into `role`
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="name != null">
@@ -50,8 +30,39 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sudoku.model.po.Role">
-    <!--@mbg.generated-->
+  <resultMap id="BaseResultMap" type="com.sudoku.model.entity.Role">
+    <!--@Table `role`-->
+    <id column="id" jdbcType="INTEGER" property="id"/>
+    <result column="name" jdbcType="VARCHAR" property="name"/>
+    <result column="nameZh" jdbcType="VARCHAR" property="nameZh"/>
+  </resultMap>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from `role`
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectIdsByNames" parameterType="list" resultType="java.lang.Integer">
+    select `id`
+    from role
+      where `name` in
+    <foreach close=")" collection="list" item="item" open="(" separator=",">
+      #{item,jdbcType=VARCHAR}
+    </foreach>
+  </select>
+  <select id="selectByUserId" resultMap="BaseResultMap">
+    select r.*
+    from role r,
+         user_role ur
+    where ur.`rid` = r.`id`
+      and ur.`uid` = #{id,jdbcType=INTEGER};
+  </select>
+  <sql id="Base_Column_List">
+    id,
+    `name`,
+    nameZh
+  </sql>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sudoku.model.entity.Role">
     update `role`
     <set>
       <if test="name != null">
@@ -63,19 +74,10 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sudoku.model.po.Role">
-    <!--@mbg.generated-->
+  <update id="updateByPrimaryKey" parameterType="com.sudoku.model.entity.Role">
     update `role`
     set `name` = #{name,jdbcType=VARCHAR},
-    nameZh = #{nameZh,jdbcType=VARCHAR}
+        nameZh = #{nameZh,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectIdsByNames" resultType="java.lang.Integer" parameterType="list">
-    select `id`
-    from role
-    where `name` in
-    <foreach collection="list" item="item" open="(" close=")" separator=",">
-      #{item,jdbcType=VARCHAR}
-    </foreach>
-  </select>
 </mapper>

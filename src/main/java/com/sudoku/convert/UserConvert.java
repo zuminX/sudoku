@@ -1,6 +1,6 @@
 package com.sudoku.convert;
 
-import com.sudoku.model.po.User;
+import com.sudoku.model.entity.User;
 import com.sudoku.model.vo.RegisterUserVO;
 import com.sudoku.model.vo.UserVO;
 import com.sudoku.utils.CoreUtils;

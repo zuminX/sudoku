@@ -1,6 +1,6 @@
 package com.sudoku.mapper;
 
-import com.sudoku.model.po.Resource;
+import com.sudoku.model.entity.Resource;
 import java.util.List;
 import org.springframework.cache.annotation.Cacheable;
 

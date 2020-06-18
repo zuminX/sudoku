@@ -1,36 +1,54 @@
+#服务器开放端口
+server:
+  port: 8081
+
 spring:
+  #  数据源配置
   datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: '${SUDOKU_MYSQL_PASSWORD}'
     url: jdbc:mysql://localhost:3306/sudoku?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    hikari:
+      connection-timeout: 30000
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
 
+  #redis配置
   redis:
     host: 127.0.0.1
     database: 0
     port: 6379
     password:
 
+  #缓存配置
   cache:
     type: ehcache
 
+  #SpringMVC设置
   mvc:
     view:
       prefix: /
       suffix: .html
 
-server:
-  port: 8081
-
+#mybatis配置
 mybatis:
   mapper-locations: classpath:mapperxml/*.xml
-  type-aliases-package: com.sudoku.model.po
+  type-aliases-package: com.sudoku.model.entity
   configuration:
     use-generated-keys: true
 
+#分页插件配置
 pagehelper:
   reasonable: true
 
-#logging:
-#  level:
+#日志配置
+logging:
+  level:
+    com.sudoku: info
+    org.springframework: warn
 #    com.sudoku.mapper : debug

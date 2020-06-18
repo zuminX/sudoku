@@ -1,6 +1,6 @@
 package com.sudoku.service;
 
-import com.sudoku.model.po.SudokuLevel;
+import com.sudoku.model.entity.SudokuLevel;
 import com.sudoku.model.vo.SudokuLevelVO;
 import java.util.List;
 

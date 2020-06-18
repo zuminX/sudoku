@@ -1,8 +1,8 @@
 package com.sudoku.controller;
 
-import com.sudoku.model.dto.SudokuDataDTO;
-import com.sudoku.model.dto.SudokuGridInformationDTO;
-import com.sudoku.model.po.SudokuLevel;
+import com.sudoku.model.bo.SudokuDataBO;
+import com.sudoku.model.bo.SudokuGridInformationBO;
+import com.sudoku.model.entity.SudokuLevel;
 import com.sudoku.model.vo.RankDataVO;
 import com.sudoku.model.vo.SubmitSudokuInformationVO;
 import com.sudoku.model.vo.SudokuLevelVO;
@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 数独游戏的控制层
+ * 数独游戏的控制类
  */
 @RestController
 @RequestMapping("/game")
@@ -55,18 +55,17 @@ public class GameController {
   @ApiOperation("生成数独题目")
   @ApiImplicitParams({@ApiImplicitParam(name = "level", value = "难度级别", dataTypeClass = Integer.class, required = true),
       @ApiImplicitParam(name = "isRecord", value = "是否记录", dataTypeClass = Boolean.class, required = true)})
-  public SudokuDataDTO generateSudokuTopic(@RequestParam("level") Integer level,
-      @RequestParam("isRecord") @NotNull(message = "是否记录游戏不能为空") Boolean isRecord) {
+  public SudokuDataBO generateSudokuTopic(@RequestParam Integer level, @RequestParam @NotNull(message = "是否记录游戏不能为空") Boolean isRecord) {
     SudokuLevel sudokuLevel = sudokuLevelService.getSudokuLevel(level);
-    SudokuDataDTO sudokuDataDTO = sudokuService.generateSudokuTopic(sudokuLevel, isRecord);
+    SudokuDataBO sudokuDataBO = sudokuService.generateSudokuTopic(sudokuLevel, isRecord);
     saveGameInformation();
-    return sudokuDataDTO;
+    return sudokuDataBO;
   }
 
   @PostMapping("/help")
   @ApiOperation("获取当前数独游戏的提示信息")
   @ApiImplicitParam(name = "userMatrix", value = "用户的数独矩阵数据", dataTypeClass = ArrayList.class, required = true)
-  public SudokuGridInformationDTO getHelp(
+  public SudokuGridInformationBO getHelp(
       @RequestBody @NotNull(message = "填写的数独矩阵数据不能为空") @IsSudokuMatrix ArrayList<ArrayList<Integer>> userMatrix) {
     return sudokuService.getHelp(userMatrix);
   }

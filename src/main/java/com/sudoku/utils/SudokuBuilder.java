@@ -5,7 +5,7 @@ import static com.sudoku.utils.PublicUtils.randomizedArray;
 import static com.sudoku.utils.SudokuUtils.checkColumnIsOnly;
 import static com.sudoku.utils.SudokuUtils.checkRowIsOnly;
 
-import com.sudoku.model.dto.SudokuDataDTO;
+import com.sudoku.model.bo.SudokuDataBO;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -26,22 +26,22 @@ public class SudokuBuilder {
    * @param maxEmpty 最大的空缺格子数
    * @return 数独数据
    */
-  public static SudokuDataDTO generateSudokuFinal(int minEmpty, int maxEmpty) {
-    SudokuDataDTO sudokuDataDTO = new SudokuDataDTO();
+  public static SudokuDataBO generateSudokuFinal(int minEmpty, int maxEmpty) {
+    SudokuDataBO sudokuDataBO = new SudokuDataBO();
     //生成数独矩阵
-    generatePuzzleMatrix(sudokuDataDTO);
+    generatePuzzleMatrix(sudokuDataBO);
     //生成题目空缺数组
-    digHolesByGameDifficulty(sudokuDataDTO, minEmpty, maxEmpty);
-    return sudokuDataDTO;
+    digHolesByGameDifficulty(sudokuDataBO, minEmpty, maxEmpty);
+    return sudokuDataBO;
   }
 
   /**
    * 生成数独矩阵
    *
-   * @param sudokuDataDTO 数独数据
+   * @param sudokuDataBO 数独数据
    */
-  private static void generatePuzzleMatrix(SudokuDataDTO sudokuDataDTO) {
-    int[][] matrix = sudokuDataDTO.getMatrix();
+  private static void generatePuzzleMatrix(SudokuDataBO sudokuDataBO) {
+    int[][] matrix = sudokuDataBO.getMatrix();
     //记录buildRandomArray()调用次数
     AtomicInteger currentTimes = new AtomicInteger(0);
     for (int row = 0; row < 9; row++) {
@@ -56,9 +56,9 @@ public class SudokuBuilder {
           //调用生成随机数组的次数未超过阈值
           if (currentTimes.get() < MAX_CALL_RANDOM_ARRAY_TIMES) {
             //将随机数组赋值给数独矩阵
-            if (!isCandidateNmbFound(sudokuDataDTO, tempRandomArray, row, col)) {
+            if (!isCandidateNmbFound(sudokuDataBO, tempRandomArray, row, col)) {
               //将该行的数据置为0
-              clearSudokuMatrixRow(sudokuDataDTO, row);
+              clearSudokuMatrixRow(sudokuDataBO, row);
               //重新生成该行随机数组
               row -= 1;
               col = 8;
@@ -66,7 +66,7 @@ public class SudokuBuilder {
             }
             //调用生成随机数组的次数超过阈值
           } else {
-            clearSudokuMatrix(sudokuDataDTO);
+            clearSudokuMatrix(sudokuDataBO);
             //重新生成数独矩阵
             row = -1;
             col = 8;
@@ -80,11 +80,11 @@ public class SudokuBuilder {
   /**
    * 清空数独矩阵的行
    *
-   * @param sudokuDataDTO 数独数据
+   * @param sudokuDataBO 数独数据
    * @param row        行
    */
-  private static void clearSudokuMatrixRow(SudokuDataDTO sudokuDataDTO, int row) {
-    int[] rowMatrix = sudokuDataDTO.getMatrix()[row];
+  private static void clearSudokuMatrixRow(SudokuDataBO sudokuDataBO, int row) {
+    int[] rowMatrix = sudokuDataBO.getMatrix()[row];
     //设置该行的数据为零
     Arrays.fill(rowMatrix, 0, 9, 0);
   }
@@ -92,26 +92,26 @@ public class SudokuBuilder {
   /**
    * 清空数独矩阵
    *
-   * @param sudokuDataDTO 数独数据
+   * @param sudokuDataBO 数独数据
    */
-  private static void clearSudokuMatrix(SudokuDataDTO sudokuDataDTO) {
+  private static void clearSudokuMatrix(SudokuDataBO sudokuDataBO) {
     //清空所有行的数据
     for (int i = 0; i < 9; i++) {
-      clearSudokuMatrixRow(sudokuDataDTO, i);
+      clearSudokuMatrixRow(sudokuDataBO, i);
     }
   }
 
   /**
    * 尝试给数独矩阵的第row行第col列的数据赋值
    *
-   * @param sudokuDataDTO  数独数据
+   * @param sudokuDataBO  数独数据
    * @param randomArray 随机数组
    * @param row         行
    * @param col         列
    * @return 能赋值返回true，不能赋值返回false
    */
-  private static boolean isCandidateNmbFound(SudokuDataDTO sudokuDataDTO, int[] randomArray, int row, int col) {
-    int[][] matrix = sudokuDataDTO.getMatrix();
+  private static boolean isCandidateNmbFound(SudokuDataBO sudokuDataBO, int[] randomArray, int row, int col) {
+    int[][] matrix = sudokuDataBO.getMatrix();
     //遍历随机数组，尝试给matrix[row][col]赋值
     for (int i = 0; i < randomArray.length; i++) {
       if (randomArray[i] == -1) {
@@ -120,7 +120,7 @@ public class SudokuBuilder {
       int random = randomArray[i];
       matrix[row][col] = random;
       //放置该数是否与数独矩阵有冲突
-      if (noConflict(sudokuDataDTO, row, col)) {
+      if (noConflict(sudokuDataBO, row, col)) {
         randomArray[i] = -1;
         return true;
       }
@@ -131,50 +131,50 @@ public class SudokuBuilder {
   /**
    * 判断该行、该列的数在数独矩阵中是否存在冲突
    *
-   * @param sudokuDataDTO 数独数据
+   * @param sudokuDataBO 数独数据
    * @param row        行
    * @param col        列
    * @return 存在冲突返回false，不存在冲突返回true
    */
-  private static boolean noConflict(SudokuDataDTO sudokuDataDTO, int row, int col) {
-    return noConflictInRow(sudokuDataDTO, row, col) && noConflictInColumn(sudokuDataDTO, row, col) &&
-        noConflictInBlock(sudokuDataDTO, row, col);
+  private static boolean noConflict(SudokuDataBO sudokuDataBO, int row, int col) {
+    return noConflictInRow(sudokuDataBO, row, col) && noConflictInColumn(sudokuDataBO, row, col) &&
+        noConflictInBlock(sudokuDataBO, row, col);
   }
 
   /**
    * 判断该行、该列的数在数独矩阵的行中是否存在冲突
    *
-   * @param sudokuDataDTO 数独数据
+   * @param sudokuDataBO 数独数据
    * @param row        行
    * @param col        列
    * @return 存在冲突返回false，不存在冲突返回true
    */
-  private static boolean noConflictInRow(SudokuDataDTO sudokuDataDTO, int row, int col) {
-    return checkRowIsOnly(sudokuDataDTO.getMatrix()[row], col, col);
+  private static boolean noConflictInRow(SudokuDataBO sudokuDataBO, int row, int col) {
+    return checkRowIsOnly(sudokuDataBO.getMatrix()[row], col, col);
   }
 
   /**
    * 判断该行、该列的数在数独矩阵的列中是否存在冲突
    *
-   * @param sudokuDataDTO 数独数据
+   * @param sudokuDataBO 数独数据
    * @param row        行
    * @param col        列
    * @return 存在冲突返回false，不存在冲突返回true
    */
-  private static boolean noConflictInColumn(SudokuDataDTO sudokuDataDTO, int row, int col) {
-    return checkColumnIsOnly(sudokuDataDTO.getMatrix(), row, col, row);
+  private static boolean noConflictInColumn(SudokuDataBO sudokuDataBO, int row, int col) {
+    return checkColumnIsOnly(sudokuDataBO.getMatrix(), row, col, row);
   }
 
   /**
    * 判断该行、该列的数在数独矩阵的宫中是否存在冲突
    *
-   * @param sudokuDataDTO 数独数据
+   * @param sudokuDataBO 数独数据
    * @param row        行
    * @param col        列
    * @return 存在冲突返回false，不存在冲突返回true
    */
-  private static boolean noConflictInBlock(SudokuDataDTO sudokuDataDTO, int row, int col) {
-    return SudokuUtils.checkBlockIsOnly(sudokuDataDTO.getMatrix(), row, col);
+  private static boolean noConflictInBlock(SudokuDataBO sudokuDataBO, int row, int col) {
+    return SudokuUtils.checkBlockIsOnly(sudokuDataBO.getMatrix(), row, col);
   }
 
   /**
@@ -195,12 +195,12 @@ public class SudokuBuilder {
   /**
    * 根据空缺格子数生成对应题目的空缺数组
    *
-   * @param sudokuDataDTO 数独数据
+   * @param sudokuDataBO 数独数据
    * @param minEmpty   最小的空缺格子数
    * @param maxEmpty   最大的空缺格子数
    */
-  private static void digHolesByGameDifficulty(SudokuDataDTO sudokuDataDTO, int minEmpty, int maxEmpty) {
-    int[][] holes = sudokuDataDTO.getHoles();
+  private static void digHolesByGameDifficulty(SudokuDataBO sudokuDataBO, int minEmpty, int maxEmpty) {
+    int[][] holes = sudokuDataBO.getHoles();
     //设置为1视为空缺格子
     for (int i = 0, random = getRandomInt(minEmpty, maxEmpty); i < random; i++) {
       holes[i / 9][i % 9] = 1;

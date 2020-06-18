@@ -1,4 +1,4 @@
-package com.sudoku.config;
+package com.sudoku.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;

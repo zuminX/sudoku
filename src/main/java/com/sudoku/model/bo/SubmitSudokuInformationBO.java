@@ -1,4 +1,4 @@
-package com.sudoku.model.dto;
+package com.sudoku.model.bo;
 
 import com.sudoku.constant.enums.AnswerSituation;
 import java.io.Serializable;
@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class SubmitSudokuInformationDTO implements Serializable {
+public class SubmitSudokuInformationBO implements Serializable {
 
   private static final long serialVersionUID = 6641560930277580060L;
   /**

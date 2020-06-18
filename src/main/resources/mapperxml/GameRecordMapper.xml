@@ -1,52 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sudoku.mapper.GameRecordMapper">
-  <resultMap id="BaseResultMap" type="com.sudoku.model.po.GameRecord">
-    <!--@Table game_record-->
-    <id column="id" jdbcType="INTEGER" property="id"/>
-    <result column="sudoku_matrix" jdbcType="CHAR" property="sudokuMatrix"/>
-    <result column="sudoku_holes" jdbcType="CHAR" property="sudokuHoles"/>
-    <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
-    <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
-    <result column="correct" jdbcType="BOOLEAN" property="correct"/>
-    <result column="slid" jdbcType="INTEGER" property="slid"/>
-    <result column="uid" jdbcType="INTEGER" property="uid"/>
-  </resultMap>
-  <resultMap id="GameRecordVOMap" type="com.sudoku.model.vo.GameRecordVO">
-    <result column="sudoku_matrix" property="sudokuMatrix"/>
-    <result column="sudoku_holes" property="sudokuHoles"/>
-    <result column="start_time" property="startTime"/>
-    <result column="end_time" property="endTime"/>
-    <result column="correct" property="correct"/>
-    <result column="name" property="sudokuLevelName"/>
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, sudoku_matrix, sudoku_holes, start_time, end_time, correct, slid, `uid`
-  </sql>
-
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List"/>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete
     from game_record
     where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    <!--@mbg.generated-->
-    delete from game_record
-    where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.po.GameRecord" useGeneratedKeys="true">
-    <!--@mbg.generated-->
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.entity.GameRecord" useGeneratedKeys="true">
     insert into game_record (sudoku_matrix, sudoku_holes, start_time,
-    end_time, correct, slid,
-    `uid`)
+                             end_time, correct, slid,
+                             `uid`)
     values (#{sudokuMatrix,jdbcType=CHAR}, #{sudokuHoles,jdbcType=CHAR}, #{startTime,jdbcType=TIMESTAMP},
-    #{endTime,jdbcType=TIMESTAMP}, #{correct,jdbcType=BOOLEAN}, #{slid,jdbcType=INTEGER},
-    #{uid,jdbcType=INTEGER})
+            #{endTime,jdbcType=TIMESTAMP}, #{correct,jdbcType=BOOLEAN}, #{slid,jdbcType=INTEGER},
+            #{uid,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.po.GameRecord"
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.entity.GameRecord"
     useGeneratedKeys="true">
-    <!--@mbg.generated-->
     insert into game_record
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="sudokuMatrix != null">
@@ -95,8 +64,55 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sudoku.model.po.GameRecord">
-    <!--@mbg.generated-->
+
+  <resultMap id="BaseResultMap" type="com.sudoku.model.entity.GameRecord">
+    <!--@Table game_record-->
+    <id column="id" jdbcType="INTEGER" property="id"/>
+    <result column="sudoku_matrix" jdbcType="CHAR" property="sudokuMatrix"/>
+    <result column="sudoku_holes" jdbcType="CHAR" property="sudokuHoles"/>
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+    <result column="correct" jdbcType="BOOLEAN" property="correct"/>
+    <result column="slid" jdbcType="INTEGER" property="slid"/>
+    <result column="uid" jdbcType="INTEGER" property="uid"/>
+  </resultMap>
+  <resultMap id="GameRecordVOMap" type="com.sudoku.model.vo.GameRecordVO">
+    <result column="sudoku_matrix" property="sudokuMatrix"/>
+    <result column="sudoku_holes" property="sudokuHoles"/>
+    <result column="start_time" property="startTime"/>
+    <result column="end_time" property="endTime"/>
+    <result column="correct" property="correct"/>
+    <result column="name" property="sudokuLevelName"/>
+  </resultMap>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from game_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="findByUidOrderByStartTimeDesc" resultMap="GameRecordVOMap">
+    select gr.sudoku_matrix,
+           gr.sudoku_holes,
+           gr.start_time,
+           gr.end_time,
+           gr.correct,
+           sl.name
+    from game_record gr
+           inner join sudoku_level sl on gr.slid = sl.id
+    where `uid` = #{uid,jdbcType=INTEGER}
+    order by start_time desc
+  </select>
+  <sql id="Base_Column_List">
+    id,
+    sudoku_matrix,
+    sudoku_holes,
+    start_time,
+    end_time,
+    correct,
+    slid,
+    `uid`
+  </sql>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sudoku.model.entity.GameRecord">
     update game_record
     <set>
       <if test="sudokuMatrix != null">
@@ -123,16 +139,16 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sudoku.model.po.GameRecord">
-    <!--@mbg.generated-->
+
+  <update id="updateByPrimaryKey" parameterType="com.sudoku.model.entity.GameRecord">
     update game_record
     set sudoku_matrix = #{sudokuMatrix,jdbcType=CHAR},
-    sudoku_holes = #{sudokuHoles,jdbcType=CHAR},
-    start_time = #{startTime,jdbcType=TIMESTAMP},
-    end_time = #{endTime,jdbcType=TIMESTAMP},
-    correct = #{correct,jdbcType=BOOLEAN},
-    slid = #{slid,jdbcType=INTEGER},
-    `uid` = #{uid,jdbcType=INTEGER}
+        sudoku_holes  = #{sudokuHoles,jdbcType=CHAR},
+        start_time    = #{startTime,jdbcType=TIMESTAMP},
+        end_time      = #{endTime,jdbcType=TIMESTAMP},
+        correct       = #{correct,jdbcType=BOOLEAN},
+        slid          = #{slid,jdbcType=INTEGER},
+        `uid`         = #{uid,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
@@ -142,12 +158,4 @@
         correct=#{updatedCorrect,jdbcType=BOOLEAN}
     where id = #{id,jdbcType=INTEGER}
   </update>
-
-  <select id="findByUidOrderByStartTimeDesc" resultMap="GameRecordVOMap">
-    select
-    gr.sudoku_matrix, gr.sudoku_holes, gr.start_time, gr.end_time, gr.correct, sl.name
-    from game_record gr
-    inner join sudoku_level sl on gr.slid = sl.id
-    where `uid`=#{uid,jdbcType=INTEGER} order by start_time desc
-  </select>
 </mapper>

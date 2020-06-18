@@ -7,11 +7,11 @@ import static com.sudoku.utils.PublicUtils.getRandomInt;
 
 import com.sudoku.constant.enums.AnswerSituation;
 import com.sudoku.convert.SubmitSudokuInformationConvert;
-import com.sudoku.model.dto.GameRecordDTO;
-import com.sudoku.model.dto.SubmitSudokuInformationDTO;
-import com.sudoku.model.dto.SudokuDataDTO;
-import com.sudoku.model.dto.SudokuGridInformationDTO;
-import com.sudoku.model.po.SudokuLevel;
+import com.sudoku.model.bo.GameRecordBO;
+import com.sudoku.model.bo.SubmitSudokuInformationBO;
+import com.sudoku.model.bo.SudokuDataBO;
+import com.sudoku.model.bo.SudokuGridInformationBO;
+import com.sudoku.model.entity.SudokuLevel;
 import com.sudoku.model.vo.SubmitSudokuInformationVO;
 import com.sudoku.service.SudokuService;
 import com.sudoku.utils.CoreUtils;
@@ -41,12 +41,12 @@ public class SudokuServiceImpl implements SudokuService {
    * @return 数独题目
    */
   @Override
-  public SudokuDataDTO generateSudokuTopic(SudokuLevel sudokuLevel, Boolean isRecord) {
+  public SudokuDataBO generateSudokuTopic(SudokuLevel sudokuLevel, Boolean isRecord) {
     //生成数独终盘
-    SudokuDataDTO sudokuDataDTO = SudokuBuilder.generateSudokuFinal(sudokuLevel.getMinEmpty(), sudokuLevel.getMinEmpty());
-    saveGameRecord(sudokuDataDTO, sudokuLevel.getId(), isRecord);
+    SudokuDataBO sudokuDataBO = SudokuBuilder.generateSudokuFinal(sudokuLevel.getMinEmpty(), sudokuLevel.getMinEmpty());
+    saveGameRecord(sudokuDataBO, sudokuLevel.getId(), isRecord);
     //将数独终盘转换为数独题目并返回
-    return SudokuUtils.generateSudokuTopic(sudokuDataDTO);
+    return SudokuUtils.generateSudokuTopic(sudokuDataBO);
   }
 
   /**
@@ -56,11 +56,11 @@ public class SudokuServiceImpl implements SudokuService {
    * @return 提示信息
    */
   @Override
-  public SudokuGridInformationDTO getHelp(ArrayList<ArrayList<Integer>> userMatrix) {
+  public SudokuGridInformationBO getHelp(ArrayList<ArrayList<Integer>> userMatrix) {
     //获取session中的游戏记录
-    GameRecordDTO gameRecord = (GameRecordDTO) session.getAttribute(GAME_RECORD_KEY);
+    GameRecordBO gameRecord = (GameRecordBO) session.getAttribute(GAME_RECORD_KEY);
     //寻找用户错误的数独格子数据
-    ArrayList<SudokuGridInformationDTO> errorGridInformationList = findErrorGridInformation(gameRecord.getSudokuDataDTO(), userMatrix);
+    ArrayList<SudokuGridInformationBO> errorGridInformationList = findErrorGridInformation(gameRecord.getSudokuDataBO(), userMatrix);
     int size = errorGridInformationList.size();
     //随机返回一个数据
     return size > 0 ? errorGridInformationList.get(getRandomInt(0, size - 1)) : null;
@@ -75,19 +75,19 @@ public class SudokuServiceImpl implements SudokuService {
   @Override
   public SubmitSudokuInformationVO checkSudokuData(ArrayList<ArrayList<Integer>> userMatrix) {
     //获取session中的游戏记录
-    GameRecordDTO gameRecord = (GameRecordDTO) session.getAttribute(GAME_RECORD_KEY);
+    GameRecordBO gameRecord = (GameRecordBO) session.getAttribute(GAME_RECORD_KEY);
     gameRecord.setEndTime(new Date());
 
-    SudokuDataDTO sudokuDataDTO = gameRecord.getSudokuDataDTO();
-    int[][] matrix = sudokuDataDTO.getMatrix();
-    int[][] holes = sudokuDataDTO.getHoles();
-    AnswerSituation situation = judgeAnswerSituation(userMatrix, sudokuDataDTO, matrix, holes);
+    SudokuDataBO sudokuDataBO = gameRecord.getSudokuDataBO();
+    int[][] matrix = sudokuDataBO.getMatrix();
+    int[][] holes = sudokuDataBO.getHoles();
+    AnswerSituation situation = judgeAnswerSituation(userMatrix, sudokuDataBO, matrix, holes);
     gameRecord.setCorrect(situation.isRight());
 
     //将游戏记录存放到session中
     setSessionAttribute(session, GAME_RECORD_KEY, gameRecord);
 
-    SubmitSudokuInformationDTO informationDTO = SubmitSudokuInformationDTO.builder().situation(situation).matrix(matrix)
+    SubmitSudokuInformationBO informationDTO = SubmitSudokuInformationBO.builder().situation(situation).matrix(matrix)
         .spendTime(PublicUtils.getTwoDateAbsDiff(gameRecord.getEndTime(), gameRecord.getStartTime())).build();
     return SubmitSudokuInformationConvert.INSTANCE.convert(informationDTO);
   }
@@ -106,12 +106,12 @@ public class SudokuServiceImpl implements SudokuService {
    * 判断答题状态
    *
    * @param userMatrix    用户的数独矩阵数据
-   * @param sudokuDataDTO 数独数据
+   * @param sudokuDataBO 数独数据
    * @param matrix        数独矩阵
    * @param holes         题目空缺数组
    * @return 用户答题状态
    */
-  private AnswerSituation judgeAnswerSituation(ArrayList<ArrayList<Integer>> userMatrix, SudokuDataDTO sudokuDataDTO, int[][] matrix,
+  private AnswerSituation judgeAnswerSituation(ArrayList<ArrayList<Integer>> userMatrix, SudokuDataBO sudokuDataBO, int[][] matrix,
       int[][] holes) {
     //初始为与答案一致
     AnswerSituation situation = AnswerSituation.IDENTICAL;
@@ -139,7 +139,7 @@ public class SudokuServiceImpl implements SudokuService {
     }
     //判断用户的答案是否符合数独规则
     if (situation.equals(AnswerSituation.CORRECT)) {
-      situation = SudokuUtils.checkSudokuValidity(sudokuDataDTO) ? AnswerSituation.CORRECT : AnswerSituation.ERROR;
+      situation = SudokuUtils.checkSudokuValidity(sudokuDataBO) ? AnswerSituation.CORRECT : AnswerSituation.ERROR;
     }
     return situation;
   }
@@ -147,35 +147,35 @@ public class SudokuServiceImpl implements SudokuService {
   /**
    * 保存游戏记录
    *
-   * @param sudokuDataDTO 数独数据
+   * @param sudokuDataBO 数独数据
    * @param slid          数独难度ID
    * @param isRecord      是否记录
    */
-  private void saveGameRecord(SudokuDataDTO sudokuDataDTO, Integer slid, Boolean isRecord) {
-    GameRecordDTO gameRecordDTO = GameRecordDTO.builder().sudokuDataDTO(sudokuDataDTO).startTime(new Date()).correct(false)
+  private void saveGameRecord(SudokuDataBO sudokuDataBO, Integer slid, Boolean isRecord) {
+    GameRecordBO gameRecordBO = GameRecordBO.builder().sudokuDataBO(sudokuDataBO).startTime(new Date()).correct(false)
         .uid(CoreUtils.getNowUser().getId()).slid(slid).build();
     //将游戏记录信息存放到session中
-    setSessionAttribute(session, GAME_RECORD_KEY, gameRecordDTO);
+    setSessionAttribute(session, GAME_RECORD_KEY, gameRecordBO);
     setSessionAttribute(session, IS_RECORD_KEY, isRecord);
   }
 
   /**
    * 寻找错误的数独格子信息
    *
-   * @param sudokuDataDTO 数独数据
+   * @param sudokuDataBO 数独数据
    * @param userMatrix    用户的数独矩阵数据
    * @return 用户错误的数独格子信息
    */
-  private ArrayList<SudokuGridInformationDTO> findErrorGridInformation(SudokuDataDTO sudokuDataDTO,
+  private ArrayList<SudokuGridInformationBO> findErrorGridInformation(SudokuDataBO sudokuDataBO,
       ArrayList<ArrayList<Integer>> userMatrix) {
-    ArrayList<SudokuGridInformationDTO> errorGridInformationList = new ArrayList<>();
-    int[][] matrix = sudokuDataDTO.getMatrix();
+    ArrayList<SudokuGridInformationBO> errorGridInformationList = new ArrayList<>();
+    int[][] matrix = sudokuDataBO.getMatrix();
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
         Integer userValue = userMatrix.get(i).get(j);
         //如果该格子为空或其值与答案不同，将对应的行、列和正确的值加入到错误信息数组中
         if (userValue == null || userValue != matrix[i][j]) {
-          errorGridInformationList.add(new SudokuGridInformationDTO(i, j, matrix[i][j]));
+          errorGridInformationList.add(new SudokuGridInformationBO(i, j, matrix[i][j]));
         }
       }
     }

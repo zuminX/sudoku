@@ -2,7 +2,7 @@ package com.sudoku.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sudoku.constant.consist.SettingParameter;
-import com.sudoku.model.po.User;
+import com.sudoku.model.entity.User;
 import com.sudoku.model.vo.RankDataVO.RankItemVO;
 import java.io.IOException;
 import java.io.PrintWriter;

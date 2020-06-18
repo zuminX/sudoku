@@ -1,4 +1,4 @@
-package com.sudoku.model.dto;
+package com.sudoku.model.bo;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class RankItemDTO<T> implements Serializable {
+public class RankItemBO<T> implements Serializable {
 
   private static final long serialVersionUID = 1559554219049093889L;
   /**

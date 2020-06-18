@@ -1,8 +1,8 @@
-package com.sudoku.config;
+package com.sudoku.config.security;
 
 import com.sudoku.constant.enums.StatusCode;
 import com.sudoku.convert.UserConvert;
-import com.sudoku.model.po.User;
+import com.sudoku.model.entity.User;
 import com.sudoku.model.vo.CommonResult;
 import com.sudoku.service.impl.UserDetailsServiceImpl;
 import com.sudoku.utils.CoreUtils;
@@ -23,7 +23,7 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
- * 配置安全项
+ * 配置Spring Security项
  */
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -53,7 +53,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   public void configure(WebSecurity web) {
     //不拦截静态资源
-    web.ignoring().antMatchers("/css/**", "/js/**", "/index.html", "/user/register", "/img/**", "/fonts/**", "/favicon.ico");
+    web.ignoring().antMatchers("/css/**", "/js/**", "/index.html", "/img/**", "/fonts/**", "/favicon.ico");
+    //不拦截用户注册
+    web.ignoring().antMatchers("/user/register");
     //不拦截swagger
     web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/configuration/ui", "/swagger-resources",
         "/swagger-resources/configuration/security", "/swagger-ui.html", "/webjars/**");

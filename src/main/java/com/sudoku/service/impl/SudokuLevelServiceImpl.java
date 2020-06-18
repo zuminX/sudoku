@@ -4,7 +4,7 @@ import com.sudoku.constant.enums.StatusCode;
 import com.sudoku.convert.SudokuLevelConvert;
 import com.sudoku.exception.GameException;
 import com.sudoku.mapper.SudokuLevelMapper;
-import com.sudoku.model.po.SudokuLevel;
+import com.sudoku.model.entity.SudokuLevel;
 import com.sudoku.model.vo.SudokuLevelVO;
 import com.sudoku.service.SudokuLevelService;
 import java.util.List;

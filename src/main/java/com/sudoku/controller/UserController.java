@@ -2,8 +2,8 @@ package com.sudoku.controller;
 
 import com.sudoku.model.vo.GameRecordPageVO;
 import com.sudoku.model.vo.RegisterUserVO;
-import com.sudoku.model.vo.UserVO;
 import com.sudoku.model.vo.UserGameInformationVO;
+import com.sudoku.model.vo.UserVO;
 import com.sudoku.service.GameRecordService;
 import com.sudoku.service.UserGameInformationService;
 import com.sudoku.service.UserService;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 用户控制层
+ * 用户控制类
  */
 @RestController
 @RequestMapping("/user")
@@ -60,8 +60,8 @@ public class UserController {
       @ApiImplicitParam(name = "page", value = "page", dataTypeClass = Integer.class, required = true),
       @ApiImplicitParam(name = "pageSize", value = "pageSize", dataTypeClass = Integer.class, required = true)
   })
-  public GameRecordPageVO getHistoryGameRecord(@RequestParam("page") Integer page,
-      @RequestParam("pageSize") @Range(min = 1, max = 20, message = "每页显示的记录数在1-20条之间") Integer pageSize) {
+  public GameRecordPageVO getHistoryGameRecord(@RequestParam Integer page,
+      @RequestParam @Range(min = 1, max = 20, message = "每页显示的记录数在1-20条之间") Integer pageSize) {
     return gameRecordService.getHistoryGameRecord(page, pageSize);
   }
 }

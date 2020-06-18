@@ -1,6 +1,6 @@
 package com.sudoku.convert;
 
-import com.sudoku.model.po.SudokuLevel;
+import com.sudoku.model.entity.SudokuLevel;
 import com.sudoku.model.vo.SudokuLevelVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

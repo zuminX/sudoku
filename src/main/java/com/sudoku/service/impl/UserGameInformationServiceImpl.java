@@ -6,12 +6,14 @@ import com.sudoku.constant.consist.RankDataName;
 import com.sudoku.constant.consist.SettingParameter;
 import com.sudoku.convert.RankDataConvert;
 import com.sudoku.convert.UserGameInformationConvert;
+import com.sudoku.log.BusinessType;
+import com.sudoku.log.Log;
 import com.sudoku.mapper.SudokuLevelMapper;
 import com.sudoku.mapper.UserGameInformationMapper;
-import com.sudoku.model.dto.GameRecordDTO;
-import com.sudoku.model.dto.RankItemDTO;
-import com.sudoku.model.po.SudokuLevel;
-import com.sudoku.model.po.UserGameInformation;
+import com.sudoku.model.bo.GameRecordBO;
+import com.sudoku.model.bo.RankItemBO;
+import com.sudoku.model.entity.SudokuLevel;
+import com.sudoku.model.entity.UserGameInformation;
 import com.sudoku.model.vo.RankDataVO;
 import com.sudoku.model.vo.UserGameInformationVO;
 import com.sudoku.service.UserGameInformationService;
@@ -26,6 +28,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 用户游戏信息业务层实现类
@@ -43,10 +46,12 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
   /**
    * 更新用户游戏信息
    */
+  @Transactional
+  @Log(value = "保存游戏记录", businessType = BusinessType.UPDATE)
   @Override
   public void updateUserGameInformation() {
     //获取session中的游戏记录
-    GameRecordDTO gameRecord = (GameRecordDTO) session.getAttribute(GAME_RECORD_KEY);
+    GameRecordBO gameRecord = (GameRecordBO) session.getAttribute(GAME_RECORD_KEY);
     Integer uid = gameRecord.getUid();
     Integer slid = gameRecord.getSlid();
 
@@ -84,6 +89,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    *
    * @return 用户游戏信息的显示层列表
    */
+  @Transactional
   @Override
   public List<UserGameInformationVO> getUserGameInformation() {
     //获取当前用户的游戏信息
@@ -119,6 +125,8 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    *
    * @param id 用户ID
    */
+  @Transactional
+  @Log("初始化用户游戏信息")
   @Override
   public void initUserGameInformation(Integer id) {
     userGameInformationMapper.insertDefaultByUserId(id);
@@ -131,6 +139,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    * @param sudokuLevels            数独级别
    * @param userId                  用户ID
    */
+  @Log(value = "插入用户缺少的数独等级信息", isSaveParameterData = false)
   private void insertUserLackSudokuLevelInformation(List<UserGameInformation> userGameInformationList, List<SudokuLevel> sudokuLevels,
       Integer userId) {
     Set<Integer> slids = userGameInformationList.stream().map(UserGameInformation::getSlid).collect(Collectors.toSet());
@@ -162,33 +171,35 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
   }
 
   /**
-   * 获取以回答正确个数排行的列表
+   * 获取以回答正确个数排名的列表
    *
    * @return 排行数据显示层
    */
   private RankDataVO<Integer> getCorrectNumberRankingList() {
-    List<RankItemDTO<Integer>> list = userGameInformationMapper
+    List<RankItemBO<Integer>> list = userGameInformationMapper
         .selectLimitNumberGroupBySlidOrderByCorrectNumber(SettingParameter.RANKING_NUMBER);
     return RankDataConvert.INSTANCE.convert(list, RankDataName.CORRECT_NUMBER);
   }
 
   /**
-   * 获取以最少用时排行的列表
+   * 获取以最少用时排名的列表
    *
    * @return 排行数据显示层
    */
   private RankDataVO<Integer> getMinSpendTimeRankingList() {
-    List<RankItemDTO<Integer>> list = userGameInformationMapper.selectLimitNumberGroupBySlidOrderByMinSpendTime(SettingParameter.RANKING_NUMBER);
+    List<RankItemBO<Integer>> list = userGameInformationMapper
+        .selectLimitNumberGroupBySlidOrderByMinSpendTime(SettingParameter.RANKING_NUMBER);
     return RankDataConvert.INSTANCE.convert(list, RankDataName.MIN_SPEND_TIME);
   }
 
   /**
-   * 获取以平均用时排行的列表
+   * 获取以平均用时排名的列表
    *
    * @return 排行数据显示层
    */
   private RankDataVO<Integer> getAverageSpendTimeRankingList() {
-    List<RankItemDTO<Integer>> list = userGameInformationMapper.selectLimitNumberGroupBySlidOrderByAverageSpendTime(SettingParameter.RANKING_NUMBER);
+    List<RankItemBO<Integer>> list = userGameInformationMapper
+        .selectLimitNumberGroupBySlidOrderByAverageSpendTime(SettingParameter.RANKING_NUMBER);
     return RankDataConvert.INSTANCE.convert(list, RankDataName.AVERAGE_SPEND_TIME);
   }
 }

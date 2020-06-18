@@ -6,9 +6,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sudoku.convert.GameRecordConvert;
 import com.sudoku.convert.GameRecordPageConvert;
+import com.sudoku.log.BusinessType;
+import com.sudoku.log.Log;
 import com.sudoku.mapper.GameRecordMapper;
-import com.sudoku.model.dto.GameRecordDTO;
-import com.sudoku.model.po.GameRecord;
+import com.sudoku.model.bo.GameRecordBO;
+import com.sudoku.model.entity.GameRecord;
 import com.sudoku.model.vo.GameRecordPageVO;
 import com.sudoku.model.vo.GameRecordVO;
 import com.sudoku.service.GameRecordService;
@@ -17,6 +19,7 @@ import java.util.Date;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 游戏记录业务层实现类
@@ -32,22 +35,24 @@ public class GameRecordServiceImpl implements GameRecordService {
   /**
    * 保存游戏记录
    */
+  @Transactional
+  @Log(value = "保存游戏记录", businessType = BusinessType.SAVE)
   @Override
   public void saveGameRecord() {
-    GameRecordDTO gameRecordDTO = (GameRecordDTO) session.getAttribute(GAME_RECORD_KEY);
+    GameRecordBO gameRecordBO = (GameRecordBO) session.getAttribute(GAME_RECORD_KEY);
     //根据结束时间判断游戏状态
-    Date endTime = gameRecordDTO.getEndTime();
+    Date endTime = gameRecordBO.getEndTime();
     //开始游戏
     if (endTime == null) {
       //转换为对应表对象，并插入到数据库中
-      GameRecord gameRecord = GameRecordConvert.INSTANCE.convert(gameRecordDTO);
+      GameRecord gameRecord = GameRecordConvert.INSTANCE.convert(gameRecordBO);
       gameRecordMapper.insertSelective(gameRecord);
       //设置回填的ID，并保存到session中
-      gameRecordDTO.setId(gameRecord.getId());
-      session.setAttribute(GAME_RECORD_KEY, gameRecordDTO);
+      gameRecordBO.setId(gameRecord.getId());
+      session.setAttribute(GAME_RECORD_KEY, gameRecordBO);
       //游戏结束
     } else {
-      gameRecordMapper.updateEndTimeAndCorrectById(endTime, gameRecordDTO.getCorrect(), gameRecordDTO.getId());
+      gameRecordMapper.updateEndTimeAndCorrectById(endTime, gameRecordBO.getCorrect(), gameRecordBO.getId());
     }
   }
 

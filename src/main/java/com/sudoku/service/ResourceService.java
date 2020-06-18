@@ -1,6 +1,6 @@
 package com.sudoku.service;
 
-import com.sudoku.model.po.Resource;
+import com.sudoku.model.entity.Resource;
 import java.util.List;
 
 /**

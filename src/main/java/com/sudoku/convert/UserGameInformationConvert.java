@@ -1,6 +1,6 @@
 package com.sudoku.convert;
 
-import com.sudoku.model.po.UserGameInformation;
+import com.sudoku.model.entity.UserGameInformation;
 import com.sudoku.model.vo.UserGameInformationVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

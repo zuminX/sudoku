@@ -1,7 +1,7 @@
 package com.sudoku.mapper;
 
-import com.sudoku.model.dto.RankItemDTO;
-import com.sudoku.model.po.UserGameInformation;
+import com.sudoku.model.bo.RankItemBO;
+import com.sudoku.model.entity.UserGameInformation;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -34,13 +34,13 @@ public interface UserGameInformationMapper {
 
   int updateTotalByUidAndSlid(@Param("updatedTotal") Integer updatedTotal, @Param("uid") Integer uid, @Param("slid") Integer slid);
 
-  List<RankItemDTO<Integer>> selectLimitNumberGroupBySlidOrderByAverageSpendTime(
+  List<RankItemBO<Integer>> selectLimitNumberGroupBySlidOrderByAverageSpendTime(
       @Param("limitNumber") Integer limitNumber);
 
-  List<RankItemDTO<Integer>> selectLimitNumberGroupBySlidOrderByMinSpendTime(
+  List<RankItemBO<Integer>> selectLimitNumberGroupBySlidOrderByMinSpendTime(
       @Param("limitNumber") Integer limitNumber);
 
-  List<RankItemDTO<Integer>> selectLimitNumberGroupBySlidOrderByCorrectNumber(
+  List<RankItemBO<Integer>> selectLimitNumberGroupBySlidOrderByCorrectNumber(
       @Param("limitNumber") Integer limitNumber);
 
 }

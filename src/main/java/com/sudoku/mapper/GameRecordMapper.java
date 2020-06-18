@@ -1,6 +1,6 @@
 package com.sudoku.mapper;
 
-import com.sudoku.model.po.GameRecord;
+import com.sudoku.model.entity.GameRecord;
 import com.sudoku.model.vo.GameRecordVO;
 import java.util.Date;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.sudoku.model.dto;
+package com.sudoku.model.bo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sudoku.utils.PublicUtils;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class SudokuDataDTO implements Serializable {
+public class SudokuDataBO implements Serializable {
 
   private static final long serialVersionUID = -2898567509394664887L;
   /**
@@ -28,7 +28,7 @@ public class SudokuDataDTO implements Serializable {
   /**
    * 无参构造方法
    */
-  public SudokuDataDTO() {
+  public SudokuDataBO() {
     matrix = new int[9][9];
     holes = new int[9][9];
   }
@@ -39,11 +39,11 @@ public class SudokuDataDTO implements Serializable {
    * @return 克隆数独数据
    */
   @JsonIgnore
-  public SudokuDataDTO getClone() {
+  public SudokuDataBO getClone() {
     //复制成员变量
     int[][] cloneMatrix = PublicUtils.getClone(this.matrix);
     int[][] cloneHoles = PublicUtils.getClone(this.holes);
     //返回复制后的数独数据
-    return new SudokuDataDTO(cloneMatrix, cloneHoles);
+    return new SudokuDataBO(cloneMatrix, cloneHoles);
   }
 }

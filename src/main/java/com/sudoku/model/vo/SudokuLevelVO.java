@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 数独等级的显示层类
+ * 数独等级的显示层
  */
 @NoArgsConstructor
 @AllArgsConstructor

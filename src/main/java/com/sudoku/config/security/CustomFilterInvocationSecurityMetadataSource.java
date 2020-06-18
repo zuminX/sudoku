@@ -1,7 +1,7 @@
-package com.sudoku.config;
+package com.sudoku.config.security;
 
-import com.sudoku.model.po.Resource;
-import com.sudoku.model.po.Role;
+import com.sudoku.model.entity.Resource;
+import com.sudoku.model.entity.Role;
 import com.sudoku.service.ResourceService;
 import java.util.Collection;
 import java.util.List;

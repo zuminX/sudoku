@@ -1,7 +1,8 @@
 package com.sudoku.handler;
 
-import com.alibaba.druid.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import com.sudoku.constant.enums.StatusCode;
+import com.sudoku.exception.LoginException;
 import com.sudoku.exception.UserException;
 import com.sudoku.model.vo.CommonResult;
 import java.util.stream.Collectors;
@@ -46,6 +47,18 @@ public class GlobalExceptionHandler {
   }
 
   /**
+   * 处理登录异常类
+   *
+   * @param e 登录异常
+   * @return 经过包装的结果对象
+   */
+  @ExceptionHandler(value = LoginException.class)
+  public CommonResult<LoginException> loginExceptionHandler(LoginException e) {
+    log.debug("[loginExceptionHandler]", e);
+    return CommonResult.error(e.getStatusCode());
+  }
+
+  /**
    * 处理参数校验异常类
    *
    * @param e 参数校验异常
@@ -76,13 +89,13 @@ public class GlobalExceptionHandler {
   /**
    * 构建无效的参数的返回结果
    *
-   * @param sb
-   * @param <T>
-   * @return
+   * @param sb  异常原因
+   * @param <T> 异常类型
+   * @return 经过包装的结果对象
    */
   private <T> CommonResult<T> buildInvalidParamErrorCommonResult(String sb) {
     //若错误为空，则使用默认异常信息
-    if (StringUtils.isEmpty(sb)) {
+    if (StrUtil.isBlank(sb)) {
       return CommonResult.error(StatusCode.INVALID_REQUEST_PARAM_ERROR);
       //否则，添加上错误原因
     } else {
