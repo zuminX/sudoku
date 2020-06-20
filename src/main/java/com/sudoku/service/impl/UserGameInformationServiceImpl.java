@@ -47,40 +47,17 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    * 更新用户游戏信息
    */
   @Transactional
-  @Log(value = "保存游戏记录", businessType = BusinessType.UPDATE)
+  @Log(value = "更新用户游戏信息", businessType = BusinessType.UPDATE)
   @Override
   public void updateUserGameInformation() {
-    //获取session中的游戏记录
     GameRecordBO gameRecord = (GameRecordBO) session.getAttribute(GAME_RECORD_KEY);
-    Integer uid = gameRecord.getUid();
-    Integer slid = gameRecord.getSlid();
-
-    UserGameInformation information = userGameInformationMapper.selectByUidAndSlid(uid, slid);
-    Integer total = information.getTotal();
-
-    //游戏开始
-    if (gameRecord.getEndTime() == null) {
-      userGameInformationMapper.updateTotalByUidAndSlid(total + 1, uid, slid);
-      //游戏结束且答题正确
-    } else if (gameRecord.getCorrect()) {
-      int diff = Math.toIntExact(PublicUtils.getTwoDateAbsDiff(gameRecord.getEndTime(), gameRecord.getStartTime()));
-      Integer correctNumber = information.getCorrectNumber();
-
-      if (information.getAverageSpendTime() == null) {
-        information.setAverageSpendTime(diff);
-      } else {
-        long totalAverageSpendTime = (long) information.getAverageSpendTime() * correctNumber;
-        information.setAverageSpendTime(Math.toIntExact(((totalAverageSpendTime + diff) / (correctNumber + 1))));
-      }
-      if (information.getMinSpendTime() == null || information.getMinSpendTime() > diff) {
-        information.setMinSpendTime(diff);
-      }
-      if (information.getMaxSpendTime() == null || information.getMaxSpendTime() < diff) {
-        information.setMaxSpendTime(diff);
-      }
-      information.setCorrectNumber(correctNumber + 1);
-
-      userGameInformationMapper.updateByUidAndSlid(information, uid, slid);
+    UserGameInformation information = userGameInformationMapper.selectByUidAndSlid(gameRecord.getUid(), gameRecord.getSlid());
+    if (CoreUtils.isGameStart(gameRecord)) {
+      plusUserGameTotal(gameRecord, information.getTotal());
+      return;
+    }
+    if (gameRecord.getCorrect()) {
+      updateInformation(gameRecord, information);
     }
   }
 
@@ -201,5 +178,90 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
     List<RankItemBO<Integer>> list = userGameInformationMapper
         .selectLimitNumberGroupBySlidOrderByAverageSpendTime(SettingParameter.RANKING_NUMBER);
     return RankDataConvert.INSTANCE.convert(list, RankDataName.AVERAGE_SPEND_TIME);
+  }
+
+  /**
+   * 根据游戏记录更新信息
+   *
+   * @param gameRecord  游戏记录
+   * @param information 用户游戏信息
+   */
+  private void updateInformation(GameRecordBO gameRecord, UserGameInformation information) {
+    int spendTime = getThisBoardSpendTime(gameRecord);
+
+    information.setAverageSpendTime(computeAverageSpendTime(spendTime, information));
+    information.setMinSpendTime(computeMinSpendTime(spendTime, information.getMinSpendTime()));
+    information.setMaxSpendTime(computeMaxSpendTime(spendTime, information.getMaxSpendTime()));
+    information.setCorrectNumber(information.getCorrectNumber() + 1);
+
+    userGameInformationMapper.updateByUidAndSlid(information, gameRecord.getUid(), gameRecord.getSlid());
+  }
+
+  /**
+   * 增加用户游戏总数
+   *
+   * @param gameRecord 游戏记录
+   * @param total      用户之前总数
+   */
+  private void plusUserGameTotal(GameRecordBO gameRecord, Integer total) {
+    userGameInformationMapper.updateTotalByUidAndSlid(total + 1, gameRecord.getUid(), gameRecord.getSlid());
+  }
+
+  /**
+   * 计算用户信息中的平均花费时间
+   *
+   * @param spendTime   本局游戏花费的时间
+   * @param information 用户游戏信息
+   * @return 平均花费时间
+   */
+  private int computeAverageSpendTime(int spendTime, UserGameInformation information) {
+    if (isFirstGame(information.getAverageSpendTime())) {
+      return spendTime;
+    }
+    int correctNumber = information.getCorrectNumber();
+    long totalAverageSpendTime = (long) information.getAverageSpendTime() * correctNumber;
+    return Math.toIntExact(((totalAverageSpendTime + spendTime) / (correctNumber + 1)));
+  }
+
+  /**
+   * 计算用户信息中的最少花费时间
+   *
+   * @param spendTime    本局游戏花费的时间
+   * @param minSpendTime 用户之前最少花费时间
+   * @return 最少花费时间
+   */
+  private int computeMinSpendTime(int spendTime, Integer minSpendTime) {
+    return isFirstGame(minSpendTime) || minSpendTime > spendTime ? spendTime : minSpendTime;
+  }
+
+  /**
+   * 计算用户信息中的最大花费时间
+   *
+   * @param spendTime    本局游戏花费的时间
+   * @param maxSpendTime 用户之前最大花费时间
+   * @return 最大花费时间
+   */
+  private int computeMaxSpendTime(int spendTime, Integer maxSpendTime) {
+    return isFirstGame(maxSpendTime) || maxSpendTime < spendTime ? spendTime : maxSpendTime;
+  }
+
+  /**
+   * 获取本局花费的时间
+   *
+   * @param gameRecord 游戏记录
+   * @return 花费的时间
+   */
+  private int getThisBoardSpendTime(GameRecordBO gameRecord) {
+    return Math.toIntExact(PublicUtils.getTwoDateAbsDiff(gameRecord.getEndTime(), gameRecord.getStartTime()));
+  }
+
+  /**
+   * 是否为第一次游戏
+   *
+   * @param spendTime 花费的时间
+   * @return 是第一次游戏返回true，否则返回false
+   */
+  private boolean isFirstGame(Integer spendTime) {
+    return spendTime == null;
   }
 }

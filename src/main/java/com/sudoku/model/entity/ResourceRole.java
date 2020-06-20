@@ -1,5 +1,9 @@
 package com.sudoku.model.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -7,21 +11,25 @@ import lombok.Data;
  * 资源角色对应的实体类
  */
 @Data
+@TableName(value = "resource_role")
 public class ResourceRole implements Serializable {
 
-  private static final long serialVersionUID = -3156642026650822947L;
+  private static final long serialVersionUID = -6996653235064535889L;
   /**
    * 资源角色ID
    */
+  @TableId(value = "id", type = IdType.AUTO)
   private Integer id;
 
   /**
    * 资源ID
    */
+  @TableField(value = "rrid")
   private Integer rrid;
 
   /**
    * 角色ID
    */
+  @TableField(value = "rid")
   private Integer rid;
 }

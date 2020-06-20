@@ -1,23 +1,9 @@
 package com.sudoku.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sudoku.model.entity.User;
 
-/**
- * 用户持久层
- */
-public interface UserMapper {
-
-  int deleteByPrimaryKey(Integer id);
-
-  int insert(User record);
-
-  int insertSelective(User record);
-
-  User selectByPrimaryKey(Integer id);
-
-  int updateByPrimaryKeySelective(User record);
-
-  int updateByPrimaryKey(User record);
+public interface UserMapper extends BaseMapper<User> {
 
   User findByUsername(String username);
 }

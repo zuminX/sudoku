@@ -1,5 +1,6 @@
 package com.sudoku.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sudoku.model.entity.SudokuLevel;
 import java.util.HashMap;
 import java.util.List;
@@ -8,22 +9,7 @@ import java.util.stream.Collectors;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.cache.annotation.Cacheable;
 
-/**
- * 角色等级持久层
- */
-public interface SudokuLevelMapper {
-
-  int deleteByPrimaryKey(Integer id);
-
-  int insert(SudokuLevel record);
-
-  int insertSelective(SudokuLevel record);
-
-  SudokuLevel selectByPrimaryKey(Integer id);
-
-  int updateByPrimaryKeySelective(SudokuLevel record);
-
-  int updateByPrimaryKey(SudokuLevel record);
+public interface SudokuLevelMapper extends BaseMapper<SudokuLevel> {
 
   @Cacheable(cacheNames = "sudokuLevels")
   List<SudokuLevel> selectAll();

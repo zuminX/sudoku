@@ -1,9 +1,9 @@
-package com.sudoku.utils;
+package com.sudoku.utils.sudoku;
 
 import static com.sudoku.utils.PublicUtils.getRandomInt;
 import static com.sudoku.utils.PublicUtils.randomizedArray;
-import static com.sudoku.utils.SudokuUtils.checkColumnIsOnly;
-import static com.sudoku.utils.SudokuUtils.checkRowIsOnly;
+import static com.sudoku.utils.sudoku.SudokuUtils.checkColumnIsOnly;
+import static com.sudoku.utils.sudoku.SudokuUtils.checkRowIsOnly;
 
 import com.sudoku.model.bo.SudokuDataBO;
 import java.util.Arrays;

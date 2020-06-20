@@ -1,47 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sudoku.mapper.RoleMapper">
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete
-    from `role`
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.entity.Role" useGeneratedKeys="true">
-    insert into `role` (`name`, nameZh)
-    values (#{name,jdbcType=VARCHAR}, #{nameZh,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.entity.Role"
-    useGeneratedKeys="true">
-    insert into `role`
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="name != null">
-        `name`,
-      </if>
-      <if test="nameZh != null">
-        nameZh,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="nameZh != null">
-        #{nameZh,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
   <resultMap id="BaseResultMap" type="com.sudoku.model.entity.Role">
     <!--@Table `role`-->
     <id column="id" jdbcType="INTEGER" property="id"/>
     <result column="name" jdbcType="VARCHAR" property="name"/>
     <result column="nameZh" jdbcType="VARCHAR" property="nameZh"/>
   </resultMap>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List"/>
-    from `role`
-    where id = #{id,jdbcType=INTEGER}
+
+  <sql id="Base_Column_List">
+    id,
+    `name`,
+    nameZh
+  </sql>
+
+  <select id="selectByUserId" resultMap="BaseResultMap">
+    select r.*
+    from role r,
+         user_role ur
+    where ur.`rid` = r.`id`
+      and ur.`uid` = #{id,jdbcType=INTEGER};
   </select>
+
   <select id="selectIdsByNames" parameterType="list" resultType="java.lang.Integer">
     select `id`
     from role
@@ -50,34 +30,4 @@
       #{item,jdbcType=VARCHAR}
     </foreach>
   </select>
-  <select id="selectByUserId" resultMap="BaseResultMap">
-    select r.*
-    from role r,
-         user_role ur
-    where ur.`rid` = r.`id`
-      and ur.`uid` = #{id,jdbcType=INTEGER};
-  </select>
-  <sql id="Base_Column_List">
-    id,
-    `name`,
-    nameZh
-  </sql>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sudoku.model.entity.Role">
-    update `role`
-    <set>
-      <if test="name != null">
-        `name` = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="nameZh != null">
-        nameZh = #{nameZh,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.sudoku.model.entity.Role">
-    update `role`
-    set `name` = #{name,jdbcType=VARCHAR},
-        nameZh = #{nameZh,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
 </mapper>

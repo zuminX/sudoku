@@ -1,26 +1,9 @@
 package com.sudoku.mapper;
 
-import com.sudoku.model.bo.RankItemBO;
-import com.sudoku.model.entity.UserGameInformation;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.sudoku.model.bo.RankItemBO;import com.sudoku.model.entity.UserGameInformation;import java.util.List;import org.apache.ibatis.annotations.Param;
 
-/**
- * 用户游戏信息持久层
- */
-public interface UserGameInformationMapper {
-
-  int deleteByPrimaryKey(Integer id);
-
-  int insert(UserGameInformation record);
-
-  int insertSelective(UserGameInformation record);
-
-  UserGameInformation selectByPrimaryKey(Integer id);
-
-  int updateByPrimaryKeySelective(UserGameInformation record);
-
-  int updateByPrimaryKey(UserGameInformation record);
+public interface UserGameInformationMapper extends BaseMapper<UserGameInformation> {
 
   List<UserGameInformation> selectByUid(@Param("uid") Integer uid);
 
@@ -42,5 +25,4 @@ public interface UserGameInformationMapper {
 
   List<RankItemBO<Integer>> selectLimitNumberGroupBySlidOrderByCorrectNumber(
       @Param("limitNumber") Integer limitNumber);
-
 }

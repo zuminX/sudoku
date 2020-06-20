@@ -2,6 +2,7 @@ package com.sudoku.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sudoku.constant.consist.SettingParameter;
+import com.sudoku.model.bo.GameRecordBO;
 import com.sudoku.model.entity.User;
 import com.sudoku.model.vo.RankDataVO.RankItemVO;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpSession;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -85,6 +87,15 @@ public class CoreUtils {
   }
 
   /**
+   * 获取当前登录的用户的ID
+   *
+   * @return 用户ID
+   */
+  public static Integer getNowUserId() {
+    return getNowUser().getId();
+  }
+
+  /**
    * 填充排行项列表到设定的数量
    *
    * @param <T> 数据的类型
@@ -95,6 +106,26 @@ public class CoreUtils {
       rankItemVOArrayList.add(new RankItemVO<>(null, null));
     }
     return rankItemVOArrayList;
+  }
+
+  /**
+   * 判断游戏是否结束
+   *
+   * @param gameRecord 游戏记录传输层对象
+   * @return 游戏结束返回true，否则返回false
+   */
+  public static boolean isGameEnd(@NotNull GameRecordBO gameRecord) {
+    return gameRecord.getEndTime() != null;
+  }
+
+  /**
+   * 判断游戏是否开始
+   *
+   * @param gameRecord 游戏记录传输层对象
+   * @return 游戏开始返回true，否则返回false
+   */
+  public static boolean isGameStart(@NotNull GameRecordBO gameRecord) {
+    return !isGameEnd(gameRecord);
   }
 
 }

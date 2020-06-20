@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
       throw new UserException(StatusCode.USER_HAS_EQUAL_NAME);
     }
     //新增用户信息
+    user.setEnabled(true);
     userMapper.insert(user);
     //新增用户的角色信息
     insertUserRole(user);

@@ -1,5 +1,7 @@
 package com.sudoku.utils;
 
+import cn.hutool.core.util.ArrayUtil;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Random;
@@ -17,6 +19,32 @@ public class PublicUtils {
 
   static {
     RANDOM = new Random();
+  }
+
+  public static int[][] unwrap(ArrayList<ArrayList<Integer>> list) {
+    if (list == null) {
+      return null;
+    }
+    final int row = list.size();
+    if (row == 0) {
+      return null;
+    }
+    final int column = list.get(0).size();
+    if (column == 0) {
+      return null;
+    }
+
+    final int[][] result = new int[row][column];
+    for (int i = 0; i < row; i++) {
+      if (list.get(i).size() != column) {
+        return null;
+      }
+      for (int j = 0; j < column; j++) {
+        Integer element = list.get(i).get(j);
+        result[i][j] = element == null ? 0 : element;
+      }
+    }
+    return result;
   }
 
   /**

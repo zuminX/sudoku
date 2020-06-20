@@ -1,7 +1,9 @@
 package com.sudoku.handler;
 
+import static com.sudoku.constant.enums.StatusCode.ERROR;
+import static com.sudoku.constant.enums.StatusCode.INVALID_REQUEST_PARAM_ERROR;
+
 import cn.hutool.core.util.StrUtil;
-import com.sudoku.constant.enums.StatusCode;
 import com.sudoku.exception.LoginException;
 import com.sudoku.exception.UserException;
 import com.sudoku.model.vo.CommonResult;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class GlobalExceptionHandler {
 
+  private static final String INVALID_PARAM_TIP_TEMPLATE = "{}：{}";
+
   /**
    * 处理所有的异常类
    *
@@ -30,8 +34,8 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(value = Exception.class)
   public CommonResult<Exception> exceptionHandler(Exception e) {
     //记录异常日志
-    log.debug("[exceptionHandler]", e);
-    return CommonResult.error(StatusCode.ERROR);
+    log.debug("[所有异常处理]", e);
+    return CommonResult.error(ERROR);
   }
 
   /**
@@ -42,7 +46,7 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(value = UserException.class)
   public CommonResult<UserException> userExceptionHandler(UserException e) {
-    log.debug("[userExceptionHandler]", e);
+    log.debug("[用户异常处理]", e);
     return CommonResult.error(e.getStatusCode());
   }
 
@@ -54,7 +58,7 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(value = LoginException.class)
   public CommonResult<LoginException> loginExceptionHandler(LoginException e) {
-    log.debug("[loginExceptionHandler]", e);
+    log.debug("[登录异常处理]", e);
     return CommonResult.error(e.getStatusCode());
   }
 
@@ -66,10 +70,9 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(value = ConstraintViolationException.class)
   public CommonResult<ConstraintViolationException> constraintViolationExceptionHandler(ConstraintViolationException e) {
-    log.debug("[constraintViolationExceptionHandler]", e);
-    //拼接错误
-    String sb = e.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(";"));
-    return buildInvalidParamErrorCommonResult(sb);
+    log.debug("[参数校验异常处理]", e);
+    String error = e.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(";"));
+    return buildInvalidParamErrorCommonResult(error);
   }
 
   /**
@@ -80,27 +83,23 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(value = BindException.class)
   public CommonResult<BindException> bindExceptionHandler(BindException e) {
-    log.debug("[bindExceptionHandler]", e);
-    //拼接错误
-    String sb = e.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(";"));
-    return buildInvalidParamErrorCommonResult(sb);
+    log.debug("[参数校验异常处理]", e);
+    String error = e.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(";"));
+    return buildInvalidParamErrorCommonResult(error);
   }
 
   /**
    * 构建无效的参数的返回结果
    *
-   * @param sb  异常原因
-   * @param <T> 异常类型
+   * @param error 异常原因
+   * @param <T>   异常类型
    * @return 经过包装的结果对象
    */
-  private <T> CommonResult<T> buildInvalidParamErrorCommonResult(String sb) {
-    //若错误为空，则使用默认异常信息
-    if (StrUtil.isBlank(sb)) {
-      return CommonResult.error(StatusCode.INVALID_REQUEST_PARAM_ERROR);
-      //否则，添加上错误原因
-    } else {
-      return CommonResult.error(StatusCode.INVALID_REQUEST_PARAM_ERROR,
-          String.format("%s：%s", StatusCode.INVALID_REQUEST_PARAM_ERROR.getMessage(), sb));
+  private <T> CommonResult<T> buildInvalidParamErrorCommonResult(String error) {
+    String tip = null;
+    if (StrUtil.isNotBlank(error)) {
+      tip = StrUtil.format(INVALID_PARAM_TIP_TEMPLATE, INVALID_REQUEST_PARAM_ERROR.getMessage(), error);
     }
+    return CommonResult.error(INVALID_REQUEST_PARAM_ERROR, tip);
   }
 }

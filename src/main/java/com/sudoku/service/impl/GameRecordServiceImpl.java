@@ -15,7 +15,6 @@ import com.sudoku.model.vo.GameRecordPageVO;
 import com.sudoku.model.vo.GameRecordVO;
 import com.sudoku.service.GameRecordService;
 import com.sudoku.utils.CoreUtils;
-import java.util.Date;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,20 +39,23 @@ public class GameRecordServiceImpl implements GameRecordService {
   @Override
   public void saveGameRecord() {
     GameRecordBO gameRecordBO = (GameRecordBO) session.getAttribute(GAME_RECORD_KEY);
-    //根据结束时间判断游戏状态
-    Date endTime = gameRecordBO.getEndTime();
-    //开始游戏
-    if (endTime == null) {
-      //转换为对应表对象，并插入到数据库中
-      GameRecord gameRecord = GameRecordConvert.INSTANCE.convert(gameRecordBO);
-      gameRecordMapper.insertSelective(gameRecord);
-      //设置回填的ID，并保存到session中
-      gameRecordBO.setId(gameRecord.getId());
-      session.setAttribute(GAME_RECORD_KEY, gameRecordBO);
-      //游戏结束
+    if (CoreUtils.isGameEnd(gameRecordBO)) {
+      updateGameRecord(gameRecordBO);
     } else {
-      gameRecordMapper.updateEndTimeAndCorrectById(endTime, gameRecordBO.getCorrect(), gameRecordBO.getId());
+      insertGameRecord(gameRecordBO);
     }
+  }
+
+  private void insertGameRecord(GameRecordBO gameRecordBO) {
+    GameRecord gameRecord = GameRecordConvert.INSTANCE.convert(gameRecordBO);
+    gameRecordMapper.insertSelective(gameRecord);
+
+    gameRecordBO.setId(gameRecord.getId());
+    session.setAttribute(GAME_RECORD_KEY, gameRecordBO);
+  }
+
+  private void updateGameRecord(GameRecordBO gameRecordBO) {
+    gameRecordMapper.updateEndTimeAndCorrectById(gameRecordBO.getEndTime(), gameRecordBO.getCorrect(), gameRecordBO.getId());
   }
 
   /**

@@ -1,73 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sudoku.mapper.SudokuLevelMapper">
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete
-    from sudoku_level
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.entity.SudokuLevel" useGeneratedKeys="true">
-    insert into sudoku_level (`level`, `name`, min_empty,
-                              max_empty)
-    values (#{level,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{minEmpty,jdbcType=INTEGER},
-            #{maxEmpty,jdbcType=INTEGER})
-  </insert>
-  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.entity.SudokuLevel"
-    useGeneratedKeys="true">
-    insert into sudoku_level
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="level != null">
-        `level`,
-      </if>
-      <if test="name != null">
-        `name`,
-      </if>
-      <if test="minEmpty != null">
-        min_empty,
-      </if>
-      <if test="maxEmpty != null">
-        max_empty,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="level != null">
-        #{level,jdbcType=INTEGER},
-      </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="minEmpty != null">
-        #{minEmpty,jdbcType=INTEGER},
-      </if>
-      <if test="maxEmpty != null">
-        #{maxEmpty,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
   <resultMap id="BaseResultMap" type="com.sudoku.model.entity.SudokuLevel">
     <!--@Table sudoku_level-->
     <id column="id" jdbcType="INTEGER" property="id"/>
-    <result column="level" jdbcType="INTEGER" property="level"/>
+    <result column="level" jdbcType="BOOLEAN" property="level"/>
     <result column="name" jdbcType="VARCHAR" property="name"/>
-    <result column="min_empty" jdbcType="INTEGER" property="minEmpty"/>
-    <result column="max_empty" jdbcType="INTEGER" property="maxEmpty"/>
+    <result column="min_empty" jdbcType="BOOLEAN" property="minEmpty"/>
+    <result column="max_empty" jdbcType="BOOLEAN" property="maxEmpty"/>
   </resultMap>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List"/>
-    from sudoku_level
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select *
-    from sudoku_level;
-  </select>
-  <select id="selectByLevel" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List"/>
-    from sudoku_level
-    where `level` = #{level,jdbcType=INTEGER}
-  </select>
+
   <sql id="Base_Column_List">
     id,
     `level`,
@@ -76,31 +18,15 @@
     max_empty
   </sql>
 
-  <update id="updateByPrimaryKeySelective" parameterType="com.sudoku.model.entity.SudokuLevel">
-    update sudoku_level
-    <set>
-      <if test="level != null">
-        `level` = #{level,jdbcType=INTEGER},
-      </if>
-      <if test="name != null">
-        `name` = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="minEmpty != null">
-        min_empty = #{minEmpty,jdbcType=INTEGER},
-      </if>
-      <if test="maxEmpty != null">
-        max_empty = #{maxEmpty,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select *
+    from sudoku_level;
+  </select>
 
-  <update id="updateByPrimaryKey" parameterType="com.sudoku.model.entity.SudokuLevel">
-    update sudoku_level
-    set `level`   = #{level,jdbcType=INTEGER},
-        `name`    = #{name,jdbcType=VARCHAR},
-        min_empty = #{minEmpty,jdbcType=INTEGER},
-        max_empty = #{maxEmpty,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+  <select id="selectByLevel" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from sudoku_level
+    where `level` = #{level,jdbcType=INTEGER}
+  </select>
 </mapper>

@@ -36,7 +36,7 @@ spring:
       suffix: .html
 
 #mybatis配置
-mybatis:
+mybatis-plus:
   mapper-locations: classpath:mapperxml/*.xml
   type-aliases-package: com.sudoku.model.entity
   configuration:

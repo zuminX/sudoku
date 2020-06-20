@@ -53,19 +53,27 @@ public class LogAspect {
     }
     long spendTime = System.currentTimeMillis() - startTime;
     String logContent = buildLogContent(log, joinPoint.getArgs(), spendTime, throwable);
-    recordLog(logContent, spendTime, throwable != null);
+    if (throwable != null) {
+      recordSuccessLog(logContent, spendTime);
+    } else {
+      recordErrorLog(logContent);
+    }
   }
 
-  private void recordLog(String logContent, long spendTime, boolean hasError) {
-    if (hasError || spendTime > 5000) {
-      log.error(logContent);
-      return;
-    }
+  private void recordSuccessLog(String logContent, long spendTime) {
     if (spendTime < 1000) {
       log.info(logContent);
       return;
     }
-    log.warn(logContent);
+    if (spendTime < 5000) {
+      log.warn(logContent);
+      return;
+    }
+    log.error(logContent);
+  }
+
+  private void recordErrorLog(String logContent) {
+    log.error(logContent);
   }
 
   private String buildLogContent(Log log, Object[] paramsArray, long spendTime, Throwable throwable) {
@@ -114,10 +122,6 @@ public class LogAspect {
     Signature signature = joinPoint.getSignature();
     MethodSignature methodSignature = (MethodSignature) signature;
     Method method = methodSignature.getMethod();
-
-    if (method != null) {
-      return method.getAnnotation(Log.class);
-    }
-    return null;
+    return method != null ? method.getAnnotation(Log.class) : null;
   }
 }

@@ -1,5 +1,6 @@
 package com.sudoku.model.bo;
 
+import com.sudoku.utils.CoreUtils;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -45,4 +46,15 @@ public class GameRecordBO implements Serializable {
    * 用户ID
    */
   private Integer uid;
+
+  public static GameRecordBO buildInit(SudokuDataBO sudokuDataBO, Integer uid, Integer slid) {
+    return GameRecordBO.builder()
+        .sudokuDataBO(sudokuDataBO)
+        .startTime(new Date())
+        .correct(false)
+        .uid(uid)
+        .slid(slid)
+        .build();
+  }
+
 }

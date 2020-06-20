@@ -1,70 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sudoku.mapper.UserGameInformationMapper">
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete
-    from user_game_information
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.entity.UserGameInformation"
-    useGeneratedKeys="true">
-    insert into user_game_information (total, correct_number, average_spend_time,
-                                       min_spend_time, max_spend_time, `uid`,
-                                       slid)
-    values (#{total,jdbcType=INTEGER}, #{correctNumber,jdbcType=INTEGER}, #{averageSpendTime,jdbcType=INTEGER},
-            #{minSpendTime,jdbcType=INTEGER}, #{maxSpendTime,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER},
-            #{slid,jdbcType=INTEGER})
-  </insert>
-  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.entity.UserGameInformation"
-    useGeneratedKeys="true">
-    insert into user_game_information
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="total != null">
-        total,
-      </if>
-      <if test="correctNumber != null">
-        correct_number,
-      </if>
-      <if test="averageSpendTime != null">
-        average_spend_time,
-      </if>
-      <if test="minSpendTime != null">
-        min_spend_time,
-      </if>
-      <if test="maxSpendTime != null">
-        max_spend_time,
-      </if>
-      <if test="uid != null">
-        `uid`,
-      </if>
-      <if test="slid != null">
-        slid,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="total != null">
-        #{total,jdbcType=INTEGER},
-      </if>
-      <if test="correctNumber != null">
-        #{correctNumber,jdbcType=INTEGER},
-      </if>
-      <if test="averageSpendTime != null">
-        #{averageSpendTime,jdbcType=INTEGER},
-      </if>
-      <if test="minSpendTime != null">
-        #{minSpendTime,jdbcType=INTEGER},
-      </if>
-      <if test="maxSpendTime != null">
-        #{maxSpendTime,jdbcType=INTEGER},
-      </if>
-      <if test="uid != null">
-        #{uid,jdbcType=INTEGER},
-      </if>
-      <if test="slid != null">
-        #{slid,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
+  <resultMap id="BaseResultMap" type="com.sudoku.model.entity.UserGameInformation">
+    <!--@Table user_game_information-->
+    <id column="id" jdbcType="INTEGER" property="id"/>
+    <result column="total" jdbcType="INTEGER" property="total"/>
+    <result column="correct_number" jdbcType="INTEGER" property="correctNumber"/>
+    <result column="average_spend_time" jdbcType="INTEGER" property="averageSpendTime"/>
+    <result column="min_spend_time" jdbcType="INTEGER" property="minSpendTime"/>
+    <result column="max_spend_time" jdbcType="INTEGER" property="maxSpendTime"/>
+    <result column="uid" jdbcType="INTEGER" property="uid"/>
+    <result column="slid" jdbcType="INTEGER" property="slid"/>
+  </resultMap>
+
+  <resultMap id="RankItemBOMap" type="com.sudoku.model.bo.RankItemBO">
+    <!--@Table user_game_information-->
+    <result column="name" jdbcType="VARCHAR" property="sudokuLevelName"/>
+    <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+    <result column="data" jdbcType="INTEGER" property="data"/>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id,
+    total,
+    correct_number,
+    average_spend_time,
+    min_spend_time,
+    max_spend_time,
+    `uid`,
+    slid
+  </sql>
+
   <insert id="batchInsertByUserIdAndSlids">
     insert into user_game_information (`uid`, `slid`)
       values
@@ -79,41 +45,6 @@
     from sudoku_level
   </insert>
 
-  <resultMap id="BaseResultMap" type="com.sudoku.model.entity.UserGameInformation">
-    <!--@Table user_game_information-->
-    <id column="id" jdbcType="INTEGER" property="id"/>
-    <result column="total" jdbcType="INTEGER" property="total"/>
-    <result column="correct_number" jdbcType="INTEGER" property="correctNumber"/>
-    <result column="average_spend_time" jdbcType="INTEGER" property="averageSpendTime"/>
-    <result column="min_spend_time" jdbcType="INTEGER" property="minSpendTime"/>
-    <result column="max_spend_time" jdbcType="INTEGER" property="maxSpendTime"/>
-    <result column="uid" jdbcType="INTEGER" property="uid"/>
-    <result column="slid" jdbcType="INTEGER" property="slid"/>
-  </resultMap>
-  <resultMap id="AverageSpendTimeRankItemMap" type="com.sudoku.model.bo.RankItemBO">
-    <!--@Table user_game_information-->
-    <result column="name" jdbcType="VARCHAR" property="sudokuLevelName"/>
-    <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
-    <result column="average_spend_time" jdbcType="INTEGER" property="data"/>
-  </resultMap>
-  <resultMap id="MinSpendTimeRankItemMap" type="com.sudoku.model.bo.RankItemBO">
-    <!--@Table user_game_information-->
-    <result column="name" jdbcType="VARCHAR" property="sudokuLevelName"/>
-    <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
-    <result column="min_spend_time" jdbcType="INTEGER" property="data"/>
-  </resultMap>
-  <resultMap id="CorrectNumberRankItemMap" type="com.sudoku.model.bo.RankItemBO">
-    <!--@Table user_game_information-->
-    <result column="name" jdbcType="VARCHAR" property="sudokuLevelName"/>
-    <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
-    <result column="correct_number" jdbcType="INTEGER" property="data"/>
-  </resultMap>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List"/>
-    from user_game_information
-    where id = #{id,jdbcType=INTEGER}
-  </select>
   <select id="selectByUid" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
@@ -129,101 +60,65 @@
       and slid = #{slid,jdbcType=INTEGER}
   </select>
 
-  <select id="selectLimitNumberGroupBySlidOrderByAverageSpendTime" resultMap="AverageSpendTimeRankItemMap">
-    select sl.name, u.nickname, ugi.average_spend_time
+  <select id="selectLimitNumberGroupBySlidOrderByAverageSpendTime" resultMap="RankItemBOMap">
+    select sl.name, u.nickname, ugi.average_spend_time as data
     from user_game_information ugi
            inner join user u on ugi.uid = u.id
            inner join sudoku_level sl on ugi.slid = sl.id
-    where average_spend_time in
-          (select tmp.average_spend_time
-           from (select average_spend_time
-                 from user_game_information
-                 where ugi.slid = slid
-                 order by average_spend_time
-                 limit #{limitNumber, jdbcType=INTEGER}) tmp)
-    order by ugi.slid, ugi.average_spend_time
+    <where>
+      <include refid="RankTimeItemData">
+        <property name="itemName" value="average_spend_time"/>
+      </include>
+    </where>
   </select>
 
-  <select id="selectLimitNumberGroupBySlidOrderByMinSpendTime" resultMap="MinSpendTimeRankItemMap">
-    select sl.name, u.nickname, ugi.min_spend_time
+  <select id="selectLimitNumberGroupBySlidOrderByMinSpendTime" resultMap="RankItemBOMap">
+    select sl.name, u.nickname, ugi.min_spend_time as data
     from user_game_information ugi
            inner join user u on ugi.uid = u.id
            inner join sudoku_level sl on ugi.slid = sl.id
-    where min_spend_time in
-          (select tmp.min_spend_time
-           from (select min_spend_time
-                 from user_game_information
-                 where ugi.slid = slid
-                 order by min_spend_time
-                 limit #{limitNumber, jdbcType=INTEGER}) tmp)
-    order by ugi.slid, ugi.min_spend_time
+    <where>
+      <include refid="RankTimeItemData">
+        <property name="itemName" value="min_spend_time"/>
+      </include>
+    </where>
   </select>
 
-  <select id="selectLimitNumberGroupBySlidOrderByCorrectNumber" resultMap="CorrectNumberRankItemMap">
-    select sl.name, u.nickname, ugi.correct_number
+  <select id="selectLimitNumberGroupBySlidOrderByCorrectNumber" resultMap="RankItemBOMap">
+    select sl.name, u.nickname, ugi.correct_number as data
     from user_game_information ugi
            inner join user u on ugi.uid = u.id
            inner join sudoku_level sl on ugi.slid = sl.id
-    where correct_number in
-          (select tmp.correct_number
-           from (select correct_number
-                 from user_game_information
-                 where ugi.slid = slid
-                 order by correct_number
-                 limit #{limitNumber, jdbcType=INTEGER}) tmp)
-    order by ugi.slid, ugi.correct_number desc
+    <where>
+      <include refid="RankNumberItemData">
+        <property name="itemName" value="correct_number"/>
+      </include>
+    </where>
   </select>
 
-  <sql id="Base_Column_List">
-    id,
-    total,
-    correct_number,
-    average_spend_time,
-    min_spend_time,
-    max_spend_time,
-    `uid`,
-    slid
+  <sql id="RankNumberItemData">
+    ${itemName} in
+        (select tmp.${itemName}
+            from (select ${itemName}
+                from user_game_information
+                where ugi.slid = slid
+                  and ugi.${itemName} > 0
+                order by ${itemName} desc
+                limit #{limitNumber}) tmp)
+    order by ugi.slid, ugi.${itemName} desc
   </sql>
 
-  <update id="updateByPrimaryKeySelective" parameterType="com.sudoku.model.entity.UserGameInformation">
-    update user_game_information
-    <set>
-      <if test="total != null">
-        total = #{total,jdbcType=INTEGER},
-      </if>
-      <if test="correctNumber != null">
-        correct_number = #{correctNumber,jdbcType=INTEGER},
-      </if>
-      <if test="averageSpendTime != null">
-        average_spend_time = #{averageSpendTime,jdbcType=INTEGER},
-      </if>
-      <if test="minSpendTime != null">
-        min_spend_time = #{minSpendTime,jdbcType=INTEGER},
-      </if>
-      <if test="maxSpendTime != null">
-        max_spend_time = #{maxSpendTime,jdbcType=INTEGER},
-      </if>
-      <if test="uid != null">
-        `uid` = #{uid,jdbcType=INTEGER},
-      </if>
-      <if test="slid != null">
-        slid = #{slid,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-
-  <update id="updateByPrimaryKey" parameterType="com.sudoku.model.entity.UserGameInformation">
-    update user_game_information
-    set total              = #{total,jdbcType=INTEGER},
-        correct_number     = #{correctNumber,jdbcType=INTEGER},
-        average_spend_time = #{averageSpendTime,jdbcType=INTEGER},
-        min_spend_time     = #{minSpendTime,jdbcType=INTEGER},
-        max_spend_time     = #{maxSpendTime,jdbcType=INTEGER},
-        `uid`              = #{uid,jdbcType=INTEGER},
-        slid               = #{slid,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+  <sql id="RankTimeItemData">
+    ${itemName} in
+        (select tmp.${itemName}
+            from (select ${itemName}
+                from user_game_information
+                where ugi.slid = slid
+                  and ugi.${itemName} is not null
+                order by ${itemName}
+                limit #{limitNumber}) tmp)
+    order by ugi.slid, ugi.${itemName}
+  </sql>
 
   <update id="updateByUidAndSlid">
     update user_game_information
