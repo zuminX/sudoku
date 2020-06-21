@@ -31,6 +31,47 @@
     slid
   </sql>
 
+   <sql id="RankNumberItemData">
+    WITH tmp as (
+        select sl.name,
+               u.nickname,
+               ugi.slid,
+               ugi.${itemName},
+               row_number() over ( partition by sl.name order by ugi.${itemName} desc)
+                   as rn
+        from user_game_information ugi
+                 inner join user u on ugi.uid = u.id
+                 inner join sudoku_level sl on ugi.slid = sl.id
+        where ugi.${itemName} > 0
+    )
+  </sql>
+
+  <sql id="RankTimeItemData">
+    WITH tmp as (
+        select sl.name,
+               u.nickname,
+               ugi.slid,
+               ugi.${itemName},
+               row_number() over ( partition by sl.name order by ugi.${itemName})
+                   as rn
+        from user_game_information ugi
+                 inner join user u on ugi.uid = u.id
+                 inner join sudoku_level sl on ugi.slid = sl.id
+        where ugi.${itemName} is not null
+    )
+  </sql>
+
+  <sql id="RankItemCondition">
+    rn  <![CDATA[<]]>= ${limitNumber}
+    order by slid
+  </sql>
+
+   <sql id="Rank_Item_Column_List">
+    `name`,
+    `nickname`,
+    `rn`
+  </sql>
+
   <insert id="batchInsertByUserIdAndSlids">
     insert into user_game_information (`uid`, `slid`)
       values
@@ -60,65 +101,41 @@
       and slid = #{slid,jdbcType=INTEGER}
   </select>
 
-  <select id="selectLimitNumberGroupBySlidOrderByAverageSpendTime" resultMap="RankItemBOMap">
-    select sl.name, u.nickname, ugi.average_spend_time as data
-    from user_game_information ugi
-           inner join user u on ugi.uid = u.id
-           inner join sudoku_level sl on ugi.slid = sl.id
-    <where>
-      <include refid="RankTimeItemData">
-        <property name="itemName" value="average_spend_time"/>
-      </include>
-    </where>
+  <select id="selectAverageSpendTimeRanking" resultMap="RankItemBOMap">
+    <include refid="RankTimeItemData">
+      <property name="itemName" value="average_spend_time"/>
+    </include>
+      select average_spend_time as data,
+            <include refid="Rank_Item_Column_List" />
+      from tmp
+      <where>
+          <include refid="RankItemCondition" />
+      </where>
   </select>
 
-  <select id="selectLimitNumberGroupBySlidOrderByMinSpendTime" resultMap="RankItemBOMap">
-    select sl.name, u.nickname, ugi.min_spend_time as data
-    from user_game_information ugi
-           inner join user u on ugi.uid = u.id
-           inner join sudoku_level sl on ugi.slid = sl.id
-    <where>
-      <include refid="RankTimeItemData">
-        <property name="itemName" value="min_spend_time"/>
-      </include>
-    </where>
+  <select id="selectMinSpendTimeRanking" resultMap="RankItemBOMap">
+    <include refid="RankTimeItemData">
+      <property name="itemName" value="min_spend_time"/>
+    </include>
+      select min_spend_time as data,
+            <include refid="Rank_Item_Column_List" />
+      from tmp
+      <where>
+          <include refid="RankItemCondition" />
+      </where>
   </select>
 
-  <select id="selectLimitNumberGroupBySlidOrderByCorrectNumber" resultMap="RankItemBOMap">
-    select sl.name, u.nickname, ugi.correct_number as data
-    from user_game_information ugi
-           inner join user u on ugi.uid = u.id
-           inner join sudoku_level sl on ugi.slid = sl.id
-    <where>
-      <include refid="RankNumberItemData">
-        <property name="itemName" value="correct_number"/>
-      </include>
-    </where>
+  <select id="selectCorrectNumberRanking" resultMap="RankItemBOMap">
+    <include refid="RankNumberItemData">
+      <property name="itemName" value="correct_number"/>
+    </include>
+      select correct_number as data,
+            <include refid="Rank_Item_Column_List" />
+      from tmp
+      <where>
+          <include refid="RankItemCondition" />
+      </where>
   </select>
-
-  <sql id="RankNumberItemData">
-    ${itemName} in
-        (select tmp.${itemName}
-            from (select ${itemName}
-                from user_game_information
-                where ugi.slid = slid
-                  and ugi.${itemName} > 0
-                order by ${itemName} desc
-                limit #{limitNumber}) tmp)
-    order by ugi.slid, ugi.${itemName} desc
-  </sql>
-
-  <sql id="RankTimeItemData">
-    ${itemName} in
-        (select tmp.${itemName}
-            from (select ${itemName}
-                from user_game_information
-                where ugi.slid = slid
-                  and ugi.${itemName} is not null
-                order by ${itemName}
-                limit #{limitNumber}) tmp)
-    order by ugi.slid, ugi.${itemName}
-  </sql>
 
   <update id="updateByUidAndSlid">
     update user_game_information

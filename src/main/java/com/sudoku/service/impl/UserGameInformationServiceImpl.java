@@ -154,7 +154,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    */
   private RankDataVO<Integer> getCorrectNumberRankingList() {
     List<RankItemBO<Integer>> list = userGameInformationMapper
-        .selectLimitNumberGroupBySlidOrderByCorrectNumber(SettingParameter.RANKING_NUMBER);
+        .selectCorrectNumberRanking(SettingParameter.RANKING_NUMBER);
     return RankDataConvert.INSTANCE.convert(list, RankDataName.CORRECT_NUMBER);
   }
 
@@ -165,7 +165,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    */
   private RankDataVO<Integer> getMinSpendTimeRankingList() {
     List<RankItemBO<Integer>> list = userGameInformationMapper
-        .selectLimitNumberGroupBySlidOrderByMinSpendTime(SettingParameter.RANKING_NUMBER);
+        .selectMinSpendTimeRanking(SettingParameter.RANKING_NUMBER);
     return RankDataConvert.INSTANCE.convert(list, RankDataName.MIN_SPEND_TIME);
   }
 
@@ -176,7 +176,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    */
   private RankDataVO<Integer> getAverageSpendTimeRankingList() {
     List<RankItemBO<Integer>> list = userGameInformationMapper
-        .selectLimitNumberGroupBySlidOrderByAverageSpendTime(SettingParameter.RANKING_NUMBER);
+        .selectAverageSpendTimeRanking(SettingParameter.RANKING_NUMBER);
     return RankDataConvert.INSTANCE.convert(list, RankDataName.AVERAGE_SPEND_TIME);
   }
 

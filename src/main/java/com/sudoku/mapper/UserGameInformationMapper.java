@@ -17,12 +17,9 @@ public interface UserGameInformationMapper extends BaseMapper<UserGameInformatio
 
   int updateTotalByUidAndSlid(@Param("updatedTotal") Integer updatedTotal, @Param("uid") Integer uid, @Param("slid") Integer slid);
 
-  List<RankItemBO<Integer>> selectLimitNumberGroupBySlidOrderByAverageSpendTime(
-      @Param("limitNumber") Integer limitNumber);
+  List<RankItemBO<Integer>> selectAverageSpendTimeRanking(@Param("limitNumber") Integer limitNumber);
 
-  List<RankItemBO<Integer>> selectLimitNumberGroupBySlidOrderByMinSpendTime(
-      @Param("limitNumber") Integer limitNumber);
+  List<RankItemBO<Integer>> selectMinSpendTimeRanking(@Param("limitNumber") Integer limitNumber);
 
-  List<RankItemBO<Integer>> selectLimitNumberGroupBySlidOrderByCorrectNumber(
-      @Param("limitNumber") Integer limitNumber);
+  List<RankItemBO<Integer>> selectCorrectNumberRanking(@Param("limitNumber") Integer limitNumber);
 }
