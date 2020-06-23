@@ -9,6 +9,6 @@ public interface RoleMapper extends BaseMapper<Role> {
 
   List<Role> selectByUserId(Integer id);
 
-  @Cacheable(cacheNames = "roles", key = "#names")
+  @Cacheable(value = "rolesByNames", keyGenerator = "simpleKG")
   List<Integer> selectIdsByNames(List<String> names);
 }

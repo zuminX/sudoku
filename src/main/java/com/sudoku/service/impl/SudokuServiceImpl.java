@@ -147,7 +147,7 @@ public class SudokuServiceImpl implements SudokuService {
    */
   private AnswerSituation compareByGenerateAnswer(ArrayList<ArrayList<Integer>> userMatrix, SudokuDataBO sudokuDataBO) {
     int[][] matrix = sudokuDataBO.getMatrix();
-    int[][] holes = sudokuDataBO.getHoles();
+    boolean[][] holes = sudokuDataBO.getHoles();
 
     AnswerSituation situation = IDENTICAL;
     for (int i = 0; i < 9; i++) {

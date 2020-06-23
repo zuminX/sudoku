@@ -200,10 +200,9 @@ public class SudokuBuilder {
    * @param maxEmpty   最大的空缺格子数
    */
   private static void digHolesByGameDifficulty(SudokuDataBO sudokuDataBO, int minEmpty, int maxEmpty) {
-    int[][] holes = sudokuDataBO.getHoles();
-    //设置为1视为空缺格子
+    boolean[][] holes = sudokuDataBO.getHoles();
     for (int i = 0, random = getRandomInt(minEmpty, maxEmpty); i < random; i++) {
-      holes[i / 9][i % 9] = 1;
+      holes[i / 9][i % 9] = true;
     }
     //利用Knuth洗牌算法打乱数组
     randomizedArray(holes);

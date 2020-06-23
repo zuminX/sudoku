@@ -23,14 +23,14 @@ public class SudokuDataBO implements Serializable {
   /**
    * 题目空缺数组
    */
-  private int[][] holes;
+  private boolean[][] holes;
 
   /**
    * 无参构造方法
    */
   public SudokuDataBO() {
     matrix = new int[9][9];
-    holes = new int[9][9];
+    holes = new boolean[9][9];
   }
 
   /**
@@ -40,10 +40,8 @@ public class SudokuDataBO implements Serializable {
    */
   @JsonIgnore
   public SudokuDataBO getClone() {
-    //复制成员变量
     int[][] cloneMatrix = PublicUtils.getClone(this.matrix);
-    int[][] cloneHoles = PublicUtils.getClone(this.holes);
-    //返回复制后的数独数据
+    boolean[][] cloneHoles = PublicUtils.getClone(this.holes);
     return new SudokuDataBO(cloneMatrix, cloneHoles);
   }
 }

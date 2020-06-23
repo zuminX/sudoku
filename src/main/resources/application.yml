@@ -27,7 +27,7 @@ spring:
 
   #缓存配置
   cache:
-    type: ehcache
+    type: redis
 
   #SpringMVC设置
   mvc:

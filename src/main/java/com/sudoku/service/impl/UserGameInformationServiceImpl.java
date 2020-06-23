@@ -88,7 +88,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    * @return 排行数据显示层列表
    */
   @Override
-  @Cacheable(cacheNames = "rankList")
+  @Cacheable(value = "rankList", keyGenerator = "simpleKG")
   public List<RankDataVO<?>> getRankList() {
     List<RankDataVO<?>> rankList = new ArrayList<>(3);
     rankList.add(getCorrectNumberRankingList());

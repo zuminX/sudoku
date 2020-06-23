@@ -7,6 +7,6 @@ import org.springframework.cache.annotation.Cacheable;
 
 public interface ResourceMapper extends BaseMapper<Resource> {
 
-  @Cacheable(cacheNames = "resources")
+  @Cacheable(value = "resourcesWithRole", keyGenerator = "simpleKG")
   List<Resource> selectAllResourcesWithRole();
 }

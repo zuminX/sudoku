@@ -27,7 +27,7 @@ public interface UserGameInformationService {
    *
    * @return 排行数据显示层列表
    */
-  @Cacheable(cacheNames = "rankList")
+  @Cacheable(value = "rankList", keyGenerator = "simpleKG")
   List<RankDataVO<?>> getRankList();
 
   /**

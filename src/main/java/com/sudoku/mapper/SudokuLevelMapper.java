@@ -11,15 +11,15 @@ import org.springframework.cache.annotation.Cacheable;
 
 public interface SudokuLevelMapper extends BaseMapper<SudokuLevel> {
 
-  @Cacheable(cacheNames = "sudokuLevels")
+  @Cacheable(value = "sudokuLevels", keyGenerator = "simpleKG")
   List<SudokuLevel> selectAll();
 
-  @Cacheable(cacheNames = "sudokuLevelIdToNameMap")
+  @Cacheable(value = "sudokuLevelIdToNameMap", keyGenerator = "simpleKG")
   default Map<Integer, String> selectIdToName() {
     List<SudokuLevel> sudokuLevels = selectAll();
     return sudokuLevels.stream().collect(Collectors.toMap(SudokuLevel::getId, SudokuLevel::getName, (a, b) -> b, HashMap::new));
   }
 
-  @Cacheable(cacheNames = "sudokuLevel", key = "#level")
+  @Cacheable(cacheNames = "sudokuLevelByLevel", keyGenerator = "simpleKG")
   SudokuLevel selectByLevel(@Param("level") Integer level);
 }

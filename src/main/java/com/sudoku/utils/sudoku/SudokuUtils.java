@@ -17,7 +17,7 @@ public class SudokuUtils {
   public static SudokuDataBO generateSudokuTopic(SudokuDataBO sudokuDataBO) {
     //获取数独终盘的克隆对象
     SudokuDataBO sudokuDataBOClone = sudokuDataBO.getClone();
-    int[][] holes = sudokuDataBOClone.getHoles();
+    boolean[][] holes = sudokuDataBOClone.getHoles();
     int[][] matrix = sudokuDataBOClone.getMatrix();
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
@@ -94,11 +94,25 @@ public class SudokuUtils {
             .anyMatch(col -> row != i && col != j && matrix[row][col] == matrix[i][j]));
   }
 
-  public static boolean isHole(int[][] holes, int i, int j) {
-    return holes[i][j] == 1;
+  /**
+   * 判断指定位置是否为空缺格子
+   * @param holes 题目空缺数组
+   * @param i 行
+   * @param j 列
+   * @return 是空缺格子返回true，否则返回false
+   */
+  public static boolean isHole(boolean[][] holes, int i, int j) {
+    return holes[i][j];
   }
 
-  public static boolean isNotHole(int[][] holes, int i, int j) {
+  /**
+   * 判断指定位置是否不为空缺格子
+   * @param holes 题目空缺数组
+   * @param i 行
+   * @param j 列
+   * @return 不是空缺格子返回true，否则返回false
+   */
+  public static boolean isNotHole(boolean[][] holes, int i, int j) {
     return !isHole(holes, i, j);
   }
 
