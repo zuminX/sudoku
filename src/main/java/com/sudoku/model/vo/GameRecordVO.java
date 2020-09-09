@@ -1,19 +1,19 @@
 package com.sudoku.model.vo;
 
+import io.swagger.annotations.ApiModel;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * 游戏记录显示层
- */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@ApiModel("游戏记录显示类")
 public class GameRecordVO implements Serializable {
 
   private static final long serialVersionUID = -1976268450582740297L;
+
   /**
    * 数独矩阵
    */

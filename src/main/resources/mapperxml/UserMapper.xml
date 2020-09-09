@@ -10,6 +10,14 @@
     <result column="enabled" jdbcType="BOOLEAN" property="enabled"/>
   </resultMap>
 
+  <resultMap extends="BaseResultMap" id="UserWithRole" type="com.sudoku.model.entity.User">
+    <collection ofType="com.sudoku.model.entity.Role" property="roles">
+      <id column="rid" property="id"/>
+      <result column="rname" property="name"/>
+      <result column="rnameZh" property="nameZh"/>
+    </collection>
+  </resultMap>
+
   <sql id="Base_Column_List">
     id,
     username,
@@ -18,9 +26,17 @@
     enabled
   </sql>
 
-  <select id="findByUsername" resultMap="BaseResultMap">
+  <select id="selectByUsername" resultMap="BaseResultMap">
     select *
     from `user`
+    where username = #{username,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectWithRoleByUsername" resultMap="UserWithRole">
+    select user.*, r.`id` as rid, r.`name` as rname, r.name_zh as rnameZh
+    from user
+           inner join user_role ur on ur.user_id = user.id
+           inner join role r on r.`id` = ur.role_id
     where username = #{username,jdbcType=VARCHAR}
   </select>
 </mapper>

@@ -1,11 +1,8 @@
 package com.sudoku.service.impl;
 
-import static com.sudoku.constant.consist.SessionKey.GAME_RECORD_KEY;
-import static com.sudoku.constant.consist.SessionKey.IS_RECORD_KEY;
 import static com.sudoku.constant.enums.AnswerSituation.CORRECT;
 import static com.sudoku.constant.enums.AnswerSituation.ERROR;
 import static com.sudoku.constant.enums.AnswerSituation.IDENTICAL;
-import static com.sudoku.utils.CoreUtils.setSessionAttribute;
 import static com.sudoku.utils.PublicUtils.getRandomInt;
 import static com.sudoku.utils.sudoku.SudokuUtils.isNotHole;
 
@@ -18,13 +15,14 @@ import com.sudoku.model.bo.SudokuGridInformationBO;
 import com.sudoku.model.entity.SudokuLevel;
 import com.sudoku.model.vo.SubmitSudokuInformationVO;
 import com.sudoku.service.SudokuService;
-import com.sudoku.utils.CoreUtils;
+import com.sudoku.utils.GameUtils;
 import com.sudoku.utils.PublicUtils;
+import com.sudoku.utils.SecurityUtils;
 import com.sudoku.utils.sudoku.SudokuBuilder;
 import com.sudoku.utils.sudoku.SudokuUtils;
 import java.util.ArrayList;
 import java.util.Date;
-import javax.servlet.http.HttpSession;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +33,7 @@ import org.springframework.stereotype.Service;
 public class SudokuServiceImpl implements SudokuService {
 
   @Autowired
-  private HttpSession session;
+  private GameUtils gameUtils;
 
   /**
    * 生成数独题目
@@ -58,8 +56,8 @@ public class SudokuServiceImpl implements SudokuService {
    * @return 提示信息
    */
   @Override
-  public SudokuGridInformationBO getHelp(ArrayList<ArrayList<Integer>> userMatrix) {
-    GameRecordBO gameRecord = (GameRecordBO) session.getAttribute(GAME_RECORD_KEY);
+  public SudokuGridInformationBO getHelp(List<List<Integer>> userMatrix) {
+    GameRecordBO gameRecord = gameUtils.getGameRecord();
     ArrayList<SudokuGridInformationBO> errorGridInformationList = findErrorGridInformation(gameRecord.getSudokuDataBO(), userMatrix);
     return randomGridInformation(errorGridInformationList);
   }
@@ -72,15 +70,15 @@ public class SudokuServiceImpl implements SudokuService {
    * @return 用户答题情况
    */
   @Override
-  public SubmitSudokuInformationVO checkSudokuData(ArrayList<ArrayList<Integer>> userMatrix) {
-    GameRecordBO gameRecord = (GameRecordBO) session.getAttribute(GAME_RECORD_KEY);
+  public SubmitSudokuInformationVO checkSudokuData(List<List<Integer>> userMatrix) {
+    GameRecordBO gameRecord = gameUtils.getGameRecord();
     gameRecord.setEndTime(new Date());
 
     SudokuDataBO sudokuDataBO = gameRecord.getSudokuDataBO();
     AnswerSituation situation = judgeAnswerSituation(userMatrix, sudokuDataBO);
     gameRecord.setCorrect(situation.isRight());
 
-    setSessionAttribute(session, GAME_RECORD_KEY, gameRecord);
+    gameUtils.setGameRecord(gameRecord);
 
     return getUserAnswerResult(gameRecord, situation);
   }
@@ -93,7 +91,7 @@ public class SudokuServiceImpl implements SudokuService {
    */
   @Override
   public Boolean isRecordGameInformation() {
-    return (Boolean) session.getAttribute(IS_RECORD_KEY);
+    return gameUtils.getGameRecord().isRecord();
   }
 
   /**
@@ -115,12 +113,12 @@ public class SudokuServiceImpl implements SudokuService {
    * @return 用户答题情况
    */
   private SubmitSudokuInformationVO getUserAnswerResult(GameRecordBO gameRecord, AnswerSituation situation) {
-    SubmitSudokuInformationBO informationDTO = SubmitSudokuInformationBO.builder()
+    SubmitSudokuInformationBO informationBO = SubmitSudokuInformationBO.builder()
         .situation(situation)
         .matrix(gameRecord.getSudokuDataBO().getMatrix())
         .spendTime(PublicUtils.getTwoDateAbsDiff(gameRecord.getEndTime(), gameRecord.getStartTime()))
         .build();
-    return SubmitSudokuInformationConvert.INSTANCE.convert(informationDTO);
+    return SubmitSudokuInformationConvert.INSTANCE.convert(informationBO);
   }
 
   /**
@@ -130,7 +128,7 @@ public class SudokuServiceImpl implements SudokuService {
    * @param sudokuDataBO 数独数据
    * @return 用户答题状态
    */
-  private AnswerSituation judgeAnswerSituation(ArrayList<ArrayList<Integer>> userMatrix, SudokuDataBO sudokuDataBO) {
+  private AnswerSituation judgeAnswerSituation(List<List<Integer>> userMatrix, SudokuDataBO sudokuDataBO) {
     AnswerSituation situation = compareByGenerateAnswer(userMatrix, sudokuDataBO);
     if (situation.equals(CORRECT)) {
       return compareBySudokuRule(userMatrix);
@@ -145,7 +143,7 @@ public class SudokuServiceImpl implements SudokuService {
    * @param sudokuDataBO 数独数据
    * @return 用户答题状态
    */
-  private AnswerSituation compareByGenerateAnswer(ArrayList<ArrayList<Integer>> userMatrix, SudokuDataBO sudokuDataBO) {
+  private AnswerSituation compareByGenerateAnswer(List<List<Integer>> userMatrix, SudokuDataBO sudokuDataBO) {
     int[][] matrix = sudokuDataBO.getMatrix();
     boolean[][] holes = sudokuDataBO.getHoles();
 
@@ -173,20 +171,24 @@ public class SudokuServiceImpl implements SudokuService {
    * @param userMatrix 用户的数独矩阵数据
    * @return 用户答题状态
    */
-  private AnswerSituation compareBySudokuRule(ArrayList<ArrayList<Integer>> userMatrix) {
+  private AnswerSituation compareBySudokuRule(List<List<Integer>> userMatrix) {
     return SudokuUtils.checkSudokuValidity(PublicUtils.unwrap(userMatrix)) ? CORRECT : ERROR;
   }
 
   /**
    * 保存游戏记录
    *
-   * @param sudokuDataBO 数独数据
-   * @param slid         数独难度ID
-   * @param isRecord     是否记录
+   * @param sudokuDataBO  数独数据
+   * @param sudokuLevelId 数独难度ID
+   * @param isRecord      是否记录
    */
-  private void saveGameRecord(SudokuDataBO sudokuDataBO, Integer slid, Boolean isRecord) {
-    setSessionAttribute(session, GAME_RECORD_KEY, GameRecordBO.buildInit(sudokuDataBO, CoreUtils.getNowUserId(), slid));
-    setSessionAttribute(session, IS_RECORD_KEY, isRecord);
+  private void saveGameRecord(SudokuDataBO sudokuDataBO, Integer sudokuLevelId, Boolean isRecord) {
+    gameUtils.setGameRecord(GameRecordBO.initBuilder()
+        .sudokuDataBO(sudokuDataBO)
+        .sudokuLevelId(sudokuLevelId)
+        .userId(SecurityUtils.getUserId())
+        .isRecord(isRecord)
+        .build());
   }
 
   /**
@@ -196,8 +198,7 @@ public class SudokuServiceImpl implements SudokuService {
    * @param userMatrix   用户的数独矩阵数据
    * @return 用户错误的数独格子信息
    */
-  private ArrayList<SudokuGridInformationBO> findErrorGridInformation(SudokuDataBO sudokuDataBO,
-      ArrayList<ArrayList<Integer>> userMatrix) {
+  private ArrayList<SudokuGridInformationBO> findErrorGridInformation(SudokuDataBO sudokuDataBO, List<List<Integer>> userMatrix) {
     ArrayList<SudokuGridInformationBO> errorGridInformationList = new ArrayList<>();
     int[][] matrix = sudokuDataBO.getMatrix();
     for (int i = 0; i < 9; i++) {

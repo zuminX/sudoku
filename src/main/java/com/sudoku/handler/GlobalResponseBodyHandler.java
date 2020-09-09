@@ -1,6 +1,7 @@
 package com.sudoku.handler;
 
 import com.sudoku.model.vo.CommonResult;
+import java.io.Serializable;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -12,7 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 /**
  * 全局响应体处理器
  */
-@ControllerAdvice(basePackages = "com.sudoku.controller")
+@ControllerAdvice(basePackages = {"com.sudoku.controller", "com.sudoku.security.controller"})
 public class GlobalResponseBodyHandler implements ResponseBodyAdvice<Object> {
 
   /**
@@ -41,11 +42,10 @@ public class GlobalResponseBodyHandler implements ResponseBodyAdvice<Object> {
   @Override
   public Object beforeBodyWrite(Object body, @NotNull MethodParameter methodParameter, @NotNull MediaType mediaType, @NotNull Class aClass,
       @NotNull ServerHttpRequest serverHttpRequest, @NotNull ServerHttpResponse serverHttpResponse) {
-    //如果已经是包装类型，就不进行包装
     if (body instanceof CommonResult) {
       return body;
     }
-    //否则，将数据包装成成功响应对象
-    return CommonResult.success(body);
+    assert body instanceof Serializable;
+    return CommonResult.success((Serializable) body);
   }
 }

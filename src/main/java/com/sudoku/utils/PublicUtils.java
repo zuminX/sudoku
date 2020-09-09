@@ -1,8 +1,10 @@
 package com.sudoku.utils;
 
-import java.util.ArrayList;
+import static java.lang.reflect.Array.newInstance;
+
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -20,21 +22,34 @@ public class PublicUtils {
     RANDOM = new Random();
   }
 
-  public static int[][] unwrap(ArrayList<ArrayList<Integer>> list) {
+  /**
+   * 私有构造方法，防止实例化
+   */
+  private PublicUtils() {
+  }
+
+  /**
+   * 将二维Integer型List转为二维int数组
+   *
+   * @param list 列表
+   * @return 转换后的二维数组
+   */
+  public static int[][] unwrap(List<List<Integer>> list) {
+    int[][] empty = new int[0][0];
     if (list == null) {
-      return null;
+      return empty;
     }
     final int row = list.size();
     if (row == 0) {
-      return null;
+      return empty;
     }
     final int column = list.get(0).size();
     if (column == 0) {
-      return null;
+      return empty;
     }
     for (int i = 1; i < row; i++) {
       if (list.get(i).size() != column) {
-        return null;
+        return empty;
       }
     }
 
@@ -60,31 +75,21 @@ public class PublicUtils {
   }
 
   /**
-   * 深拷贝二维int型数组
+   * 深拷贝一个二维数组
    *
-   * @param src 源数据
-   * @return 深拷贝的二维int型数组
+   * @param <T>  泛型
+   * @param src  源数据
+   * @param type 一维数组的class对象
+   * @return 深拷贝的二维数组
    */
-  public static int[][] getClone(int[][] src) {
-    int[][] result = new int[src.length][src[0].length];
-    for (int i = 0, length = src.length; i < length; i++) {
-      System.arraycopy(src[i], 0, result[i], 0, result[0].length);
+  @SuppressWarnings("unchecked")
+  public static <T> T[] clone(T[] src, Class<T> type) {
+    if (src == null) {
+      return null;
     }
-    return result;
-  }
-
-  /**
-   * 深拷贝二维boolean型数组
-   *
-   * @param src 源数据
-   * @return 深拷贝的二维boolean型数组
-   */
-  public static boolean[][] getClone(boolean[][] src) {
-    boolean[][] result = new boolean[src.length][src[0].length];
-    for (int i = 0, length = src.length; i < length; i++) {
-      System.arraycopy(src[i], 0, result[i], 0, result[0].length);
-    }
-    return result;
+    T[] array = (T[]) newInstance(type, src.length);
+    System.arraycopy(src, 0, array, 0, array.length);
+    return array;
   }
 
   /**
@@ -93,25 +98,11 @@ public class PublicUtils {
    * @param array 待打乱的数组
    */
   public static void randomizedArray(int[] array) {
-    for (int i = array.length - 1, random; i >= 0; i--) {
-      random = getRandomInt(0, i);
+    for (int i = array.length - 1; i >= 0; i--) {
+      int random = getRandomInt(0, i);
       int temp = array[i];
       array[i] = array[random];
       array[random] = temp;
-    }
-  }
-
-  /**
-   * 利用Knuth洗牌算法打乱二维int型数组
-   *
-   * @param array 待打乱的数组
-   */
-  public static void randomizedArray(int[][] array) {
-    for (int row = array.length, column = array[0].length, random, i = row * column - 1; i >= 0; i--) {
-      random = getRandomInt(0, i);
-      int temp = array[i / row][i % column];
-      array[i / row][i % column] = array[random / row][random % column];
-      array[random / row][random % column] = temp;
     }
   }
 
@@ -121,8 +112,8 @@ public class PublicUtils {
    * @param array 待打乱的数组
    */
   public static void randomizedArray(boolean[][] array) {
-    for (int row = array.length, column = array[0].length, random, i = row * column - 1; i >= 0; i--) {
-      random = getRandomInt(0, i);
+    for (int row = array.length, column = array[0].length, i = row * column - 1; i >= 0; i--) {
+      int random = getRandomInt(0, i);
       boolean temp = array[i / row][i % column];
       array[i / row][i % column] = array[random / row][random % column];
       array[random / row][random % column] = temp;

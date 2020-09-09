@@ -4,13 +4,13 @@
   <resultMap id="BaseResultMap" type="com.sudoku.model.entity.ResourceRole">
     <!--@Table resource_role-->
     <id column="id" jdbcType="INTEGER" property="id"/>
-    <result column="rrid" jdbcType="INTEGER" property="rrid"/>
-    <result column="rid" jdbcType="INTEGER" property="rid"/>
+    <result column="resource_id" jdbcType="INTEGER" property="resourceId"/>
+    <result column="role_id" jdbcType="INTEGER" property="roleId"/>
   </resultMap>
 
   <sql id="Base_Column_List">
     id,
-    rrid,
-    rid
+    resource_id,
+    role_id
   </sql>
 </mapper>

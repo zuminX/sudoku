@@ -1,0 +1,38 @@
+package com.sudoku.security.model;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import java.io.Serializable;
+import javax.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ApiModel("登录用户信息体类")
+public class LoginBody implements Serializable {
+
+  private static final long serialVersionUID = 9125412007527553474L;
+
+  @ApiModelProperty(value = "用户名", required = true)
+  @NotEmpty(message = "用户名不能为空")
+  @Length(min = 4, max = 16, message = "用户名的长度为4-16位")
+  private String username;
+
+  @ApiModelProperty(value = "密码", required = true)
+  @NotEmpty(message = "密码不能为空")
+  @Length(min = 6, max = 32, message = "密码的长度为6-32位")
+  private String password;
+
+  @ApiModelProperty(value = "验证码", required = true)
+  @NotEmpty(message = "验证码不能为空")
+  @Length(min = 5, max = 5, message = "验证码必须为5位")
+  private String code;
+
+  @ApiModelProperty(value = "唯一标识", required = true)
+  @NotEmpty(message = "唯一标识不能为空")
+  private String uuid;
+}

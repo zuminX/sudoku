@@ -2,7 +2,6 @@ package com.sudoku.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sudoku.model.entity.SudokuLevel;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,9 +14,13 @@ public interface SudokuLevelMapper extends BaseMapper<SudokuLevel> {
   List<SudokuLevel> selectAll();
 
   @Cacheable(value = "sudokuLevelIdToNameMap", keyGenerator = "simpleKG")
-  default Map<Integer, String> selectIdToName() {
+  default Map<String, String> selectIdToName() {
     List<SudokuLevel> sudokuLevels = selectAll();
-    return sudokuLevels.stream().collect(Collectors.toMap(SudokuLevel::getId, SudokuLevel::getName, (a, b) -> b, HashMap::new));
+    //此处存在bug，redis返回的数据类型为Map<String,String>
+    return sudokuLevels.stream()
+                       .collect(
+                           Collectors.toMap(sudokuLevel -> String.valueOf(sudokuLevel.getId()), SudokuLevel::getName,
+                               (a, b) -> b));
   }
 
   @Cacheable(cacheNames = "sudokuLevelByLevel", keyGenerator = "simpleKG")

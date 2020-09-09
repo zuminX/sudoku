@@ -5,21 +5,21 @@
     <!--@Table `role`-->
     <id column="id" jdbcType="INTEGER" property="id"/>
     <result column="name" jdbcType="VARCHAR" property="name"/>
-    <result column="nameZh" jdbcType="VARCHAR" property="nameZh"/>
+    <result column="name_zh" jdbcType="VARCHAR" property="nameZh"/>
   </resultMap>
 
   <sql id="Base_Column_List">
     id,
     `name`,
-    nameZh
+    name_zh
   </sql>
 
   <select id="selectByUserId" resultMap="BaseResultMap">
     select r.*
     from role r,
          user_role ur
-    where ur.`rid` = r.`id`
-      and ur.`uid` = #{id,jdbcType=INTEGER};
+    where ur.role_id = r.`id`
+      and ur.user_id = #{id,jdbcType=INTEGER};
   </select>
 
   <select id="selectIdsByNames" parameterType="list" resultType="java.lang.Integer">

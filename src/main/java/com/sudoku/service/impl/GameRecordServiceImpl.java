@@ -1,21 +1,18 @@
 package com.sudoku.service.impl;
 
-import static com.sudoku.constant.consist.SessionKey.GAME_RECORD_KEY;
-
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.sudoku.convert.GameRecordConvert;
-import com.sudoku.convert.GameRecordPageConvert;
 import com.sudoku.log.BusinessType;
 import com.sudoku.log.Log;
 import com.sudoku.mapper.GameRecordMapper;
 import com.sudoku.model.bo.GameRecordBO;
 import com.sudoku.model.entity.GameRecord;
-import com.sudoku.model.vo.GameRecordPageVO;
 import com.sudoku.model.vo.GameRecordVO;
+import com.sudoku.model.vo.PageVO;
 import com.sudoku.service.GameRecordService;
-import com.sudoku.utils.CoreUtils;
-import javax.servlet.http.HttpSession;
+import com.sudoku.utils.GameUtils;
+import com.sudoku.utils.PageUtils;
+import com.sudoku.utils.PageUtils.PageParam;
+import com.sudoku.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,33 +24,43 @@ import org.springframework.transaction.annotation.Transactional;
 public class GameRecordServiceImpl implements GameRecordService {
 
   @Autowired
-  private HttpSession session;
-  @Autowired
   private GameRecordMapper gameRecordMapper;
+  @Autowired
+  private GameUtils gameUtils;
 
   /**
    * 保存游戏记录
    */
+  @Override
   @Transactional
   @Log(value = "保存游戏记录", businessType = BusinessType.SAVE)
-  @Override
   public void saveGameRecord() {
-    GameRecordBO gameRecordBO = (GameRecordBO) session.getAttribute(GAME_RECORD_KEY);
-    if (CoreUtils.isGameEnd(gameRecordBO)) {
+    GameRecordBO gameRecordBO = gameUtils.getGameRecord();
+    if (GameUtils.isGameEnd(gameRecordBO)) {
       updateGameRecord(gameRecordBO);
     } else {
       insertGameRecord(gameRecordBO);
     }
   }
 
+  /**
+   * 插入游戏记录
+   *
+   * @param gameRecordBO 游戏记录
+   */
   private void insertGameRecord(GameRecordBO gameRecordBO) {
     GameRecord gameRecord = GameRecordConvert.INSTANCE.convert(gameRecordBO);
     gameRecordMapper.insertSelective(gameRecord);
 
     gameRecordBO.setId(gameRecord.getId());
-    session.setAttribute(GAME_RECORD_KEY, gameRecordBO);
+    gameUtils.setGameRecord(gameRecordBO);
   }
 
+  /**
+   * 更新游戏记录
+   *
+   * @param gameRecordBO 游戏记录
+   */
   private void updateGameRecord(GameRecordBO gameRecordBO) {
     gameRecordMapper.updateEndTimeAndCorrectById(gameRecordBO.getEndTime(), gameRecordBO.getCorrect(), gameRecordBO.getId());
   }
@@ -66,10 +73,11 @@ public class GameRecordServiceImpl implements GameRecordService {
    * @return 游戏记录的分页信息
    */
   @Override
-  public GameRecordPageVO getHistoryGameRecord(Integer page, Integer pageSize) {
-    PageHelper.startPage(page, pageSize);
-    Integer uid = CoreUtils.getNowUser().getId();
-    PageInfo<GameRecordVO> gameRecordPageInfo = new PageInfo<>(gameRecordMapper.findByUidOrderByStartTimeDesc(uid));
-    return GameRecordPageConvert.INSTANCE.convert(gameRecordPageInfo);
+  public PageVO<GameRecordVO> getHistoryGameRecord(Integer page, Integer pageSize) {
+    return PageUtils.getPageVO(PageParam.<GameRecordVO>builder()
+        .queryFunc(() -> gameRecordMapper.findByUidOrderByStartTimeDesc(SecurityUtils.getUserId()))
+        .page(page)
+        .pageSize(pageSize)
+        .build());
   }
 }

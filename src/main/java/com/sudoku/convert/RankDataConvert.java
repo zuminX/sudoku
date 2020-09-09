@@ -3,7 +3,7 @@ package com.sudoku.convert;
 import com.sudoku.constant.consist.SettingParameter;
 import com.sudoku.model.bo.RankItemBO;
 import com.sudoku.model.vo.RankDataVO;
-import com.sudoku.model.vo.RankDataVO.RankItemVO;
+import com.sudoku.model.vo.RankItemVO;
 import com.sudoku.utils.CoreUtils;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -23,8 +23,8 @@ public interface RankDataConvert {
    * 将排行项传输层列表转换为排行数据显示层对象
    *
    * @param rankItemBOList 排行项传输层列表
-   * @param rankDataName    排行数据名称
-   * @param <T>             数据的类型
+   * @param rankDataName   排行数据名称
+   * @param <T>            数据的类型
    * @return 排行数据显示层对象
    */
   default <T> RankDataVO<T> convert(List<RankItemBO<T>> rankItemBOList, String rankDataName) {
@@ -38,8 +38,10 @@ public interface RankDataConvert {
       //若为最后一项，将其添加到Map中
       if (i == size - 1) {
         rankItemMap.put(levelName, CoreUtils.fillUpRankItemList(rankItemVOList));
-        //否则，若当前项的等级名称与下一项的等级名称不同，即将要进入新的等级
-      } else if (!levelName.equals(rankItemBOList.get(i + 1).getSudokuLevelName())) {
+        break;
+      }
+      //若当前项的等级名称与下一项的等级名称不同，即将要进入新的等级
+      if (!levelName.equals(rankItemBOList.get(i + 1).getSudokuLevelName())) {
         //将其添加到Mao中，并初始化排行项列表
         rankItemMap.put(levelName, CoreUtils.fillUpRankItemList(rankItemVOList));
         rankItemVOList = new ArrayList<>(SettingParameter.RANKING_NUMBER);

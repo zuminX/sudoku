@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
-import java.util.List;
 import lombok.Data;
 
 /**
@@ -15,7 +14,8 @@ import lombok.Data;
 @TableName(value = "`resource`")
 public class Resource implements Serializable {
 
-  private static final long serialVersionUID = 8877877758938672841L;
+  private static final long serialVersionUID = -7035970422635900016L;
+
   /**
    * 资源ID
    */
@@ -23,19 +23,15 @@ public class Resource implements Serializable {
   private Integer id;
 
   /**
-   * 资源路径
+   * 权限标识
    */
-  @TableField(value = "url")
-  private String url;
+  @TableField(value = "perms")
+  private String perms;
 
   /**
    * 资源名称
    */
-  @TableField(value = "nameZh")
+  @TableField(value = "name_zh")
   private String nameZh;
 
-  /**
-   * 角色列表
-   */
-  private List<Role> roles;
 }

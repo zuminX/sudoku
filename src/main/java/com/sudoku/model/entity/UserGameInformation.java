@@ -15,6 +15,7 @@ import lombok.Data;
 public class UserGameInformation implements Serializable {
 
   private static final long serialVersionUID = 4670246285232369453L;
+
   /**
    * 用户游戏信息的ID
    */
@@ -54,12 +55,12 @@ public class UserGameInformation implements Serializable {
   /**
    * 用户ID
    */
-  @TableField(value = "uid")
-  private Integer uid;
+  @TableField(value = "user_id")
+  private Integer userId;
 
   /**
    * 数独等级ID
    */
-  @TableField(value = "slid")
-  private Integer slid;
+  @TableField(value = "sudoku_level_id")
+  private Integer sudokuLevelId;
 }

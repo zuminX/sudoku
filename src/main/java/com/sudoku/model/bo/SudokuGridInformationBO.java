@@ -1,31 +1,26 @@
 package com.sudoku.model.bo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-/**
- * 数独格子的信息
- */
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
+@ApiModel("数独格子信息业务类")
 public class SudokuGridInformationBO implements Serializable {
 
   private static final long serialVersionUID = -4914426979421357329L;
-  /**
-   * 行数
-   */
+
+  @ApiModelProperty("行数")
   private int row;
-  /**
-   * 列数
-   */
+
+  @ApiModelProperty("列数")
   private int column;
-  /**
-   * 值
-   */
+
+  @ApiModelProperty("对应格子的数值")
   private int value;
 }

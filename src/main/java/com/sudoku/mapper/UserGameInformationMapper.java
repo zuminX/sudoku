@@ -1,21 +1,26 @@
 package com.sudoku.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.sudoku.model.bo.RankItemBO;import com.sudoku.model.entity.UserGameInformation;import java.util.List;import org.apache.ibatis.annotations.Param;
+import com.sudoku.model.bo.RankItemBO;
+import com.sudoku.model.entity.UserGameInformation;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserGameInformationMapper extends BaseMapper<UserGameInformation> {
 
-  List<UserGameInformation> selectByUid(@Param("uid") Integer uid);
+  List<UserGameInformation> selectByUserId(@Param("userId") Integer userId);
 
-  UserGameInformation selectByUidAndSlid(@Param("uid") Integer uid, @Param("slid") Integer slid);
+  UserGameInformation selectByUserIdAndSudokuLevelId(@Param("userId") Integer userId, @Param("sudokuLevelId") Integer sudokuLevelId);
 
-  int batchInsertByUserIdAndSlids(@Param("userId") Integer userId, @Param("lackSlids") List<Integer> lackSlids);
+  int batchInsertByUserIdAndSudokuLevelIds(@Param("userId") Integer userId, @Param("sudokuLevelIds") List<Integer> sudokuLevelIds);
 
   int insertDefaultByUserId(@Param("userId") Integer userId);
 
-  int updateByUidAndSlid(@Param("updated") UserGameInformation updated, @Param("uid") Integer uid, @Param("slid") Integer slid);
+  int updateByUserIdAndSudokuLevelId(@Param("updated") UserGameInformation updated, @Param("userId") Integer userId,
+      @Param("sudokuLevelId") Integer sudokuLevelId);
 
-  int updateTotalByUidAndSlid(@Param("updatedTotal") Integer updatedTotal, @Param("uid") Integer uid, @Param("slid") Integer slid);
+  int updateTotalByUserIdAndSudokuLevelId(@Param("updatedTotal") Integer updatedTotal, @Param("userId") Integer userId,
+      @Param("sudokuLevelId") Integer sudokuLevelId);
 
   List<RankItemBO<Integer>> selectAverageSpendTimeRanking(@Param("limitNumber") Integer limitNumber);
 

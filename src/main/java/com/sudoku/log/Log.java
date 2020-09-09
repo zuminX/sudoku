@@ -1,7 +1,8 @@
 package com.sudoku.log;
 
+import static java.lang.annotation.ElementType.METHOD;
+
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -9,7 +10,7 @@ import java.lang.annotation.Target;
 /**
  * 自定义操作日志记录注解
  */
-@Target({ElementType.METHOD})
+@Target(METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Log {

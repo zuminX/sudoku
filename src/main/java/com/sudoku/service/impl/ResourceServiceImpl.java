@@ -1,9 +1,11 @@
 package com.sudoku.service.impl;
 
 import com.sudoku.mapper.ResourceMapper;
-import com.sudoku.model.entity.Resource;
+import com.sudoku.model.entity.User;
 import com.sudoku.service.ResourceService;
-import java.util.List;
+import com.sudoku.utils.SecurityUtils;
+import java.util.Collections;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +21,14 @@ public class ResourceServiceImpl implements ResourceService {
   /**
    * 获取所有资源及其拥有的角色
    *
+   * @param user 用户对象
    * @return 资源列表
    */
   @Override
-  public List<Resource> getAllResourcesWithRole() {
-    return resourceMapper.selectAllResourcesWithRole();
+  public Set<String> getUserPermission(User user) {
+    if (SecurityUtils.isAdmin(user)) {
+      return Collections.singleton("*:*:*");
+    }
+    return resourceMapper.selectPermsByUserId(user.getId());
   }
 }

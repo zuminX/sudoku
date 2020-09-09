@@ -15,6 +15,7 @@ import lombok.Data;
 public class UserRole implements Serializable {
 
   private static final long serialVersionUID = -5198486341431696116L;
+
   /**
    * 用户角色ID
    */
@@ -24,18 +25,18 @@ public class UserRole implements Serializable {
   /**
    * 用户ID
    */
-  @TableField(value = "uid")
-  private Integer uid;
+  @TableField(value = "user_id")
+  private Integer userId;
 
   /**
    * 角色ID
    */
-  @TableField(value = "rid")
-  private Integer rid;
+  @TableField(value = "role_id")
+  private Integer roleId;
 
-  public UserRole(Integer uid, Integer rid) {
-    this.uid = uid;
-    this.rid = rid;
+  public UserRole(Integer userId, Integer roleId) {
+    this.userId = userId;
+    this.roleId = roleId;
   }
 
 }

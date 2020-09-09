@@ -28,7 +28,9 @@ public class SudokuLevelServiceImpl implements SudokuLevelService {
    */
   @Override
   public List<SudokuLevelVO> getSudokuLevels() {
-    return sudokuLevelMapper.selectAll().stream().map(SudokuLevelConvert.INSTANCE::convert).collect(Collectors.toList());
+    return sudokuLevelMapper.selectAll().stream()
+        .map(SudokuLevelConvert.INSTANCE::convert)
+        .collect(Collectors.toList());
   }
 
   /**
@@ -39,7 +41,6 @@ public class SudokuLevelServiceImpl implements SudokuLevelService {
    */
   @Override
   public SudokuLevel getSudokuLevel(int level) {
-    //根据难度级别查找对应的数独级别信息
     SudokuLevel sudokuLevel = sudokuLevelMapper.selectByLevel(level);
     if (sudokuLevel == null) {
       throw new GameException(StatusCode.GAME_NOT_LEVEL);

@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 /**
- * 游戏记录转换器
+ * 游戏记录对象转换器
  */
 @Mapper(imports = PublicUtils.class)
 public interface GameRecordConvert {

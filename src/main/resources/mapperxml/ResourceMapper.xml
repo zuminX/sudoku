@@ -4,29 +4,21 @@
   <resultMap id="BaseResultMap" type="com.sudoku.model.entity.Resource">
     <!--@Table `resource`-->
     <id column="id" jdbcType="INTEGER" property="id"/>
-    <result column="url" jdbcType="VARCHAR" property="url"/>
-    <result column="nameZh" jdbcType="VARCHAR" property="nameZh"/>
+    <result column="perms" jdbcType="VARCHAR" property="perms"/>
+    <result column="name_zh" jdbcType="VARCHAR" property="nameZh"/>
   </resultMap>
-
-  <resultMap extends="BaseResultMap" id="ResourceWithRole" type="com.sudoku.model.entity.Resource">
-    <collection ofType="com.sudoku.model.entity.Role" property="roles">
-      <id column="rid" property="id"/>
-      <result column="rname" property="name"/>
-      <result column="rnameZh" property="nameZh"/>
-    </collection>
-  </resultMap>
-
   <sql id="Base_Column_List">
     id,
-    url,
-    nameZh
+    perms,
+    name_zh
   </sql>
 
-  <select id="selectAllResourcesWithRole" resultMap="ResourceWithRole">
-    select resource.*, r.`id`, r.`name` as rname, r.`nameZh` as rnameZh
+  <select id="selectPermsByUserId" resultType="java.lang.String">
+    select distinct resource.perms, ur.user_id
     from resource
-           inner join resource_role rr on resource.`id` = rr.rrid
-           inner join role r on r.`id` = rr.rid
-    order by resource.`id`
+           inner join resource_role rr on resource.`id` = rr.resource_id
+           inner join role r on r.`id` = rr.role_id
+           inner join user_role ur on r.id = ur.role_id
+    where user_id = #{userId}
   </select>
 </mapper>

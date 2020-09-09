@@ -28,13 +28,4 @@ public class UserException extends BaseException {
     super(statusCode);
   }
 
-  /**
-   * 产生用户异常类的供应方法
-   *
-   * @param statusCode 状态编码
-   * @return 用户异常类的供应方法
-   */
-  public static Supplier<? extends UserException> of(StatusCode statusCode) {
-    return () -> new UserException(statusCode);
-  }
 }

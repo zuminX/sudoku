@@ -4,17 +4,17 @@ import com.sudoku.constant.enums.AnswerSituation;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * 用户答题情况传输层
+ * 用户答题情况业务类
  */
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Builder
 public class SubmitSudokuInformationBO implements Serializable {
 

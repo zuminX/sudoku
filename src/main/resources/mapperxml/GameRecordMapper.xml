@@ -9,8 +9,8 @@
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
     <result column="correct" jdbcType="BOOLEAN" property="correct"/>
-    <result column="slid" jdbcType="INTEGER" property="slid"/>
-    <result column="uid" jdbcType="INTEGER" property="uid"/>
+    <result column="sudoku_level_id" jdbcType="INTEGER" property="sudokuLevelId"/>
+    <result column="user_id" jdbcType="INTEGER" property="userId"/>
   </resultMap>
 
   <resultMap id="GameRecordVOMap" type="com.sudoku.model.vo.GameRecordVO">
@@ -29,8 +29,8 @@
     start_time,
     end_time,
     correct,
-    slid,
-    `uid`
+    sudoku_level_id,
+    user_id
   </sql>
 
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.entity.GameRecord"
@@ -52,11 +52,11 @@
       <if test="correct != null">
         correct,
       </if>
-      <if test="slid != null">
-        slid,
+      <if test="sudokuLevelId != null">
+        sudoku_level_id,
       </if>
-      <if test="uid != null">
-        `uid`,
+      <if test="userId != null">
+        user_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -75,11 +75,11 @@
       <if test="correct != null">
         #{correct,jdbcType=BOOLEAN},
       </if>
-      <if test="slid != null">
-        #{slid,jdbcType=INTEGER},
+      <if test="sudokuLevelId != null">
+        #{sudokuLevelId,jdbcType=INTEGER},
       </if>
-      <if test="uid != null">
-        #{uid,jdbcType=INTEGER},
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -92,15 +92,15 @@
            gr.correct,
            sl.name
     from game_record gr
-           inner join sudoku_level sl on gr.slid = sl.id
-    where `uid` = #{uid,jdbcType=INTEGER}
+           inner join sudoku_level sl on gr.sudoku_level_id = sl.id
+    where user_id = #{userId,jdbcType=INTEGER}
     order by start_time desc
   </select>
 
   <update id="updateEndTimeAndCorrectById">
     update game_record
-    set end_time=#{updatedEndTime,jdbcType=TIMESTAMP},
-        correct=#{updatedCorrect,jdbcType=BOOLEAN}
+    set end_time = #{updatedEndTime,jdbcType=TIMESTAMP},
+        correct = #{updatedCorrect,jdbcType=BOOLEAN}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

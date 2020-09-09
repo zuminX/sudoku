@@ -1,7 +1,5 @@
 package com.sudoku.service.impl;
 
-import static com.sudoku.constant.consist.SessionKey.GAME_RECORD_KEY;
-
 import com.sudoku.constant.consist.RankDataName;
 import com.sudoku.constant.consist.SettingParameter;
 import com.sudoku.convert.RankDataConvert;
@@ -17,14 +15,14 @@ import com.sudoku.model.entity.UserGameInformation;
 import com.sudoku.model.vo.RankDataVO;
 import com.sudoku.model.vo.UserGameInformationVO;
 import com.sudoku.service.UserGameInformationService;
-import com.sudoku.utils.CoreUtils;
+import com.sudoku.utils.GameUtils;
 import com.sudoku.utils.PublicUtils;
+import com.sudoku.utils.SecurityUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -37,22 +35,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserGameInformationServiceImpl implements UserGameInformationService {
 
   @Autowired
-  private HttpSession session;
-  @Autowired
   private UserGameInformationMapper userGameInformationMapper;
   @Autowired
   private SudokuLevelMapper sudokuLevelMapper;
+  @Autowired
+  private GameUtils gameUtils;
 
   /**
    * 更新用户游戏信息
    */
+  @Override
   @Transactional
   @Log(value = "更新用户游戏信息", businessType = BusinessType.UPDATE)
-  @Override
   public void updateUserGameInformation() {
-    GameRecordBO gameRecord = (GameRecordBO) session.getAttribute(GAME_RECORD_KEY);
-    UserGameInformation information = userGameInformationMapper.selectByUidAndSlid(gameRecord.getUid(), gameRecord.getSlid());
-    if (CoreUtils.isGameStart(gameRecord)) {
+    GameRecordBO gameRecord = gameUtils.getGameRecord();
+    UserGameInformation information = userGameInformationMapper.selectByUserIdAndSudokuLevelId(gameRecord.getUserId(),
+        gameRecord.getSudokuLevelId());
+    if (GameUtils.isGameStart(gameRecord)) {
       plusUserGameTotal(gameRecord, information.getTotal());
       return;
     }
@@ -66,18 +65,18 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    *
    * @return 用户游戏信息的显示层列表
    */
-  @Transactional
   @Override
+  @Transactional
   public List<UserGameInformationVO> getUserGameInformation() {
     //获取当前用户的游戏信息
-    Integer userId = CoreUtils.getNowUser().getId();
-    List<UserGameInformation> userGameInformationList = userGameInformationMapper.selectByUid(userId);
+    Integer userId = SecurityUtils.getUserId();
+    List<UserGameInformation> userGameInformationList = userGameInformationMapper.selectByUserId(userId);
     //获取数独级别列表
     List<SudokuLevel> sudokuLevels = sudokuLevelMapper.selectAll();
     //若当前用户的游戏信息比数独级别数少，则缺少了信息
     if (sudokuLevels.size() > userGameInformationList.size()) {
       insertUserLackSudokuLevelInformation(userGameInformationList, sudokuLevels, userId);
-      userGameInformationList = userGameInformationMapper.selectByUid(userId);
+      userGameInformationList = userGameInformationMapper.selectByUserId(userId);
     }
     return convertToUserGameInformationVOList(userGameInformationList);
   }
@@ -102,9 +101,9 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    *
    * @param id 用户ID
    */
+  @Override
   @Transactional
   @Log("初始化用户游戏信息")
-  @Override
   public void initUserGameInformation(Integer id) {
     userGameInformationMapper.insertDefaultByUserId(id);
   }
@@ -119,7 +118,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
   @Log(value = "插入用户缺少的数独等级信息", isSaveParameterData = false)
   private void insertUserLackSudokuLevelInformation(List<UserGameInformation> userGameInformationList, List<SudokuLevel> sudokuLevels,
       Integer userId) {
-    Set<Integer> slids = userGameInformationList.stream().map(UserGameInformation::getSlid).collect(Collectors.toSet());
+    Set<Integer> slids = userGameInformationList.stream().map(UserGameInformation::getSudokuLevelId).collect(Collectors.toSet());
     List<Integer> lackSlids = new ArrayList<>(sudokuLevels.size() - userGameInformationList.size());
     sudokuLevels.forEach(sudokuLevel -> {
       Integer slid = sudokuLevel.getId();
@@ -127,7 +126,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
         lackSlids.add(slid);
       }
     });
-    userGameInformationMapper.batchInsertByUserIdAndSlids(userId, lackSlids);
+    userGameInformationMapper.batchInsertByUserIdAndSudokuLevelIds(userId, lackSlids);
   }
 
   /**
@@ -138,10 +137,10 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    */
   private List<UserGameInformationVO> convertToUserGameInformationVOList(List<UserGameInformation> userGameInformationList) {
     List<UserGameInformationVO> list = new ArrayList<>();
-    Map<Integer, String> idToName = sudokuLevelMapper.selectIdToName();
+    Map<String, String> idToName = sudokuLevelMapper.selectIdToName();
     userGameInformationList.forEach(userGameInformation -> {
       UserGameInformationVO convert = UserGameInformationConvert.INSTANCE.convert(userGameInformation);
-      convert.setSudokuLevelName(idToName.get(userGameInformation.getSlid()));
+      convert.setSudokuLevelName(idToName.get(userGameInformation.getSudokuLevelId().toString()));
       list.add(convert);
     });
     return list;
@@ -153,8 +152,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    * @return 排行数据显示层
    */
   private RankDataVO<Integer> getCorrectNumberRankingList() {
-    List<RankItemBO<Integer>> list = userGameInformationMapper
-        .selectCorrectNumberRanking(SettingParameter.RANKING_NUMBER);
+    List<RankItemBO<Integer>> list = userGameInformationMapper.selectCorrectNumberRanking(SettingParameter.RANKING_NUMBER);
     return RankDataConvert.INSTANCE.convert(list, RankDataName.CORRECT_NUMBER);
   }
 
@@ -164,8 +162,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    * @return 排行数据显示层
    */
   private RankDataVO<Integer> getMinSpendTimeRankingList() {
-    List<RankItemBO<Integer>> list = userGameInformationMapper
-        .selectMinSpendTimeRanking(SettingParameter.RANKING_NUMBER);
+    List<RankItemBO<Integer>> list = userGameInformationMapper.selectMinSpendTimeRanking(SettingParameter.RANKING_NUMBER);
     return RankDataConvert.INSTANCE.convert(list, RankDataName.MIN_SPEND_TIME);
   }
 
@@ -175,8 +172,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    * @return 排行数据显示层
    */
   private RankDataVO<Integer> getAverageSpendTimeRankingList() {
-    List<RankItemBO<Integer>> list = userGameInformationMapper
-        .selectAverageSpendTimeRanking(SettingParameter.RANKING_NUMBER);
+    List<RankItemBO<Integer>> list = userGameInformationMapper.selectAverageSpendTimeRanking(SettingParameter.RANKING_NUMBER);
     return RankDataConvert.INSTANCE.convert(list, RankDataName.AVERAGE_SPEND_TIME);
   }
 
@@ -194,7 +190,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
     information.setMaxSpendTime(computeMaxSpendTime(spendTime, information.getMaxSpendTime()));
     information.setCorrectNumber(information.getCorrectNumber() + 1);
 
-    userGameInformationMapper.updateByUidAndSlid(information, gameRecord.getUid(), gameRecord.getSlid());
+    userGameInformationMapper.updateByUserIdAndSudokuLevelId(information, gameRecord.getUserId(), gameRecord.getSudokuLevelId());
   }
 
   /**
@@ -204,7 +200,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    * @param total      用户之前总数
    */
   private void plusUserGameTotal(GameRecordBO gameRecord, Integer total) {
-    userGameInformationMapper.updateTotalByUidAndSlid(total + 1, gameRecord.getUid(), gameRecord.getSlid());
+    userGameInformationMapper.updateTotalByUserIdAndSudokuLevelId(total + 1, gameRecord.getUserId(), gameRecord.getSudokuLevelId());
   }
 
   /**

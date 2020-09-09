@@ -9,8 +9,8 @@
     <result column="average_spend_time" jdbcType="INTEGER" property="averageSpendTime"/>
     <result column="min_spend_time" jdbcType="INTEGER" property="minSpendTime"/>
     <result column="max_spend_time" jdbcType="INTEGER" property="maxSpendTime"/>
-    <result column="uid" jdbcType="INTEGER" property="uid"/>
-    <result column="slid" jdbcType="INTEGER" property="slid"/>
+    <result column="user_id" jdbcType="INTEGER" property="userId"/>
+    <result column="sudoku_level_id" jdbcType="INTEGER" property="sudokuLevelId"/>
   </resultMap>
 
   <resultMap id="RankItemBOMap" type="com.sudoku.model.bo.RankItemBO">
@@ -27,21 +27,20 @@
     average_spend_time,
     min_spend_time,
     max_spend_time,
-    `uid`,
-    slid
+    user_id,
+    sudoku_level_id
   </sql>
 
    <sql id="RankNumberItemData">
     WITH tmp as (
         select sl.name,
                u.nickname,
-               ugi.slid,
+               ugi.sudoku_level_id,
                ugi.${itemName},
-               row_number() over ( partition by sl.name order by ugi.${itemName} desc)
-                   as rn
+               row_number() over ( partition by sl.name order by ugi.${itemName} desc) as rn
         from user_game_information ugi
-                 inner join user u on ugi.uid = u.id
-                 inner join sudoku_level sl on ugi.slid = sl.id
+                 inner join user u on ugi.user_id = u.id
+                 inner join sudoku_level sl on ugi.sudoku_level_id = sl.id
         where ugi.${itemName} > 0
     )
   </sql>
@@ -50,20 +49,19 @@
     WITH tmp as (
         select sl.name,
                u.nickname,
-               ugi.slid,
+               ugi.sudoku_level_id,
                ugi.${itemName},
-               row_number() over ( partition by sl.name order by ugi.${itemName})
-                   as rn
+               row_number() over ( partition by sl.name order by ugi.${itemName}) as rn
         from user_game_information ugi
-                 inner join user u on ugi.uid = u.id
-                 inner join sudoku_level sl on ugi.slid = sl.id
+                 inner join user u on ugi.user_id = u.id
+                 inner join sudoku_level sl on ugi.sudoku_level_id = sl.id
         where ugi.${itemName} is not null
     )
   </sql>
 
   <sql id="RankItemCondition">
     rn  <![CDATA[<]]>= ${limitNumber}
-    order by slid
+    order by sudoku_level_id
   </sql>
 
    <sql id="Rank_Item_Column_List">
@@ -72,33 +70,33 @@
     `rn`
   </sql>
 
-  <insert id="batchInsertByUserIdAndSlids">
-    insert into user_game_information (`uid`, `slid`)
+  <insert id="batchInsertByUserIdAndSudokuLevelIds">
+    insert into user_game_information (user_id, sudoku_level_id)
       values
-    <foreach collection="lackSlids" item="item" separator=",">
+    <foreach collection="sudokuLevelIds " item="item" separator=",">
       (#{userId,jdbcType=INTEGER}, #{item,jdbcType=INTEGER})
     </foreach>
   </insert>
 
   <insert id="insertDefaultByUserId">
-    insert into user_game_information (`uid`, `slid`)
-    select #{userId,jdbcType=INTEGER} as `uid`, `id` as `slid`
+    insert into user_game_information (user_id, sudoku_level_id)
+    select #{userId,jdbcType=INTEGER} as `user_id`, `id` as `sudoku_level_id`
     from sudoku_level
   </insert>
 
-  <select id="selectByUid" resultMap="BaseResultMap">
+  <select id="selectByUserId" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
     from user_game_information
-    where `uid` = #{uid,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER}
   </select>
 
-  <select id="selectByUidAndSlid" resultMap="BaseResultMap">
+  <select id="selectByUserIdAndSudokuLevelId" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
     from user_game_information
-    where `uid` = #{uid,jdbcType=INTEGER}
-      and slid = #{slid,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER}
+      and sudoku_level_id = #{sudokuLevelId,jdbcType=INTEGER}
   </select>
 
   <select id="selectAverageSpendTimeRanking" resultMap="RankItemBOMap">
@@ -137,7 +135,7 @@
       </where>
   </select>
 
-  <update id="updateByUidAndSlid">
+  <update id="updateByUserIdAndSudokuLevelId">
     update user_game_information
     <set>
       <if test="updated.id != null">
@@ -158,21 +156,21 @@
       <if test="updated.maxSpendTime != null">
         max_spend_time = #{updated.maxSpendTime,jdbcType=INTEGER},
       </if>
-      <if test="updated.uid != null">
-        uid = #{updated.uid,jdbcType=INTEGER},
+      <if test="updated.userId != null">
+        user_id = #{updated.userId,jdbcType=INTEGER},
       </if>
-      <if test="updated.slid != null">
-        slid = #{updated.slid,jdbcType=INTEGER},
+      <if test="updated.sudokuLevelId != null">
+        sudoku_level_id = #{updated.sudokuLevelId,jdbcType=INTEGER},
       </if>
     </set>
-    where `uid` = #{uid,jdbcType=INTEGER}
-      and slid = #{slid,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER}
+      and sudoku_level_id = #{sudokuLevelId,jdbcType=INTEGER}
   </update>
 
-  <update id="updateTotalByUidAndSlid">
+  <update id="updateTotalByUserIdAndSudokuLevelId">
     update user_game_information
     set total=#{updatedTotal,jdbcType=INTEGER}
-    where `uid` = #{uid,jdbcType=INTEGER}
-      and slid = #{slid,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER}
+      and sudoku_level_id = #{sudokuLevelId,jdbcType=INTEGER}
   </update>
 </mapper>

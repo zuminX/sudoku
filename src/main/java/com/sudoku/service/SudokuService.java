@@ -4,7 +4,7 @@ import com.sudoku.model.bo.SudokuDataBO;
 import com.sudoku.model.bo.SudokuGridInformationBO;
 import com.sudoku.model.entity.SudokuLevel;
 import com.sudoku.model.vo.SubmitSudokuInformationVO;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 数独业务层接口
@@ -26,7 +26,7 @@ public interface SudokuService {
    * @param userMatrix 用户的数独矩阵数据
    * @return 提示信息
    */
-  SudokuGridInformationBO getHelp(ArrayList<ArrayList<Integer>> userMatrix);
+  SudokuGridInformationBO getHelp(List<List<Integer>> userMatrix);
 
   /**
    * 检查用户的数独数据
@@ -34,7 +34,7 @@ public interface SudokuService {
    * @param userMatrix 用户的数独矩阵数据
    * @return 用户答题情况
    */
-  SubmitSudokuInformationVO checkSudokuData(ArrayList<ArrayList<Integer>> userMatrix);
+  SubmitSudokuInformationVO checkSudokuData(List<List<Integer>> userMatrix);
 
   /**
    * 是否记录游戏信息

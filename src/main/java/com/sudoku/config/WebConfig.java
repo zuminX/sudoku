@@ -20,9 +20,7 @@ public class WebConfig {
    */
   @Bean
   public WebServerFactoryCustomizer<ConfigurableWebServerFactory> webServerFactoryCustomizer() {
-    return factory -> {
-      factory.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/index.html"));
-    };
+    return factory -> factory.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/index.html"));
   }
 
 }

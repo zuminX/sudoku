@@ -49,6 +49,26 @@ pagehelper:
 #日志配置
 logging:
   level:
-    com.sudoku: info
+    com.sudoku: debug
     org.springframework: warn
 #    com.sudoku.mapper : debug
+
+#token配置
+token:
+  #令牌自定义标识
+  header: Authorization
+  #令牌秘钥
+  secret: abcdefghijklmnopqrstuvwxyz
+  #令牌有效期
+  expireTime: 30
+  #刷新令牌时间
+  refreshTime: 20
+
+#验证码配置
+captcha:
+  #长度
+  width: 112
+  #宽度
+  height: 36
+  #有效期
+  expireTime: 5

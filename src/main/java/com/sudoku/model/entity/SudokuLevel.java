@@ -15,6 +15,7 @@ import lombok.Data;
 public class SudokuLevel implements Serializable {
 
   private static final long serialVersionUID = -187769059852176191L;
+
   /**
    * 数独难度ID
    */

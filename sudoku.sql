@@ -22,9 +22,9 @@ VALUES (1, 'test1', '$2a$10$VaphyIrQ7C9aELKTx/Wh1.QqGVvBymhd57NrY/OoQhuAjMgNMoEO
 DROP TABLE IF EXISTS `user_role`;
 CREATE TABLE `user_role`
 (
-    `id`  int(11) NOT NULL AUTO_INCREMENT COMMENT '用户角色ID',
-    `uid` int(11) DEFAULT NULL COMMENT '用户ID',
-    `rid` int(11) DEFAULT NULL COMMENT '角色ID',
+    `id`      int(11) NOT NULL AUTO_INCREMENT COMMENT '用户角色ID',
+    `user_id` int(11) DEFAULT NULL COMMENT '用户ID',
+    `role_id` int(11) DEFAULT NULL COMMENT '角色ID',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
@@ -38,9 +38,9 @@ VALUES (1, 1, 1),
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role`
 (
-    `id`     int(11) NOT NULL AUTO_INCREMENT COMMENT '角色ID',
-    `name`   varchar(32) DEFAULT NULL COMMENT '角色名',
-    `nameZh` varchar(64) DEFAULT NULL COMMENT '角色名称',
+    `id`      int(11) NOT NULL AUTO_INCREMENT COMMENT '角色ID',
+    `name`    varchar(32) DEFAULT NULL COMMENT '角色名',
+    `name_zh` varchar(64) DEFAULT NULL COMMENT '角色名称',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
@@ -53,35 +53,50 @@ VALUES (1, 'ROLE_USER', '用户'),
 DROP TABLE IF EXISTS `resource`;
 CREATE TABLE `resource`
 (
-    `id`     int(11) NOT NULL AUTO_INCREMENT COMMENT '资源ID',
-    `url`    varchar(64) DEFAULT NULL COMMENT '资源路径',
-    `nameZh` varchar(64) DEFAULT NULL COMMENT '资源名称',
+    `id`      int(11) NOT NULL AUTO_INCREMENT COMMENT '资源ID',
+    `perms`   varchar(64) DEFAULT NULL COMMENT '权限标识',
+    `name_zh` varchar(64) DEFAULT NULL COMMENT '资源名称',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
 INSERT INTO `resource`
-VALUES (1, '/game/**', '数独游戏'),
-       (2, '/admin/**', '后台管理'),
-       (3, '/user/**', '用户信息');
+VALUES (1, 'sudoku:level:list', '数独等级列表'),
+       (2, 'sudoku:game:generator', '数独游戏生成'),
+       (3, 'sudoku:game:help', '数独游戏提示'),
+       (4, 'sudoku:game:check', '数独游戏检查'),
+       (5, 'sudoku:rank:list', '数独排行列表'),
+       (6, 'sudoku:user:information', '数独用户信息'),
+       (7, 'sudoku:user:record', '数独用户游戏记录'),
+       (8, 'system:user:add', '用户新增');
 
 
 DROP TABLE IF EXISTS `resource_role`;
 CREATE TABLE `resource_role`
 (
-    `id`   int(11) NOT NULL AUTO_INCREMENT COMMENT '资源角色ID',
-    `rrid` int(11) DEFAULT NULL COMMENT '资源ID',
-    `rid`  int(11) DEFAULT NULL COMMENT '角色ID',
+    `id`          int(11) NOT NULL AUTO_INCREMENT COMMENT '资源角色ID',
+    `resource_id` int(11) DEFAULT NULL COMMENT '资源ID',
+    `role_id`     int(11) DEFAULT NULL COMMENT '角色ID',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
 INSERT INTO `resource_role`
 VALUES (1, 1, 1),
-       (2, 3, 1),
-       (3, 1, 2),
-       (4, 2, 2),
-       (5, 3, 2);
+       (2, 2, 1),
+       (3, 3, 1),
+       (4, 4, 1),
+       (5, 5, 1),
+       (6, 6, 1),
+       (7, 7, 1),
+       (8, 8, 2),
+       (9, 1, 2),
+       (10, 2, 2),
+       (11, 3, 2),
+       (12, 4, 2),
+       (13, 5, 2),
+       (14, 6, 2),
+       (15, 7, 2);
 
 
 DROP TABLE IF EXISTS `sudoku_level`;
@@ -112,8 +127,8 @@ CREATE TABLE `user_game_information`
     `average_spend_time` int(11) DEFAULT NULL COMMENT '平均用时',
     `min_spend_time`     int(11) DEFAULT NULL COMMENT '最短用时',
     `max_spend_time`     int(11) DEFAULT NULL COMMENT '最长用时',
-    `uid`                int(11) DEFAULT NULL COMMENT '用户ID',
-    `slid`               int(11) DEFAULT NULL COMMENT '数独等级ID',
+    `user_id`            int(11) DEFAULT NULL COMMENT '用户ID',
+    `sudoku_level_id`    int(11) DEFAULT NULL COMMENT '数独等级ID',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
@@ -132,14 +147,14 @@ VALUES (1, 1, 1, 600000, 600000, 600000, 1, 1),
 DROP TABLE IF EXISTS `game_record`;
 CREATE TABLE `game_record`
 (
-    `id`            int(11) NOT NULL AUTO_INCREMENT COMMENT '游戏记录的ID',
-    `sudoku_matrix` char(81)   DEFAULT NULL COMMENT '数独矩阵',
-    `sudoku_holes`  char(81)   DEFAULT NULL COMMENT '空缺的数独',
-    `start_time`    DATETIME   DEFAULT NULL COMMENT '开始时间',
-    `end_time`      DATETIME   DEFAULT NULL COMMENT '结束时间',
-    `correct`       tinyint(1) DEFAULT 0 COMMENT '回答是否正确',
-    `slid`          int(11)    DEFAULT NULL COMMENT '数独难度ID',
-    `uid`           int(11)    DEFAULT NULL COMMENT '用户ID',
+    `id`              int(11) NOT NULL AUTO_INCREMENT COMMENT '游戏记录的ID',
+    `sudoku_matrix`   char(81)   DEFAULT NULL COMMENT '数独矩阵',
+    `sudoku_holes`    char(81)   DEFAULT NULL COMMENT '空缺的数独',
+    `start_time`      DATETIME   DEFAULT NULL COMMENT '开始时间',
+    `end_time`        DATETIME   DEFAULT NULL COMMENT '结束时间',
+    `correct`         tinyint(1) DEFAULT 0 COMMENT '回答是否正确',
+    `sudoku_level_id` int(11)    DEFAULT NULL COMMENT '数独难度ID',
+    `user_id`         int(11)    DEFAULT NULL COMMENT '用户ID',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;

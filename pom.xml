@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.2.5.RELEASE</version>
+    <version>2.3.1.RELEASE</version>
     <relativePath/>
   </parent>
   <groupId>com</groupId>
@@ -23,22 +23,45 @@
     <pagehelper.starter.version>1.2.13</pagehelper.starter.version>
     <swagger2.version>2.9.2</swagger2.version>
     <hutool.version>5.3.7</hutool.version>
+    <jwt.version>0.9.1</jwt.version>
+    <hibernate.validator.version>6.1.5.Final</hibernate.validator.version>
     <jetbrains.annotations.version>19.0.0</jetbrains.annotations.version>
     <maven-surefire.version>2.22.2</maven-surefire.version>
     <maven-compiler.version>3.8.1</maven-compiler.version>
   </properties>
 
   <dependencies>
+    <!-- hibernate 校验器 -->
+    <dependency>
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>${hibernate.validator.version}</version>
+    </dependency>
+
     <!-- SpringBoot 拦截器 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-aop</artifactId>
     </dependency>
 
+    <!-- Spring Boot 配置处理器 -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+
     <!-- spring security 安全认证 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+
+    <!--Token生成与解析-->
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt</artifactId>
+      <version>${jwt.version}</version>
     </dependency>
 
     <!-- SpringBoot Web容器 -->

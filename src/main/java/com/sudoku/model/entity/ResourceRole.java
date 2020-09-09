@@ -15,6 +15,7 @@ import lombok.Data;
 public class ResourceRole implements Serializable {
 
   private static final long serialVersionUID = -6996653235064535889L;
+
   /**
    * 资源角色ID
    */
@@ -24,12 +25,12 @@ public class ResourceRole implements Serializable {
   /**
    * 资源ID
    */
-  @TableField(value = "rrid")
-  private Integer rrid;
+  @TableField(value = "resource_id")
+  private Integer resourceId;
 
   /**
    * 角色ID
    */
-  @TableField(value = "rid")
-  private Integer rid;
+  @TableField(value = "role_id")
+  private Integer roleId;
 }

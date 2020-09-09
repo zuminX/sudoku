@@ -20,7 +20,7 @@
 
   <select id="selectAll" resultMap="BaseResultMap">
     select *
-    from sudoku_level;
+    from sudoku_level
   </select>
 
   <select id="selectByLevel" resultMap="BaseResultMap">

@@ -15,6 +15,7 @@ import lombok.Data;
 public class Role implements Serializable {
 
   private static final long serialVersionUID = -5419147180433797930L;
+
   /**
    * 角色ID
    */
@@ -30,6 +31,6 @@ public class Role implements Serializable {
   /**
    * 角色名称
    */
-  @TableField(value = "nameZh")
+  @TableField(value = "name_zh")
   private String nameZh;
 }

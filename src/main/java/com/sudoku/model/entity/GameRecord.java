@@ -16,6 +16,7 @@ import lombok.Data;
 public class GameRecord implements Serializable {
 
   private static final long serialVersionUID = 9118930828203696159L;
+
   /**
    * 游戏记录的ID
    */
@@ -55,12 +56,12 @@ public class GameRecord implements Serializable {
   /**
    * 数独难度ID
    */
-  @TableField(value = "slid")
-  private Integer slid;
+  @TableField(value = "sudoku_level_id")
+  private Integer sudokuLevelId;
 
   /**
    * 用户ID
    */
-  @TableField(value = "uid")
-  private Integer uid;
+  @TableField(value = "user_id")
+  private Integer userId;
 }

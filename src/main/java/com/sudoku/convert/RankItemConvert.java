@@ -1,7 +1,7 @@
 package com.sudoku.convert;
 
 import com.sudoku.model.bo.RankItemBO;
-import com.sudoku.model.vo.RankDataVO.RankItemVO;
+import com.sudoku.model.vo.RankItemVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

@@ -1,4 +1,4 @@
-package com.sudoku.model.vo;
+package com.sudoku.model.body;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,8 +12,8 @@ import org.hibernate.validator.constraints.Length;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@ApiModel("注册用户信息类")
-public class RegisterUserVO implements Serializable {
+@ApiModel("注册用户信息体类")
+public class RegisterUserBody implements Serializable {
 
   private static final long serialVersionUID = 7615402214779318417L;
 
@@ -36,4 +36,12 @@ public class RegisterUserVO implements Serializable {
   @NotEmpty(message = "昵称不能为空")
   @Length(min = 4, max = 32, message = "昵称的长度为4-32位")
   private String nickname;
+
+  @ApiModelProperty(value = "验证码", required = true)
+  @NotEmpty(message = "验证码不能为空")
+  @Length(min = 5, max = 5, message = "验证码必须为5位")
+  private String code;
+
+  @ApiModelProperty(value = "唯一标识", required = true)
+  private String uuid;
 }

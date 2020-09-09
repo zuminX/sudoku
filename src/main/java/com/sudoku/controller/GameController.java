@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,9 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * 数独游戏的控制类
- */
 @RestController
 @RequestMapping("/game")
 @Validated
@@ -46,12 +44,14 @@ public class GameController {
   private SudokuLevelService sudokuLevelService;
 
   @GetMapping("/sudokuLevels")
+  @PreAuthorize("@ss.hasPermission('sudoku:level:list')")
   @ApiOperation("获取数独的所有难度等级")
   public List<SudokuLevelVO> getSudokuLevels() {
     return sudokuLevelService.getSudokuLevels();
   }
 
   @GetMapping("/generateTopic")
+  @PreAuthorize("@ss.hasPermission('sudoku:game:generator')")
   @ApiOperation("生成数独题目")
   @ApiImplicitParams({@ApiImplicitParam(name = "level", value = "难度级别", dataTypeClass = Integer.class, required = true),
       @ApiImplicitParam(name = "isRecord", value = "是否记录", dataTypeClass = Boolean.class, required = true)})
@@ -63,24 +63,25 @@ public class GameController {
   }
 
   @PostMapping("/help")
+  @PreAuthorize("@ss.hasPermission('sudoku:game:help')")
   @ApiOperation("获取当前数独游戏的提示信息")
   @ApiImplicitParam(name = "userMatrix", value = "用户的数独矩阵数据", dataTypeClass = ArrayList.class, required = true)
-  public SudokuGridInformationBO getHelp(
-      @RequestBody @NotNull(message = "填写的数独矩阵数据不能为空") @IsSudokuMatrix ArrayList<ArrayList<Integer>> userMatrix) {
+  public SudokuGridInformationBO getHelp(@RequestBody @IsSudokuMatrix List<List<Integer>> userMatrix) {
     return sudokuService.getHelp(userMatrix);
   }
 
   @PostMapping("/check")
+  @PreAuthorize("@ss.hasPermission('sudoku:game:check')")
   @ApiOperation("检查用户的数独数据")
   @ApiImplicitParam(name = "userMatrix", value = "用户的数独矩阵数据", dataTypeClass = ArrayList.class, required = true)
-  public SubmitSudokuInformationVO checkSudokuData(
-      @RequestBody @NotNull(message = "填写的数独矩阵数据不能为空") @IsSudokuMatrix ArrayList<ArrayList<Integer>> userMatrix) {
+  public SubmitSudokuInformationVO checkSudokuData(@RequestBody @IsSudokuMatrix List<List<Integer>> userMatrix) {
     SubmitSudokuInformationVO submitSudokuInformationVO = sudokuService.checkSudokuData(userMatrix);
     saveGameInformation();
     return submitSudokuInformationVO;
   }
 
   @GetMapping("/rank")
+  @PreAuthorize("@ss.hasPermission('sudoku:rank:list')")
   @ApiOperation("获取排行列表数据")
   public List<RankDataVO<?>> getRankList() {
     return userGameInformationService.getRankList();

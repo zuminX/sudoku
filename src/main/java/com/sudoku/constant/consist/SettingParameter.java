@@ -5,8 +5,6 @@ package com.sudoku.constant.consist;
  */
 public class SettingParameter {
 
-  public static final Integer PAGE_SIZE = 5;
-
   public static final Integer RANKING_NUMBER = 3;
 
   private SettingParameter() {
