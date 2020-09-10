@@ -49,7 +49,7 @@ pagehelper:
 #日志配置
 logging:
   level:
-    com.sudoku: debug
+    com.sudoku: warn
     org.springframework: warn
 #    com.sudoku.mapper : debug
 
