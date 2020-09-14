@@ -14,8 +14,10 @@ import java.util.stream.Collectors;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -36,7 +38,7 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(value = Exception.class)
   public CommonResult<Exception> exceptionHandler(Exception e) {
-    log.debug("[所有异常处理]", e);
+    log.error("[所有异常处理]", e);
     return CommonResult.error(ERROR);
   }
 
@@ -93,8 +95,8 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(value = ConstraintViolationException.class)
   public CommonResult<ConstraintViolationException> constraintViolationExceptionHandler(ConstraintViolationException e) {
     log.debug("[参数校验异常]", e);
-    String error = e.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(";"));
-    return buildInvalidParamErrorCommonResult(error);
+    return buildInvalidParamErrorCommonResult(
+        e.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(";")));
   }
 
   /**
@@ -106,8 +108,22 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(value = BindException.class)
   public CommonResult<BindException> bindExceptionHandler(BindException e) {
     log.debug("[参数校验异常]", e);
-    String error = e.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(";"));
-    return buildInvalidParamErrorCommonResult(error);
+    return buildInvalidParamErrorCommonResult(
+        e.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(";")));
+  }
+
+  /**
+   * 处理参数校验异常类
+   *
+   * @param e 参数校验异常
+   * @return 经过包装的结果对象
+   */
+  @ExceptionHandler(value = MethodArgumentNotValidException.class)
+  public CommonResult<MethodArgumentNotValidException> bindExceptionHandler(MethodArgumentNotValidException e) {
+    log.debug("[参数校验异常]", e);
+    return buildInvalidParamErrorCommonResult(
+        e.getBindingResult().getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(
+            Collectors.joining(";")));
   }
 
   /**

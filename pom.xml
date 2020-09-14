@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.3.1.RELEASE</version>
+    <version>2.3.3.RELEASE</version>
     <relativePath/>
   </parent>
   <groupId>com</groupId>
@@ -15,8 +15,8 @@
   <description>Sudoku project for Spring Boot</description>
 
   <properties>
-    <java.version>1.8</java.version>
-    <jdk.version>8</jdk.version>
+    <java.version>11</java.version>
+    <jdk.version>11</jdk.version>
     <mapstruct.version>1.3.1.Final</mapstruct.version>
     <lombok.version>1.18.12</lombok.version>
     <mybatis.plus.starter.version>3.3.2</mybatis.plus.starter.version>
@@ -28,6 +28,10 @@
     <jetbrains.annotations.version>19.0.0</jetbrains.annotations.version>
     <maven-surefire.version>2.22.2</maven-surefire.version>
     <maven-compiler.version>3.8.1</maven-compiler.version>
+    <jaxb-api.version>2.3.0</jaxb-api.version>
+    <jaxb-impl.version>2.3.0</jaxb-impl.version>
+    <jaxb-core.version>2.3.0</jaxb-core.version>
+    <activation.version>1.1.1</activation.version>
   </properties>
 
   <dependencies>
@@ -164,6 +168,28 @@
       <groupId>cn.hutool</groupId>
       <artifactId>hutool-all</artifactId>
       <version>${hutool.version}</version>
+    </dependency>
+
+    <!-- 解决部署到Linux中出现NoClassDefFoundError: javax/xml/bind/DatatypeConverter的异常 -->
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>${jaxb-api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+      <version>${jaxb-impl.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-core</artifactId>
+      <version>${jaxb-core.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+      <version>${activation.version}</version>
     </dependency>
   </dependencies>
 
