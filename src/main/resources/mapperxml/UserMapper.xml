@@ -7,8 +7,19 @@
     <result column="username" jdbcType="VARCHAR" property="username"/>
     <result column="password" jdbcType="VARCHAR" property="password"/>
     <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
-    <result column="enabled" jdbcType="BOOLEAN" property="enabled"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <result column="recent_login_time" jdbcType="TIMESTAMP" property="recentLoginTime"/>
+    <result column="enabled" jdbcType="TINYINT" property="enabled"/>
   </resultMap>
+  <sql id="Base_Column_List">
+    id,
+    username,
+    `password`,
+    nickname,
+    create_time,
+    recent_login_time,
+    enabled
+  </sql>
 
   <resultMap extends="BaseResultMap" id="UserWithRole" type="com.sudoku.model.entity.User">
     <collection ofType="com.sudoku.model.entity.Role" property="roles">
@@ -17,14 +28,6 @@
       <result column="rnameZh" property="nameZh"/>
     </collection>
   </resultMap>
-
-  <sql id="Base_Column_List">
-    id,
-    username,
-    `password`,
-    nickname,
-    enabled
-  </sql>
 
   <select id="selectByUsername" resultMap="BaseResultMap">
     select *
@@ -39,4 +42,10 @@
            inner join role r on r.`id` = ur.role_id
     where username = #{username,jdbcType=VARCHAR}
   </select>
+
+  <update id="updateRecentLoginTimeById">
+    update `user`
+    set recent_login_time=#{updatedRecentLoginTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>

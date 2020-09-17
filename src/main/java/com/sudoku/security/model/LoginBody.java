@@ -29,7 +29,7 @@ public class LoginBody implements Serializable {
 
   @ApiModelProperty(value = "验证码", required = true)
   @NotEmpty(message = "验证码不能为空")
-  @Length(min = 5, max = 5, message = "验证码必须为5位")
+  @Length(min = 4, max = 4, message = "验证码必须为4位")
   private String code;
 
   @ApiModelProperty(value = "唯一标识", required = true)

@@ -106,7 +106,7 @@ public class GlobalExceptionHandler {
    * @return 经过包装的结果对象
    */
   @ExceptionHandler(value = BindException.class)
-  public CommonResult<BindException> bindExceptionHandler(BindException e) {
+  public CommonResult<java.net.BindException> bindExceptionHandler(BindException e) {
     log.debug("[参数校验异常]", e);
     return buildInvalidParamErrorCommonResult(
         e.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(";")));

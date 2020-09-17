@@ -28,12 +28,22 @@ public class CaptchaServiceImpl implements CaptchaService {
   /**
    * 验证码的宽度
    */
-  private int width;
+  private int width = 112;
 
   /**
    * 验证码的高度
    */
-  private int height;
+  private int height = 36;
+
+  /**
+   * 验证码字符的个数
+   */
+  private int codeNumber = 4;
+
+  /**
+   * 验证码干扰线的个数
+   */
+  private int lineCount = 100;
 
   /**
    * 验证码有效期(分钟)
@@ -50,7 +60,7 @@ public class CaptchaServiceImpl implements CaptchaService {
    */
   @Override
   public CaptchaVO generateCaptcha() {
-    LineCaptcha captcha = CaptchaUtil.createLineCaptcha(width, height);
+    LineCaptcha captcha = CaptchaUtil.createLineCaptcha(width, height, codeNumber, lineCount);
     String uuid = UUID.fastUUID().toString();
     redisUtils.setObject(getCaptchaKey(uuid), captcha.getCode(), expireTime, TimeUnit.MINUTES);
     return new CaptchaVO(uuid, captcha.getImageBase64());

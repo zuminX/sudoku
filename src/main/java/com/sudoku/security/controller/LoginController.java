@@ -5,6 +5,7 @@ import com.sudoku.security.model.LoginBody;
 import com.sudoku.security.model.LoginSuccessVO;
 import com.sudoku.security.service.CaptchaService;
 import com.sudoku.security.service.LoginService;
+import com.sudoku.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -26,13 +27,17 @@ public class LoginController {
   private LoginService loginService;
   @Autowired
   private CaptchaService captchaService;
+  @Autowired
+  private UserService userService;
 
   @PostMapping("/login")
   @ApiOperation("登录")
   @ApiImplicitParam(name = "loginBody", value = "loginBody", dataTypeClass = LoginBody.class, required = true)
   public CommonResult<LoginSuccessVO> login(@RequestBody @Valid LoginBody loginBody) {
     captchaService.checkCaptcha(loginBody.getUuid(), loginBody.getCode());
+    LoginSuccessVO login = loginService.login(loginBody);
+    userService.updateRecentLoginTime(login.getUser().getId());
     //必须手动包装，否则会产生bug
-    return CommonResult.success(loginService.login(loginBody));
+    return CommonResult.success(login);
   }
 }

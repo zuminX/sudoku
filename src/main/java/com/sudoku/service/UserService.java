@@ -24,4 +24,11 @@ public interface UserService {
    * @return 用户对象
    */
   User selectWithRoleByUsername(String username);
+
+  /**
+   * 更新用户最近登录的时间
+   *
+   * @param userId 用户ID
+   */
+  void updateRecentLoginTime(Integer userId);
 }

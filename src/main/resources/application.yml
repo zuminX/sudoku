@@ -29,12 +29,6 @@ spring:
   cache:
     type: redis
 
-  #SpringMVC设置
-  mvc:
-    view:
-      prefix: /
-      suffix: .html
-
 #mybatis配置
 mybatis-plus:
   mapper-locations: classpath:mapperxml/*.xml
@@ -70,5 +64,9 @@ captcha:
   width: 112
   #宽度
   height: 36
+  #字符个数
+  codeNumber: 4
+  #干扰线个数
+  lineCount: 100
   #有效期
   expireTime: 5

@@ -17,6 +17,7 @@ import com.sudoku.model.vo.UserVO;
 import com.sudoku.service.UserService;
 import com.sudoku.utils.SecurityUtils;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,6 +68,16 @@ public class UserServiceImpl implements UserService {
   @Override
   public User selectWithRoleByUsername(String username) {
     return userMapper.selectWithRoleByUsername(username);
+  }
+
+  /**
+   * 更新用户最近登录的时间
+   *
+   * @param userId 用户ID
+   */
+  @Override
+  public void updateRecentLoginTime(Integer userId) {
+    userMapper.updateRecentLoginTimeById(new Date(), userId);
   }
 
   /**

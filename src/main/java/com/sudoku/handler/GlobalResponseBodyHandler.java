@@ -45,9 +45,6 @@ public class GlobalResponseBodyHandler implements ResponseBodyAdvice<Object> {
     if (body instanceof CommonResult) {
       return body;
     }
-    if (!(body instanceof Serializable)) {
-      throw new AssertionError("出现非可序列化的对象：" + body);
-    }
-    return CommonResult.success((Serializable) body);
+    return CommonResult.success(body);
   }
 }

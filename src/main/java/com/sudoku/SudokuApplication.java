@@ -3,12 +3,13 @@ package com.sudoku;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
 
 /**
  * 数独游戏服务器的启动类
  */
-@SpringBootApplication
+@SpringBootApplication()
 @EnableCaching
 @MapperScan("com.sudoku.mapper")
 public class SudokuApplication {
