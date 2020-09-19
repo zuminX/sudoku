@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sudoku.mapper.ResourceMapper">
-  <resultMap id="BaseResultMap" type="com.sudoku.model.entity.Resource">
+<mapper namespace="com.sudoku.project.mapper.ResourceMapper">
+  <resultMap id="BaseResultMap" type="com.sudoku.project.model.entity.Resource">
     <!--@Table `resource`-->
     <id column="id" jdbcType="INTEGER" property="id"/>
     <result column="perms" jdbcType="VARCHAR" property="perms"/>

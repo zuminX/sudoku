@@ -32,7 +32,7 @@ spring:
 #mybatis配置
 mybatis-plus:
   mapper-locations: classpath:mapperxml/*.xml
-  type-aliases-package: com.sudoku.model.entity
+  type-aliases-package: com.sudoku.project.model.entity
   configuration:
     use-generated-keys: true
 
@@ -45,7 +45,7 @@ logging:
   level:
     com.sudoku: warn
     org.springframework: warn
-#    com.sudoku.mapper : debug
+#    com.sudoku.project.mapper : debug
 
 #token配置
 token:

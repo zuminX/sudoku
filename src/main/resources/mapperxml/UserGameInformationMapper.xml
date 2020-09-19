@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sudoku.mapper.UserGameInformationMapper">
-  <resultMap id="BaseResultMap" type="com.sudoku.model.entity.UserGameInformation">
+<mapper namespace="com.sudoku.project.mapper.UserGameInformationMapper">
+  <resultMap id="BaseResultMap" type="com.sudoku.project.model.entity.UserGameInformation">
     <!--@Table user_game_information-->
     <id column="id" jdbcType="INTEGER" property="id"/>
     <result column="total" jdbcType="INTEGER" property="total"/>
@@ -13,7 +13,7 @@
     <result column="sudoku_level_id" jdbcType="INTEGER" property="sudokuLevelId"/>
   </resultMap>
 
-  <resultMap id="RankItemBOMap" type="com.sudoku.model.bo.RankItemBO">
+  <resultMap id="RankItemBOMap" type="com.sudoku.project.model.bo.RankItemBO">
     <!--@Table user_game_information-->
     <result column="name" jdbcType="VARCHAR" property="sudokuLevelName"/>
     <result column="nickname" jdbcType="VARCHAR" property="nickname"/>

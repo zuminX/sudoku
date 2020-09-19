@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sudoku.mapper.StatisticsUserMapper">
-  <resultMap id="StatisticsUserDataBOResult" type="com.sudoku.model.bo.StatisticsUserDataBO">
+<mapper namespace="com.sudoku.project.mapper.StatisticsUserMapper">
+  <resultMap id="StatisticsUserDataBOResult" type="com.sudoku.project.model.bo.StatisticsUserDataBO">
     <result column="user_total" property="userTotal"/>
     <result column="user_active_total" property="userActiveTotal"/>
   </resultMap>
-  <resultMap id="BaseResultMap" type="com.sudoku.model.entity.StatisticsUser">
+  <resultMap id="BaseResultMap" type="com.sudoku.project.model.entity.StatisticsUser">
     <!--@Table statistics_user-->
     <id column="id" jdbcType="INTEGER" property="id"/>
     <result column="user_total" jdbcType="INTEGER" property="userTotal"/>

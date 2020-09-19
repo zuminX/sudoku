@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sudoku.mapper.GameRecordMapper">
-  <resultMap id="BaseResultMap" type="com.sudoku.model.entity.GameRecord">
+<mapper namespace="com.sudoku.project.mapper.GameRecordMapper">
+  <resultMap id="BaseResultMap" type="com.sudoku.project.model.entity.GameRecord">
     <!--@Table game_record-->
     <id column="id" jdbcType="INTEGER" property="id"/>
     <result column="sudoku_matrix" jdbcType="CHAR" property="sudokuMatrix"/>
@@ -13,7 +13,7 @@
     <result column="user_id" jdbcType="INTEGER" property="userId"/>
   </resultMap>
 
-  <resultMap id="GameRecordVOMap" type="com.sudoku.model.vo.GameRecordVO">
+  <resultMap id="GameRecordVOMap" type="com.sudoku.project.model.vo.GameRecordVO">
     <result column="sudoku_matrix" property="sudokuMatrix"/>
     <result column="sudoku_holes" property="sudokuHoles"/>
     <result column="start_time" property="startTime"/>
@@ -33,7 +33,7 @@
     user_id
   </sql>
 
-  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.sudoku.model.entity.GameRecord"
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.sudoku.project.model.entity.GameRecord"
     useGeneratedKeys="true">
     insert into game_record
     <trim prefix="(" suffix=")" suffixOverrides=",">

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sudoku.mapper.UserMapper">
-  <resultMap id="BaseResultMap" type="com.sudoku.model.entity.User">
+<mapper namespace="com.sudoku.project.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.sudoku.project.model.entity.User">
     <!--@Table `user`-->
     <id column="id" jdbcType="INTEGER" property="id"/>
     <result column="username" jdbcType="VARCHAR" property="username"/>
@@ -21,8 +21,8 @@
     enabled
   </sql>
 
-  <resultMap extends="BaseResultMap" id="UserWithRole" type="com.sudoku.model.entity.User">
-    <collection ofType="com.sudoku.model.entity.Role" property="roles">
+  <resultMap extends="BaseResultMap" id="UserWithRole" type="com.sudoku.project.model.entity.User">
+    <collection ofType="com.sudoku.project.model.entity.Role" property="roles">
       <id column="rid" property="id"/>
       <result column="rname" property="name"/>
       <result column="rnameZh" property="nameZh"/>
