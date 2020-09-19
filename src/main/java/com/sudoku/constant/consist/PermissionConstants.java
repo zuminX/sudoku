@@ -15,7 +15,7 @@ public class PermissionConstants {
 
   public static final List<String> USER_ROLE_NAME = Collections.singletonList(USER_NAME);
 
-  public static final List<String> ADMIN_ROLE_NAME = Collections.unmodifiableList(Arrays.asList(ADMIN_NAME, USER_NAME));
+  public static final List<String> ADMIN_ROLE_NAME = List.of(ADMIN_NAME, USER_NAME);
 
   public static final String ADMIN_PERMISSION = "*:*:*";
 

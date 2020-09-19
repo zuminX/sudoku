@@ -1,53 +1,42 @@
 package com.sudoku.model.vo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * 分页数据显示层类
- *
- * @param <T> 数据类型
- */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@ApiModel("分页数据显示层类")
 public class PageVO<T> implements Serializable {
 
   private static final long serialVersionUID = 4427124527401721636L;
 
-  /**
-   * 分页信息
-   */
+  @ApiModelProperty("分页信息")
   private PageInformation pageInformation;
 
-  /**
-   * 分页数据
-   */
+  @ApiModelProperty("分页数据")
   private List<T> list;
 
   @NoArgsConstructor
   @AllArgsConstructor
   @Data
+  @ApiModel("分页信息类")
   public static class PageInformation implements Serializable {
 
     private static final long serialVersionUID = 8500765176094961217L;
 
-    /**
-     * 总页数
-     */
+    @ApiModelProperty("总页数")
     private Integer totalPage;
 
-    /**
-     * 当前页
-     */
+    @ApiModelProperty("当前页")
     private Integer currentPage;
 
-    /**
-     * 每页的数量
-     */
+    @ApiModelProperty("每页的数量")
     private Integer pageSize;
   }
 }

@@ -6,7 +6,9 @@ import static com.sudoku.constant.enums.StatusCode.INVALID_REQUEST_PARAM_ERROR;
 import cn.hutool.core.util.StrUtil;
 import com.sudoku.exception.BaseException;
 import com.sudoku.exception.CaptchaException;
+import com.sudoku.exception.FormParameterConversionException;
 import com.sudoku.exception.LoginException;
+import com.sudoku.exception.StatisticsException;
 import com.sudoku.exception.UserException;
 import com.sudoku.model.vo.CommonResult;
 import java.io.Serializable;
@@ -31,7 +33,7 @@ public class GlobalExceptionHandler {
   private static final String INVALID_PARAM_TIP_TEMPLATE = "{}：{}";
 
   /**
-   * 处理所有的异常类
+   * 处理所有异常
    *
    * @param e 异常
    * @return 经过包装的结果对象
@@ -43,7 +45,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * 处理所有的异常类
+   * 处理基础异常
    *
    * @param e 异常
    * @return 经过包装的结果对象
@@ -54,7 +56,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * 处理用户异常类
+   * 处理用户异常
    *
    * @param e 用户异常
    * @return 经过包装的结果对象
@@ -65,7 +67,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * 处理登录异常类
+   * 处理登录异常
    *
    * @param e 登录异常
    * @return 经过包装的结果对象
@@ -76,7 +78,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * 处理验证码异常类
+   * 处理验证码异常
    *
    * @param e 登录异常
    * @return 经过包装的结果对象
@@ -87,7 +89,30 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * 处理参数校验异常类
+   * 处理统计异常
+   *
+   * @param e 登录异常
+   * @return 经过包装的结果对象
+   */
+  @ExceptionHandler(value = StatisticsException.class)
+  public CommonResult<StatisticsException> statisticsExceptionHandler(StatisticsException e) {
+    return simpleExceptionProcess("[统计异常]", e);
+  }
+
+  /**
+   * 处理表单参数转换异常
+   *
+   * @param e 登录异常
+   * @return 经过包装的结果对象
+   */
+  @ExceptionHandler(value = FormParameterConversionException.class)
+  public CommonResult<FormParameterConversionException> formParameterConversionExceptionHandler(FormParameterConversionException e) {
+    log.warn("[表单参数转换异常]", e);
+    return CommonResult.error(e.getStatusCode());
+  }
+
+  /**
+   * 处理参数校验异常
    *
    * @param e 参数校验异常
    * @return 经过包装的结果对象
@@ -100,7 +125,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * 处理参数校验异常类
+   * 处理参数校验异常
    *
    * @param e 参数校验异常
    * @return 经过包装的结果对象
@@ -113,7 +138,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * 处理参数校验异常类
+   * 处理参数校验异常
    *
    * @param e 参数校验异常
    * @return 经过包装的结果对象

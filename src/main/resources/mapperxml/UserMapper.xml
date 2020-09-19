@@ -48,4 +48,20 @@
     set recent_login_time=#{updatedRecentLoginTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="countByCreateTimeBetween" resultType="java.lang.Integer">
+    select count(1)
+    from `user`
+    where DAY(create_time) <![CDATA[>=]]> DAY(#{startCreateTime,jdbcType=TIMESTAMP})
+      and DAY(create_time) <![CDATA[<]]>
+          DAY(#{endCreateTime,jdbcType=TIMESTAMP})
+  </select>
+
+  <select id="countByRecentLoginTimeBetween" resultType="java.lang.Integer">
+    select count(1)
+    from `user`
+    where DAY(recent_login_time) <![CDATA[>=]]> DAY(#{startLoginTime,jdbcType=TIMESTAMP})
+      and DAY(recent_login_time) <![CDATA[<]]>
+          DAY(#{endLoginTime,jdbcType=TIMESTAMP})
+  </select>
 </mapper>

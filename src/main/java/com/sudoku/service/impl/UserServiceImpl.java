@@ -16,6 +16,7 @@ import com.sudoku.model.entity.UserRole;
 import com.sudoku.model.vo.UserVO;
 import com.sudoku.service.UserService;
 import com.sudoku.utils.SecurityUtils;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -77,7 +78,7 @@ public class UserServiceImpl implements UserService {
    */
   @Override
   public void updateRecentLoginTime(Integer userId) {
-    userMapper.updateRecentLoginTimeById(new Date(), userId);
+    userMapper.updateRecentLoginTimeById(LocalDateTime.now(), userId);
   }
 
   /**

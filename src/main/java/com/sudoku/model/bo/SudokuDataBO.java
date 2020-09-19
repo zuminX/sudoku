@@ -2,27 +2,23 @@ package com.sudoku.model.bo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sudoku.utils.PublicUtils;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-/**
- * 数独数据业务类
- */
 @AllArgsConstructor
 @Data
+@ApiModel("数独数据业务类")
 public class SudokuDataBO implements Serializable {
 
   private static final long serialVersionUID = -2898567509394664887L;
 
-  /**
-   * 数独矩阵
-   */
+  @ApiModelProperty("数独矩阵")
   private int[][] matrix;
 
-  /**
-   * 题目空缺数组
-   */
+  @ApiModelProperty("题目空缺数组")
   private boolean[][] holes;
 
   /**

@@ -71,7 +71,9 @@ VALUES (1, 'sudoku:level:list', '数独等级列表'),
        (5, 'sudoku:rank:list', '数独排行列表'),
        (6, 'sudoku:user:information', '数独用户信息'),
        (7, 'sudoku:user:record', '数独用户游戏记录'),
-       (8, 'system:user:add', '用户新增');
+       (8, 'system:user:add', '用户新增'),
+       (9, 'statistics:user:list', '用户统计信息列表')
+;
 
 
 DROP TABLE IF EXISTS `resource_role`;
@@ -93,6 +95,7 @@ VALUES (1, 1, 1),
        (6, 6, 1),
        (7, 7, 1),
        (8, 8, 2),
+       (16, 9, 2),
        (9, 1, 2),
        (10, 2, 2),
        (11, 3, 2),

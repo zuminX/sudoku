@@ -62,8 +62,8 @@ public class UserController {
   @PreAuthorize("@ss.hasPermission('sudoku:user:record')")
   @ApiOperation("获取历史游戏记录")
   @ApiImplicitParams({
-      @ApiImplicitParam(name = "page", value = "page", dataTypeClass = Integer.class, required = true),
-      @ApiImplicitParam(name = "pageSize", value = "pageSize", dataTypeClass = Integer.class, required = true)
+      @ApiImplicitParam(name = "page", value = "当前查询页", dataTypeClass = Integer.class, required = true),
+      @ApiImplicitParam(name = "pageSize", value = "每页显示的条数", dataTypeClass = Integer.class, required = true)
   })
   public PageVO<GameRecordVO> getHistoryGameRecord(@RequestParam Integer page,
       @RequestParam @Range(min = 1, max = 20, message = "每页显示的记录数在1-20条之间") Integer pageSize) {

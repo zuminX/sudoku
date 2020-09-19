@@ -16,7 +16,10 @@ public enum StatusCode {
   ERROR(1, HttpStatus.BAD_REQUEST, "服务端发生了未知错误"),
 
   //请求参数不合法
-  INVALID_REQUEST_PARAM_ERROR(2, HttpStatus.FORBIDDEN, "请求参数不合法"),
+  INVALID_REQUEST_PARAM_ERROR(2, HttpStatus.BAD_REQUEST, "请求参数不合法"),
+
+  //表单参数转换异常
+  FORM_PARAMETER_CONVERSION_ERROR(5, HttpStatus.BAD_REQUEST, "请求参数不合法"),
 
   //请求异常
   RESOURCE_NOT_FOUND(100, HttpStatus.NOT_FOUND, "未找到指定的资源"),
@@ -43,6 +46,10 @@ public enum StatusCode {
   CAPTCHA_ERROR(500, HttpStatus.BAD_REQUEST, "生成验证码时发生错误"),
   CAPTCHA_EXPIRED(501, HttpStatus.BAD_REQUEST, "验证码过期，请重新生成验证码"),
   CAPTCHA_NOT_EQUALS(502, HttpStatus.FORBIDDEN, "验证码错误，请重新生成验证码"),
+
+  //统计异常
+  STATISTICS_ERROR(600, HttpStatus.BAD_REQUEST, "统计信息时发生错误"),
+  STATISTICS_INQUIRY_DATE_INVALID(601, HttpStatus.BAD_REQUEST, "查询统计信息的日期无效"),
   ;
 
   /**
