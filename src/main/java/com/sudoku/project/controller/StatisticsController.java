@@ -2,8 +2,8 @@ package com.sudoku.project.controller;
 
 import com.sudoku.common.constant.enums.StatisticsDateName;
 import com.sudoku.common.exception.FormParameterConversionException;
-import com.sudoku.framework.security.service.StatisticsGameService;
-import com.sudoku.framework.security.service.StatisticsUserService;
+import com.sudoku.project.service.StatisticsGameService;
+import com.sudoku.project.service.StatisticsUserService;
 import com.sudoku.project.model.bo.StatisticsUserDataBO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

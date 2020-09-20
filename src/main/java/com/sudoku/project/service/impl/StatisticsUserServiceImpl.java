@@ -1,4 +1,4 @@
-package com.sudoku.framework.security.service.impl;
+package com.sudoku.project.service.impl;
 
 import com.sudoku.common.constant.enums.StatisticsDateName;
 import com.sudoku.common.constant.enums.StatusCode;
@@ -7,7 +7,7 @@ import com.sudoku.project.mapper.StatisticsUserMapper;
 import com.sudoku.project.mapper.UserMapper;
 import com.sudoku.project.model.bo.StatisticsUserDataBO;
 import com.sudoku.project.model.entity.StatisticsUser;
-import com.sudoku.framework.security.service.StatisticsUserService;
+import com.sudoku.project.service.StatisticsUserService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -91,22 +91,13 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
       this.plusDateFunction = plusDateFunction;
     }
 
-    /**
-     * 获取该日期的下一个日期
-     *
-     * @param date 日期
-     * @return 给定日期的下一个日期
-     */
-    private LocalDateTime getNextDate(LocalDateTime date) {
-      return plusDateFunction.apply(date, 1L);
-    }
 
     /**
      * 更新统计数据
      */
     public void updateData() {
       //从最新统计的日期后一个统计日期开始
-      LocalDateTime startDate = getNextDate(statisticsUserMapper.findFirstDateByDateNameOrderByDateDesc(statisticsDateName));
+      LocalDateTime startDate = getStartDate();
       LocalDateTime nowDate = LocalDateTime.now();
       LocalDateTime endDate = getNextDate(startDate);
       //更新数据，直到统计的时间超过当前时间
@@ -121,6 +112,27 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
         startDate = getNextDate(startDate);
         endDate = getNextDate(startDate);
       }
+    }
+
+    /**
+     * 获取起始日期
+     *
+     * @return 起始日期
+     */
+    private LocalDateTime getStartDate() {
+      LocalDateTime lastDate = statisticsUserMapper.findFirstDateByDateNameOrderByDateDesc(statisticsDateName);
+      //若不存在最新统计的日期，则使用系统用户中最早注册的时间
+      return lastDate == null ? userMapper.findFirstCreateTimeOrderByCreateTime() : getNextDate(lastDate);
+    }
+
+    /**
+     * 获取该日期的下一个日期
+     *
+     * @param date 日期
+     * @return 给定日期的下一个日期
+     */
+    private LocalDateTime getNextDate(LocalDateTime date) {
+      return plusDateFunction.apply(date, 1L);
     }
 
     /**

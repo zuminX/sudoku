@@ -64,4 +64,11 @@
       and DAY(recent_login_time) <![CDATA[<]]>
           DAY(#{endLoginTime,jdbcType=TIMESTAMP})
   </select>
+
+  <select id="findFirstCreateTimeOrderByCreateTime" resultType="java.time.LocalDateTime">
+    select create_time
+    from `user`
+    order by create_time
+    limit 1
+  </select>
 </mapper>

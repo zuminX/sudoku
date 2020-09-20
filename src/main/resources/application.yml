@@ -45,7 +45,7 @@ logging:
   level:
     com.sudoku: warn
     org.springframework: warn
-#    com.sudoku.project.mapper : debug
+    com.sudoku.project.mapper : debug
 
 #token配置
 token:
@@ -70,3 +70,15 @@ captcha:
   lineCount: 100
   #有效期
   expireTime: 5
+
+#xxl-job
+xxl:
+  job:
+    admin:
+      #调度中心部署跟地址
+      addresses: http://127.0.0.1:8085/xxl-job-admin
+      #执行器通讯TOKEN
+    executor:
+      #执行器的AppName
+      appname: sudoku-executor
+    accessToken: zumin

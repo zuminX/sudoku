@@ -1,4 +1,4 @@
-package com.sudoku.framework.security.service;
+package com.sudoku.project.service;
 
 import com.sudoku.common.constant.enums.StatisticsDateName;
 import com.sudoku.project.model.bo.StatisticsUserDataBO;
