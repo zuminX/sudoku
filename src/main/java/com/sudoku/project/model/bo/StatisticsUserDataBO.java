@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @ApiModel("用户统计数据类")
 public class StatisticsUserDataBO {
 
-  @ApiModelProperty("用户总数")
-  private Integer userTotal;
-  @ApiModelProperty("用户活跃数")
-  private Integer userActiveTotal;
+  @ApiModelProperty("新增用户总数")
+  private Integer newUserTotal;
+  @ApiModelProperty("活跃用户总数")
+  private Integer activeUserTotal;
 }

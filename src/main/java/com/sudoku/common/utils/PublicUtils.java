@@ -16,11 +16,7 @@ public class PublicUtils {
   /**
    * 生成随机数的对象
    */
-  private static final Random RANDOM;
-
-  static {
-    RANDOM = new Random();
-  }
+  private static final Random RANDOM = new Random();
 
   /**
    * 私有构造方法，防止实例化

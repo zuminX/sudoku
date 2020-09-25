@@ -52,17 +52,17 @@
   <select id="countByCreateTimeBetween" resultType="java.lang.Integer">
     select count(1)
     from `user`
-    where DAY(create_time) <![CDATA[>=]]> DAY(#{startCreateTime,jdbcType=TIMESTAMP})
-      and DAY(create_time) <![CDATA[<]]>
-          DAY(#{endCreateTime,jdbcType=TIMESTAMP})
+    where DATE(create_time) <![CDATA[>=]]> DATE(#{startCreateTime,jdbcType=DATE})
+      and DATE(create_time) <![CDATA[<]]>
+          DATE(#{endCreateTime,jdbcType=DATE})
   </select>
 
   <select id="countByRecentLoginTimeBetween" resultType="java.lang.Integer">
     select count(1)
     from `user`
-    where DAY(recent_login_time) <![CDATA[>=]]> DAY(#{startLoginTime,jdbcType=TIMESTAMP})
-      and DAY(recent_login_time) <![CDATA[<]]>
-          DAY(#{endLoginTime,jdbcType=TIMESTAMP})
+    where DATE(recent_login_time) <![CDATA[>=]]> DATE(#{startLoginTime,jdbcType=DATE})
+      and DATE(recent_login_time) <![CDATA[<]]>
+          DATE(#{endLoginTime,jdbcType=DATE})
   </select>
 
   <select id="findFirstCreateTimeOrderByCreateTime" resultType="java.time.LocalDateTime">

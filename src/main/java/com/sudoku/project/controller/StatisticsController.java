@@ -1,15 +1,16 @@
 package com.sudoku.project.controller;
 
-import com.sudoku.common.constant.enums.StatisticsDateName;
+import com.sudoku.common.constant.enums.StatisticsDate;
 import com.sudoku.common.exception.FormParameterConversionException;
+import com.sudoku.project.model.bo.StatisticsUserDataBO;
 import com.sudoku.project.service.StatisticsGameService;
 import com.sudoku.project.service.StatisticsUserService;
-import com.sudoku.project.model.bo.StatisticsUserDataBO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import java.beans.PropertyEditorSupport;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
@@ -35,19 +36,31 @@ public class StatisticsController {
   @Autowired
   private StatisticsGameService statisticsGameService;
 
-  @GetMapping("/user")
+  @GetMapping("/user/assignDate")
   @PreAuthorize("@ss.hasPermission('statistics:user:list')")
-  @ApiOperation("获取用户统计数据")
+  @ApiOperation("获取指定日期的用户统计数据")
   @ApiImplicitParams({
       @ApiImplicitParam(name = "startDate", value = "开始日期", dataTypeClass = LocalDateTime.class, required = true),
       @ApiImplicitParam(name = "endDate", value = "结束日期", dataTypeClass = LocalDateTime.class, required = true),
-      @ApiImplicitParam(name = "dateName", value = "统计日期的名字", dataTypeClass = StatisticsDateName.class, required = true)
+      @ApiImplicitParam(name = "date", value = "统计日期类", dataTypeClass = StatisticsDate.class, required = true)
   })
-  public List<StatisticsUserDataBO> getStatisticsUserData(
-      @RequestParam @NotNull(message = "开始日期不能为空") @Past(message = "开始日期必须是过去的时间") LocalDateTime startDate,
-      @RequestParam LocalDateTime endDate,
-      @RequestParam StatisticsDateName dateName) {
-    return statisticsUserService.getStatisticsUserData(startDate, endDate, dateName);
+  public List<StatisticsUserDataBO> getAssignDateStatisticsUserData(
+      @RequestParam @NotNull(message = "开始日期不能为空") @Past(message = "开始日期必须是过去的时间") LocalDate startDate,
+      @RequestParam @NotNull(message = "结束日期不能为空") LocalDate endDate,
+      @RequestParam StatisticsDate date) {
+    return statisticsUserService.getStatisticsUserData(startDate, endDate, date);
+  }
+
+  @GetMapping("/user/recentDate")
+  @PreAuthorize("@ss.hasPermission('statistics:user:list')")
+  @ApiOperation("获取最近日期的用户统计数据")
+  @ApiImplicitParams({
+      @ApiImplicitParam(name = "date", value = "统计日期类", dataTypeClass = StatisticsDate.class, required = true)
+  })
+  public List<StatisticsUserDataBO> getRecentDateStatisticsUserData(@RequestParam StatisticsDate date) {
+    LocalDate endDate = LocalDate.now();
+    LocalDate startDate = date.minus(endDate, 7L);
+    return getAssignDateStatisticsUserData(startDate, endDate, date);
   }
 
   /**
@@ -55,13 +68,12 @@ public class StatisticsController {
    */
   @InitBinder
   protected void initBinder(WebDataBinder binder) {
-    // Date 类型转换
-    binder.registerCustomEditor(StatisticsDateName.class, new PropertyEditorSupport() {
+    binder.registerCustomEditor(StatisticsDate.class, new PropertyEditorSupport() {
       @Override
       public void setAsText(String text) {
-        StatisticsDateName dateName = StatisticsDateName.findByName(text);
+        StatisticsDate dateName = StatisticsDate.findByName(text);
         if (dateName == null) {
-          throw new FormParameterConversionException(text, StatisticsDateName.class);
+          throw new FormParameterConversionException(text, StatisticsDate.class);
         }
         setValue(dateName);
       }

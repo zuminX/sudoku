@@ -8,9 +8,9 @@ import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.core.lang.UUID;
 import com.sudoku.common.constant.consist.RedisKeys;
 import com.sudoku.common.exception.CaptchaException;
+import com.sudoku.common.tools.RedisUtils;
 import com.sudoku.framework.security.model.CaptchaVO;
 import com.sudoku.framework.security.service.CaptchaService;
-import com.sudoku.common.utils.RedisUtils;
 import java.util.concurrent.TimeUnit;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,22 +29,18 @@ public class CaptchaServiceImpl implements CaptchaService {
    * 验证码的宽度
    */
   private int width = 112;
-
   /**
    * 验证码的高度
    */
   private int height = 36;
-
   /**
    * 验证码字符的个数
    */
   private int codeNumber = 4;
-
   /**
    * 验证码干扰线的个数
    */
   private int lineCount = 100;
-
   /**
    * 验证码有效期(分钟)
    */

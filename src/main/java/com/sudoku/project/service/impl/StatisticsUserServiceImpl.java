@@ -1,17 +1,21 @@
 package com.sudoku.project.service.impl;
 
-import com.sudoku.common.constant.enums.StatisticsDateName;
+import com.sudoku.common.constant.consist.RedisKeys;
+import com.sudoku.common.constant.enums.StatisticsDate;
 import com.sudoku.common.constant.enums.StatusCode;
 import com.sudoku.common.exception.StatisticsException;
+import com.sudoku.project.core.UpdateOutDatedDataInRedis;
+import com.sudoku.project.core.UpdateStatisticsData;
 import com.sudoku.project.mapper.StatisticsUserMapper;
 import com.sudoku.project.mapper.UserMapper;
 import com.sudoku.project.model.bo.StatisticsUserDataBO;
+import com.sudoku.project.model.bo.UserTotalStampedBO;
 import com.sudoku.project.model.entity.StatisticsUser;
 import com.sudoku.project.service.StatisticsUserService;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.function.BiFunction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,29 +35,52 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
    *
    * @param startDate 开始日期
    * @param endDate   结束日期
-   * @param dateName  统计日期的名字
+   * @param date      统计日期
    * @return 用户统计信息列表
    */
   @Override
-  public List<StatisticsUserDataBO> getStatisticsUserData(LocalDateTime startDate, LocalDateTime endDate, StatisticsDateName dateName) {
+  @Cacheable(value = "statisticsUserData", keyGenerator = "localDateTimeKG")
+  public List<StatisticsUserDataBO> getStatisticsUserData(LocalDate startDate, LocalDate endDate, StatisticsDate date) {
     if (startDate.compareTo(endDate) > 0) {
       throw new StatisticsException(StatusCode.STATISTICS_INQUIRY_DATE_INVALID);
     }
-    return statisticsUserMapper.selectUserTotalAndUserActiveTotalByDateBetweenAndDateName(startDate, endDate, dateName.getName());
+    return statisticsUserMapper.selectNewUserTotalAndActiveUserTotalByDateBetweenAndDateName(startDate, endDate, date.getName());
+  }
+
+  /**
+   * 获取用户总数
+   *
+   * @return 用户总数
+   */
+  @Override
+  public Integer getUserTotal() {
+    return new UpdateOutDatedDataInRedis<UserTotalStampedBO>(RedisKeys.USER_TOTAL) {
+      @Override
+      public UserTotalStampedBO getLatestDataIfEmpty() {
+        Integer userTotal = statisticsUserMapper.selectNewUserTotalSumByDateName(StatisticsDate.DAILY.getName());
+        return new UserTotalStampedBO(userTotal);
+      }
+
+      @Override
+      public UserTotalStampedBO getLatestData(UserTotalStampedBO oldData) {
+        Integer newUserTotal = statisticsUserMapper.selectNewUserTotalSumByDateAfterAndDateName(oldData.getUpdateDate().plusDays(1L),
+            StatisticsDate.DAILY.getName());
+        return new UserTotalStampedBO(oldData.getUserTotal() + newUserTotal);
+      }
+    }.updateData().getUserTotal();
   }
 
   /**
    * 更新每日的统计信息，直到当前
    */
   @Override
-  @Transactional
   public void updateDailyDataUntilNow() {
-    new UpdateDataTemplateMethod(StatisticsDateName.DAILY, LocalDateTime::plusDays) {
+    new UpdateUserStatisticsData(StatisticsDate.DAILY) {
       @Override
-      public StatisticsUserDataBO getStatisticsUserData(LocalDateTime startDate, LocalDateTime endDate) {
-        Integer userTotal = userMapper.countByCreateTimeBetween(startDate, endDate);
-        Integer userActiveTotal = userMapper.countByRecentLoginTimeBetween(startDate, endDate);
-        return new StatisticsUserDataBO(userTotal, userActiveTotal);
+      public StatisticsUserDataBO getStatisticsUserData(LocalDate startDate, LocalDate endDate) {
+        Integer newUserTotal = userMapper.countByCreateTimeBetween(startDate, endDate);
+        Integer activeUserTotal = userMapper.countByRecentLoginTimeBetween(startDate, endDate);
+        return new StatisticsUserDataBO(newUserTotal, activeUserTotal);
       }
     }.updateData();
   }
@@ -62,77 +89,32 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
    * 更新每月的统计信息，直到当前
    */
   @Override
-  @Transactional
   public void updateEachMonthDataUntilNow() {
-    new UpdateDataTemplateMethod(StatisticsDateName.EACH_MONTH, LocalDateTime::plusMonths) {
+    new UpdateUserStatisticsData(StatisticsDate.EACH_MONTH) {
       @Override
-      public StatisticsUserDataBO getStatisticsUserData(LocalDateTime startDate, LocalDateTime endDate) {
+      public StatisticsUserDataBO getStatisticsUserData(LocalDate startDate, LocalDate endDate) {
         //获取该月的用户统计数据列表
-        List<StatisticsUserDataBO> statisticsUserDataList = statisticsUserMapper.selectUserTotalAndUserActiveTotalByDateBetweenAndDateName(
-            startDate, endDate, StatisticsDateName.EACH_MONTH.getName());
-        Integer userTotal = statisticsUserDataList.stream().mapToInt(StatisticsUserDataBO::getUserTotal).sum();
-        Integer userActiveTotal = statisticsUserDataList.stream().mapToInt(StatisticsUserDataBO::getUserActiveTotal).sum();
-        return new StatisticsUserDataBO(userTotal, userActiveTotal);
+        List<StatisticsUserDataBO> statisticsUserDataList = statisticsUserMapper.selectNewUserTotalAndActiveUserTotalByDateBetweenAndDateName(
+            startDate, endDate, StatisticsDate.EACH_MONTH.getName());
+        Integer newUserTotal = statisticsUserDataList.stream().mapToInt(StatisticsUserDataBO::getNewUserTotal).sum();
+        Integer activeUserTotal = statisticsUserDataList.stream().mapToInt(StatisticsUserDataBO::getActiveUserTotal).sum();
+        return new StatisticsUserDataBO(newUserTotal, activeUserTotal);
       }
     }.updateData();
   }
 
   /**
-   * 更新统计数据的模板方法
+   * 更新用户统计数据的模板方法
    */
-  private abstract class UpdateDataTemplateMethod {
-
-    private final String statisticsDateName;
-    private final BiFunction<LocalDateTime, Long, LocalDateTime> plusDateFunction;
-
-    public UpdateDataTemplateMethod(StatisticsDateName statisticsDateName,
-        BiFunction<LocalDateTime, Long, LocalDateTime> plusDateFunction) {
-      this.statisticsDateName = statisticsDateName.getName();
-      this.plusDateFunction = plusDateFunction;
-    }
-
+  private abstract class UpdateUserStatisticsData extends UpdateStatisticsData {
 
     /**
-     * 更新统计数据
-     */
-    public void updateData() {
-      //从最新统计的日期后一个统计日期开始
-      LocalDateTime startDate = getStartDate();
-      LocalDateTime nowDate = LocalDateTime.now();
-      LocalDateTime endDate = getNextDate(startDate);
-      //更新数据，直到统计的时间超过当前时间
-      while (endDate.compareTo(nowDate) < 0) {
-        StatisticsUserDataBO statisticsUserData = getStatisticsUserData(startDate, endDate);
-        statisticsUserMapper.insert(StatisticsUser.builder()
-            .userTotal(statisticsUserData.getUserTotal())
-            .userActiveTotal(statisticsUserData.getUserActiveTotal())
-            .dateName(statisticsDateName)
-            .date(startDate)
-            .build());
-        startDate = getNextDate(startDate);
-        endDate = getNextDate(startDate);
-      }
-    }
-
-    /**
-     * 获取起始日期
+     * 该类的构造方法
      *
-     * @return 起始日期
+     * @param statisticsDate 统计日期对象
      */
-    private LocalDateTime getStartDate() {
-      LocalDateTime lastDate = statisticsUserMapper.findFirstDateByDateNameOrderByDateDesc(statisticsDateName);
-      //若不存在最新统计的日期，则使用系统用户中最早注册的时间
-      return lastDate == null ? userMapper.findFirstCreateTimeOrderByCreateTime() : getNextDate(lastDate);
-    }
-
-    /**
-     * 获取该日期的下一个日期
-     *
-     * @param date 日期
-     * @return 给定日期的下一个日期
-     */
-    private LocalDateTime getNextDate(LocalDateTime date) {
-      return plusDateFunction.apply(date, 1L);
+    public UpdateUserStatisticsData(StatisticsDate statisticsDate) {
+      super(statisticsDate);
     }
 
     /**
@@ -142,7 +124,45 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
      * @param endDate   结束日期
      * @return 用户的统计数据
      */
-    public abstract StatisticsUserDataBO getStatisticsUserData(LocalDateTime startDate, LocalDateTime endDate);
+    public abstract StatisticsUserDataBO getStatisticsUserData(LocalDate startDate, LocalDate endDate);
+
+    /**
+     * 向数据库插入用户统计数据
+     *
+     * @param startDate 开始日期
+     * @param endDate   结束日期
+     */
+    @Override
+    @Transactional
+    protected void insertData(LocalDate startDate, LocalDate endDate) {
+      StatisticsUserDataBO statisticsUserData = getStatisticsUserData(startDate, endDate);
+      statisticsUserMapper.insert(StatisticsUser.builder()
+          .newUserTotal(statisticsUserData.getNewUserTotal())
+          .activeUserTotal(statisticsUserData.getActiveUserTotal())
+          .dateName(getStatisticsDate().getName())
+          .date(startDate)
+          .build());
+    }
+
+    /**
+     * 获取第一次统计数据的日期
+     *
+     * @return 第一次统计数据的日期
+     */
+    @Override
+    protected LocalDate getLatestUpdateDate() {
+      return statisticsUserMapper.findFirstDateByDateNameOrderByDateDesc(getStatisticsDate().getName());
+    }
+
+    /**
+     * 使用系统用户中最早注册的日期
+     *
+     * @return 用户注册的最早日期
+     */
+    @Override
+    protected LocalDate getFirstStatisticsDate() {
+      return userMapper.findFirstCreateTimeOrderByCreateTime().toLocalDate();
+    }
   }
 
 }

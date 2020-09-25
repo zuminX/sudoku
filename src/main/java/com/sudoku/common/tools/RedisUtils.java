@@ -1,4 +1,4 @@
-package com.sudoku.common.utils;
+package com.sudoku.common.tools;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.ListUtil;

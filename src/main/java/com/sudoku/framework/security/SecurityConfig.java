@@ -1,7 +1,7 @@
 package com.sudoku.framework.security;
 
 import com.sudoku.common.utils.SecurityUtils;
-import com.sudoku.common.utils.ServletUtils;
+import com.sudoku.common.tools.ServletUtils;
 import com.sudoku.framework.security.filter.JwtAuthenticationTokenFilter;
 import com.sudoku.framework.security.handler.CustomizeLogoutSuccessHandler;
 import javax.annotation.Resource;

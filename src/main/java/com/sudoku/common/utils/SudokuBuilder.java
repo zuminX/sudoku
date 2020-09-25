@@ -1,15 +1,15 @@
-package com.sudoku.common.utils.sudoku;
+package com.sudoku.common.utils;
 
 import static com.sudoku.common.utils.PublicUtils.getRandomInt;
 import static com.sudoku.common.utils.PublicUtils.randomizedArray;
-import static com.sudoku.common.utils.sudoku.SudokuBuilder.GenerateStatus.EMPTY_ALL;
-import static com.sudoku.common.utils.sudoku.SudokuBuilder.GenerateStatus.EMPTY_ROW;
-import static com.sudoku.common.utils.sudoku.SudokuBuilder.GenerateStatus.FILL_GRID;
-import static com.sudoku.common.utils.sudoku.SudokuBuilder.GenerateStatus.FILL_ROW;
-import static com.sudoku.common.utils.sudoku.SudokuBuilder.GenerateStatus.INIT_FIRST_ROW;
-import static com.sudoku.common.utils.sudoku.SudokuUtils.checkBlockIsOnly;
-import static com.sudoku.common.utils.sudoku.SudokuUtils.checkColumnIsOnly;
-import static com.sudoku.common.utils.sudoku.SudokuUtils.checkRowIsOnly;
+import static com.sudoku.common.utils.SudokuBuilder.GenerateStatus.EMPTY_ALL;
+import static com.sudoku.common.utils.SudokuBuilder.GenerateStatus.EMPTY_ROW;
+import static com.sudoku.common.utils.SudokuBuilder.GenerateStatus.FILL_GRID;
+import static com.sudoku.common.utils.SudokuBuilder.GenerateStatus.FILL_ROW;
+import static com.sudoku.common.utils.SudokuBuilder.GenerateStatus.INIT_FIRST_ROW;
+import static com.sudoku.common.utils.SudokuUtils.checkBlockIsOnly;
+import static com.sudoku.common.utils.SudokuUtils.checkColumnIsOnly;
+import static com.sudoku.common.utils.SudokuUtils.checkRowIsOnly;
 
 import com.sudoku.project.model.bo.SudokuDataBO;
 import java.util.Arrays;
@@ -58,12 +58,11 @@ public class SudokuBuilder {
     int[] tempRandomArray = null;
     while (row != 9) {
       switch (status) {
-        case FILL_GRID:
+        case FILL_GRID -> {
           if (currentTimes >= MAX_CALL_RANDOM_ARRAY_TIMES) {
             status = EMPTY_ALL;
             break;
           }
-          assert tempRandomArray != null;
           if (!isCandidateNmbFound(matrix, tempRandomArray, row, col)) {
             status = EMPTY_ROW;
             break;
@@ -71,29 +70,28 @@ public class SudokuBuilder {
           if (++col == 9) {
             row++;
             status = FILL_ROW;
-            break;
           }
-          break;
-        case EMPTY_ROW:
+        }
+        case EMPTY_ROW -> {
           clearMatrixRow(matrix, row);
           status = FILL_ROW;
-          break;
-        case FILL_ROW:
+        }
+        case FILL_ROW -> {
           tempRandomArray = buildRandomArray();
           currentTimes++;
           col = 0;
           status = FILL_GRID;
-          break;
-        case INIT_FIRST_ROW:
+        }
+        case INIT_FIRST_ROW -> {
           matrix[0] = buildRandomArray();
           currentTimes = 1;
           row = 0;
           status = FILL_ROW;
-          break;
-        case EMPTY_ALL:
+        }
+        case EMPTY_ALL -> {
           clearMatrix(matrix);
           status = INIT_FIRST_ROW;
-          break;
+        }
       }
     }
   }
@@ -181,7 +179,7 @@ public class SudokuBuilder {
   /**
    * 生成数独矩阵算法的状态
    */
-  enum GenerateStatus {
+  public enum GenerateStatus {
     /**
      * 清空矩阵的所有数据
      */

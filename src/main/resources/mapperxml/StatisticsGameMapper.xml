@@ -9,7 +9,7 @@
     <result column="error_total" jdbcType="INTEGER" property="errorTotal" />
     <result column="sudoku_level_id" jdbcType="INTEGER" property="sudokuLevelId" />
     <result column="date_name" jdbcType="VARCHAR" property="dateName" />
-    <result column="date" jdbcType="TIMESTAMP" property="date" />
+    <result column="date" jdbcType="DATE" property="date" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->

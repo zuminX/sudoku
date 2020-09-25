@@ -5,33 +5,37 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName(value = "statistics_user")
 public class StatisticsUser implements Serializable {
 
-  private static final long serialVersionUID = -3821008426308955938L;
+  private static final long serialVersionUID = -6871484199539215302L;
   /**
    * 用户统计数据的ID
    */
-  @TableId(value = "id", type = IdType.INPUT)
+  @TableId(value = "id", type = IdType.AUTO)
   private Integer id;
 
   /**
-   * 用户总数
+   * 新增用户总数
    */
-  @TableField(value = "user_total")
-  private Integer userTotal;
+  @TableField(value = "new_user_total")
+  private Integer newUserTotal;
 
   /**
-   * 用户活跃总数
+   * 活跃用户总数
    */
-  @TableField(value = "user_active_total")
-  private Integer userActiveTotal;
+  @TableField(value = "active_user_total")
+  private Integer activeUserTotal;
 
   /**
    * 统计日期类型的名字
@@ -43,5 +47,5 @@ public class StatisticsUser implements Serializable {
    * 统计的日期
    */
   @TableField(value = "`date`")
-  private LocalDateTime date;
+  private LocalDate date;
 }

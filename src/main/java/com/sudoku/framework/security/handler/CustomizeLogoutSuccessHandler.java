@@ -2,7 +2,7 @@ package com.sudoku.framework.security.handler;
 
 import com.sudoku.framework.security.model.LoginUserBO;
 import com.sudoku.framework.security.service.UserTokenService;
-import com.sudoku.common.utils.ServletUtils;
+import com.sudoku.common.tools.ServletUtils;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

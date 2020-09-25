@@ -8,7 +8,7 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
 import com.sudoku.framework.security.model.LoginUserBO;
 import com.sudoku.framework.security.service.UserTokenService;
-import com.sudoku.common.utils.RedisUtils;
+import com.sudoku.common.tools.RedisUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

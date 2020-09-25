@@ -1,4 +1,4 @@
-package com.sudoku.common.utils;
+package com.sudoku.common.tools;
 
 import java.io.IOException;
 import javax.servlet.ServletException;

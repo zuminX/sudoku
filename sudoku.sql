@@ -170,15 +170,14 @@ VALUES (1, '23918746558639412747162539894276158331845927665783291489451673272394
         '010100110110111000011011100110110001100100100110000000000011000000001000100101000', '2020-05-24 22:00:00', '2020-05-24
 22:10:00', 1, 1, 1);
 
-
 DROP TABLE IF EXISTS `statistics_user`;
 CREATE TABLE `statistics_user`
 (
     `id`                int         NOT NULL AUTO_INCREMENT COMMENT '用户统计数据的ID',
-    `user_total`        int DEFAULT 0 COMMENT '用户总数',
-    `user_active_total` int DEFAULT 0 COMMENT '用户活跃总数',
+    `new_user_total`    int DEFAULT 0 COMMENT '新增用户总数',
+    `active_user_total` int DEFAULT 0 COMMENT '活跃用户总数',
     `date_name`         VARCHAR(16) NOT NULL COMMENT '统计日期类型的名字',
-    `date`              DATETIME    NOT NULL COMMENT '统计的日期',
+    `date`              DATE        NOT NULL COMMENT '统计的日期',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
@@ -191,7 +190,7 @@ CREATE TABLE `statistics_game`
     `error_total`     int DEFAULT 0 COMMENT '提交错误的总数',
     `sudoku_level_id` int         NOT NULL COMMENT '数独等级ID',
     `date_name`       VARCHAR(16) NOT NULL COMMENT '统计日期类型的名字',
-    `date`            DATETIME    NOT NULL COMMENT '统计的日期',
+    `date`            DATE        NOT NULL COMMENT '统计的日期',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;

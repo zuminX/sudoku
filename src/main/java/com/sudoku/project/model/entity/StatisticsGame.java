@@ -5,17 +5,18 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.Data;
 
 @Data
 @TableName(value = "statistics_game")
 public class StatisticsGame implements Serializable {
 
+  private static final long serialVersionUID = -2964616765324913859L;
   /**
    * 游戏统计数据的ID
    */
-  @TableId(value = "id", type = IdType.INPUT)
+  @TableId(value = "id", type = IdType.AUTO)
   private Integer id;
 
   /**
@@ -46,7 +47,5 @@ public class StatisticsGame implements Serializable {
    * 统计的日期
    */
   @TableField(value = "`date`")
-  private LocalDateTime date;
-
-  private static final long serialVersionUID = 1L;
+  private LocalDate date;
 }

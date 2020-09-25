@@ -2,6 +2,7 @@ package com.sudoku.common.utils;
 
 import static com.sudoku.common.constant.consist.RedisKeys.GAME_RECORD_PREFIX;
 
+import com.sudoku.common.tools.RedisUtils;
 import com.sudoku.project.model.bo.GameRecordBO;
 import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;

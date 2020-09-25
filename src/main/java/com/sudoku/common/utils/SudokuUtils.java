@@ -1,4 +1,4 @@
-package com.sudoku.common.utils.sudoku;
+package com.sudoku.common.utils;
 
 import com.sudoku.project.model.bo.SudokuDataBO;
 import java.util.stream.IntStream;

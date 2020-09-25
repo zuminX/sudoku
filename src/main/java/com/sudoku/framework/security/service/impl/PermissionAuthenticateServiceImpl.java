@@ -9,7 +9,7 @@ import com.sudoku.common.constant.consist.PermissionConstants;
 import com.sudoku.framework.security.model.LoginUserBO;
 import com.sudoku.framework.security.service.PermissionAuthenticateService;
 import com.sudoku.framework.security.service.UserTokenService;
-import com.sudoku.common.utils.ServletUtils;
+import com.sudoku.common.tools.ServletUtils;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
