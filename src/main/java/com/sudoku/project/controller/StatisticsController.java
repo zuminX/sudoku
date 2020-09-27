@@ -63,6 +63,13 @@ public class StatisticsController {
     return getAssignDateStatisticsUserData(startDate, endDate, date);
   }
 
+  @GetMapping("/user/total")
+  @PreAuthorize("@ss.hasPermission('statistics:user:total')")
+  @ApiOperation("获取系统的用户总数")
+  public Integer getUserTotal() {
+    return statisticsUserService.getUserTotal();
+  }
+
   /**
    * 将前台传递过来的统计日期的字符串，自动转化为对应的枚举类型
    */

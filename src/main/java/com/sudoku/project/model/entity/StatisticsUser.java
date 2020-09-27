@@ -6,15 +6,14 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDate;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 统计用户表对应的实体类
+ */
 @Data
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @TableName(value = "statistics_user")
 public class StatisticsUser implements Serializable {
 

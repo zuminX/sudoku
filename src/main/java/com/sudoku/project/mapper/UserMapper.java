@@ -8,6 +8,12 @@ import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper extends BaseMapper<User> {
 
+  /**
+   * 根据用户名查找用户
+   *
+   * @param username 用户名
+   * @return 用户对象
+   */
   User selectByUsername(@Param("username") String username);
 
   /**
@@ -18,7 +24,14 @@ public interface UserMapper extends BaseMapper<User> {
    */
   User selectWithRoleByUsername(@Param("username") String username);
 
-  int updateRecentLoginTimeById(@Param("updatedRecentLoginTime") LocalDateTime updatedRecentLoginTime, @Param("id") Integer id);
+  /**
+   * 更新指定ID的用户的最近登录时间
+   *
+   * @param loginTime 登录时间
+   * @param id        用户ID
+   * @return 更新的行数
+   */
+  int updateRecentLoginTimeById(@Param("loginTime") LocalDateTime loginTime, @Param("id") Integer id);
 
   /**
    * 统计在[startCreateTime,endCreateTime)天中创建的用户数

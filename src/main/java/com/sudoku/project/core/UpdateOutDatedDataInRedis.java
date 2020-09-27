@@ -2,13 +2,13 @@ package com.sudoku.project.core;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.sudoku.common.tools.RedisUtils;
-import com.sudoku.project.model.bo.LocalDateStamped;
+import com.sudoku.common.tools.DataStamped;
 import java.time.LocalDate;
 
 /**
  * 更新Redis中过期数据类
  */
-public abstract class UpdateOutDatedDataInRedis<T extends LocalDateStamped> {
+public abstract class UpdateOutDatedDataInRedis<T> {
 
   private final String key;
   private final RedisUtils redisUtils;
@@ -24,25 +24,26 @@ public abstract class UpdateOutDatedDataInRedis<T extends LocalDateStamped> {
   }
 
   /**
-   * 更新在Redis中，当天之前更新的数据
+   * 更新存储在Redis中，当天之前更新的数据
    *
    * @return 更新后的数据
    */
   public T updateData() {
-    T data = redisUtils.getObject(key);
-    LocalDate nowDate = LocalDate.now();
-    if (data == null) {
-      data = getLatestDataIfEmpty();
-    } else {
-      LocalDate updateDate = data.getUpdateDate();
-      if (nowDate.compareTo(updateDate) <= 0) {
-        return data;
-      }
-      data = getLatestData(data);
+    DataStamped<T> dataStamped = redisUtils.getObject(key);
+    if (dataStamped == null) {
+      T data = getLatestDataIfEmpty();
+      redisUtils.setObject(key, new DataStamped<>(data));
+      return data;
     }
-    data.setUpdateDate(nowDate);
-    redisUtils.setObject(key, data);
-    return data;
+    LocalDate nowDate = LocalDate.now();
+    if (nowDate.compareTo(dataStamped.getUpdateDate()) <= 0) {
+      return dataStamped.getData();
+    }
+    T latestData = getLatestData(dataStamped);
+    dataStamped.setData(latestData);
+    dataStamped.setUpdateDate(nowDate);
+    redisUtils.setObject(key, dataStamped);
+    return latestData;
   }
 
   /**
@@ -57,5 +58,5 @@ public abstract class UpdateOutDatedDataInRedis<T extends LocalDateStamped> {
    *
    * @return 最新的数据
    */
-  public abstract T getLatestData(T oldData);
+  public abstract T getLatestData(DataStamped<T> oldData);
 }

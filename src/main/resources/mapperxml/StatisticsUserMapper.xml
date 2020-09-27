@@ -32,8 +32,8 @@
   <select id="selectNewUserTotalAndActiveUserTotalByDateBetweenAndDateName" resultMap="StatisticsUserDataBOResult">
     select new_user_total, active_user_total
     from statistics_user
-    where DATE(`date`) <![CDATA[>=]]> DATE(#{startDate,jdbcType=DATE})
-      and DATE(`date`) <![CDATA[<]]> DATE(#{endDate,jdbcType=DATE})
+    where `date` <![CDATA[>=]]> DATE(#{startDate,jdbcType=DATE})
+      and `date` <![CDATA[<]]> DATE(#{endDate,jdbcType=DATE})
       and date_name = #{dateName,jdbcType=VARCHAR}
   </select>
 
@@ -46,7 +46,15 @@
   <select id="selectNewUserTotalSumByDateAfterAndDateName" resultType="java.lang.Integer">
     select SUM(new_user_total)
     from statistics_user
-    where DATE(`date`) <![CDATA[>=]]> DATE(#{startDate,jdbcType=DATE})
+    where `date` <![CDATA[>=]]> DATE(#{startDate,jdbcType=DATE})
+      and date_name = #{dateName,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectNewUserTotalSumAndActiveUserTotalSumByDateBetweenAndDateName" resultMap="StatisticsUserDataBOResult">
+    select SUM(new_user_total) as new_user_total, SUM(active_user_total) as active_user_total
+    from statistics_user
+    where `date` <![CDATA[>=]]> DATE(#{startDate,jdbcType=DATE})
+      and `date` <![CDATA[<]]> DATE(#{endDate,jdbcType=DATE})
       and date_name = #{dateName,jdbcType=VARCHAR}
   </select>
 </mapper>

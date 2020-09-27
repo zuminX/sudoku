@@ -4,13 +4,13 @@ import com.sudoku.common.constant.consist.RedisKeys;
 import com.sudoku.common.constant.enums.StatisticsDate;
 import com.sudoku.common.constant.enums.StatusCode;
 import com.sudoku.common.exception.StatisticsException;
+import com.sudoku.common.tools.DataStamped;
+import com.sudoku.project.convert.StatisticsUserConvert;
 import com.sudoku.project.core.UpdateOutDatedDataInRedis;
 import com.sudoku.project.core.UpdateStatisticsData;
 import com.sudoku.project.mapper.StatisticsUserMapper;
 import com.sudoku.project.mapper.UserMapper;
 import com.sudoku.project.model.bo.StatisticsUserDataBO;
-import com.sudoku.project.model.bo.UserTotalStampedBO;
-import com.sudoku.project.model.entity.StatisticsUser;
 import com.sudoku.project.service.StatisticsUserService;
 import java.time.LocalDate;
 import java.util.List;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 统计用户的业务层实现类
+ * 统计用户信息的业务层实现类
  */
 @Service
 public class StatisticsUserServiceImpl implements StatisticsUserService {
@@ -31,7 +31,7 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
   private UserMapper userMapper;
 
   /**
-   * 获取用户统计信息列表
+   * 获取在[startDate,endDate)中的用户统计信息列表
    *
    * @param startDate 开始日期
    * @param endDate   结束日期
@@ -39,7 +39,7 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
    * @return 用户统计信息列表
    */
   @Override
-  @Cacheable(value = "statisticsUserData", keyGenerator = "localDateTimeKG")
+  @Cacheable(value = "statisticsUserData", keyGenerator = "simpleKG")
   public List<StatisticsUserDataBO> getStatisticsUserData(LocalDate startDate, LocalDate endDate, StatisticsDate date) {
     if (startDate.compareTo(endDate) > 0) {
       throw new StatisticsException(StatusCode.STATISTICS_INQUIRY_DATE_INVALID);
@@ -54,20 +54,19 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
    */
   @Override
   public Integer getUserTotal() {
-    return new UpdateOutDatedDataInRedis<UserTotalStampedBO>(RedisKeys.USER_TOTAL) {
+    return new UpdateOutDatedDataInRedis<Integer>(RedisKeys.USER_TOTAL) {
       @Override
-      public UserTotalStampedBO getLatestDataIfEmpty() {
-        Integer userTotal = statisticsUserMapper.selectNewUserTotalSumByDateName(StatisticsDate.DAILY.getName());
-        return new UserTotalStampedBO(userTotal);
+      public Integer getLatestDataIfEmpty() {
+        return statisticsUserMapper.selectNewUserTotalSumByDateName(StatisticsDate.DAILY.getName());
       }
 
       @Override
-      public UserTotalStampedBO getLatestData(UserTotalStampedBO oldData) {
+      public Integer getLatestData(DataStamped<Integer> oldData) {
         Integer newUserTotal = statisticsUserMapper.selectNewUserTotalSumByDateAfterAndDateName(oldData.getUpdateDate().plusDays(1L),
             StatisticsDate.DAILY.getName());
-        return new UserTotalStampedBO(oldData.getUserTotal() + newUserTotal);
+        return oldData.getData() + newUserTotal;
       }
-    }.updateData().getUserTotal();
+    }.updateData();
   }
 
   /**
@@ -94,11 +93,8 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
       @Override
       public StatisticsUserDataBO getStatisticsUserData(LocalDate startDate, LocalDate endDate) {
         //获取该月的用户统计数据列表
-        List<StatisticsUserDataBO> statisticsUserDataList = statisticsUserMapper.selectNewUserTotalAndActiveUserTotalByDateBetweenAndDateName(
-            startDate, endDate, StatisticsDate.EACH_MONTH.getName());
-        Integer newUserTotal = statisticsUserDataList.stream().mapToInt(StatisticsUserDataBO::getNewUserTotal).sum();
-        Integer activeUserTotal = statisticsUserDataList.stream().mapToInt(StatisticsUserDataBO::getActiveUserTotal).sum();
-        return new StatisticsUserDataBO(newUserTotal, activeUserTotal);
+        return statisticsUserMapper.selectNewUserTotalSumAndActiveUserTotalSumByDateBetweenAndDateName(startDate, endDate,
+            StatisticsDate.DAILY.getName());
       }
     }.updateData();
   }
@@ -136,12 +132,7 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
     @Transactional
     protected void insertData(LocalDate startDate, LocalDate endDate) {
       StatisticsUserDataBO statisticsUserData = getStatisticsUserData(startDate, endDate);
-      statisticsUserMapper.insert(StatisticsUser.builder()
-          .newUserTotal(statisticsUserData.getNewUserTotal())
-          .activeUserTotal(statisticsUserData.getActiveUserTotal())
-          .dateName(getStatisticsDate().getName())
-          .date(startDate)
-          .build());
+      statisticsUserMapper.insert(StatisticsUserConvert.INSTANCE.convert(statisticsUserData, getStatisticsDate().getName(), startDate));
     }
 
     /**

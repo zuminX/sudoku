@@ -1,7 +1,7 @@
 package com.sudoku.project.model.bo;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,12 +32,12 @@ public class GameRecordBO implements Serializable {
   /**
    * 开始时间
    */
-  private Date startTime;
+  private LocalDateTime startTime;
 
   /**
    * 结束时间
    */
-  private Date endTime;
+  private LocalDateTime endTime;
 
   /**
    * 回答是否正确
@@ -67,7 +67,7 @@ public class GameRecordBO implements Serializable {
    */
   public static GameRecordBOBuilder initBuilder() {
     return GameRecordBO.builder()
-        .startTime(new Date())
+        .startTime(LocalDateTime.now())
         .correct(false);
   }
 

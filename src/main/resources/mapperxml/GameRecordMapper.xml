@@ -99,8 +99,26 @@
 
   <update id="updateEndTimeAndCorrectById">
     update game_record
-    set end_time = #{updatedEndTime,jdbcType=TIMESTAMP},
-        correct = #{updatedCorrect,jdbcType=BOOLEAN}
+    set end_time = #{endTime,jdbcType=TIMESTAMP},
+        correct  = #{correct,jdbcType=BOOLEAN}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="findFirstEndTimeOrderByEndTime" resultType="java.time.LocalDateTime">
+    select end_time
+    from game_record
+    order by end_time
+    limit 1
+  </select>
+
+  <select id="countCorrectTotalAndErrorTotalSudokuLevelIdByEndTimeBetween"
+    resultType="com.sudoku.project.model.bo.StatisticsGameDataBO">
+    select SUM(CASE correct WHEN 1 THEN 1 ELSE 0 END) as correct_total,
+           SUM(CASE correct WHEN 0 THEN 1 ELSE 0 END) as error_total,
+           sudoku_level_id
+    from game_record
+    where DATE(`end_time`) <![CDATA[>=]]> DATE(#{startDate,jdbcType=DATE})
+      and DATE(`end_time`) <![CDATA[<]]> DATE(#{endDate,jdbcType=DATE})
+    group by sudoku_level_id
+  </select>
 </mapper>

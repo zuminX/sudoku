@@ -7,8 +7,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDate;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+/**
+ * 统计游戏表对应的实体类
+ */
 @Data
+@NoArgsConstructor
 @TableName(value = "statistics_game")
 public class StatisticsGame implements Serializable {
 

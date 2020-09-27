@@ -29,6 +29,17 @@ public interface StatisticsUserMapper extends BaseMapper<StatisticsUser> {
       @Param("endDate") LocalDate endDate, @Param("dateName") String dateName);
 
   /**
+   * 查询在[startDate,endDate)中，统计日期名字为dateName的用户的统计数据的总和
+   *
+   * @param startDate 开始时间
+   * @param endDate   结束时间
+   * @param dateName  统计日期名字
+   * @return 用户的统计数据的总和
+   */
+  StatisticsUserDataBO selectNewUserTotalSumAndActiveUserTotalSumByDateBetweenAndDateName(@Param("startDate") LocalDate startDate,
+      @Param("endDate") LocalDate endDate, @Param("dateName") String dateName);
+
+  /**
    * 查询统计日期名字为dateName的用户总数
    *
    * @return 用户总数

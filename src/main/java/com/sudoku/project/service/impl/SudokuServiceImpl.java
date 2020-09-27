@@ -7,6 +7,11 @@ import static com.sudoku.common.utils.PublicUtils.getRandomInt;
 import static com.sudoku.common.utils.SudokuUtils.isNotHole;
 
 import com.sudoku.common.constant.enums.AnswerSituation;
+import com.sudoku.common.utils.GameUtils;
+import com.sudoku.common.utils.PublicUtils;
+import com.sudoku.common.utils.SecurityUtils;
+import com.sudoku.common.utils.SudokuBuilder;
+import com.sudoku.common.utils.SudokuUtils;
 import com.sudoku.project.convert.SubmitSudokuInformationConvert;
 import com.sudoku.project.model.bo.GameRecordBO;
 import com.sudoku.project.model.bo.SubmitSudokuInformationBO;
@@ -15,13 +20,8 @@ import com.sudoku.project.model.bo.SudokuGridInformationBO;
 import com.sudoku.project.model.entity.SudokuLevel;
 import com.sudoku.project.model.vo.SubmitSudokuInformationVO;
 import com.sudoku.project.service.SudokuService;
-import com.sudoku.common.utils.GameUtils;
-import com.sudoku.common.utils.PublicUtils;
-import com.sudoku.common.utils.SecurityUtils;
-import com.sudoku.common.utils.SudokuBuilder;
-import com.sudoku.common.utils.SudokuUtils;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,7 +72,7 @@ public class SudokuServiceImpl implements SudokuService {
   @Override
   public SubmitSudokuInformationVO checkSudokuData(List<List<Integer>> userMatrix) {
     GameRecordBO gameRecord = gameUtils.getGameRecord();
-    gameRecord.setEndTime(new Date());
+    gameRecord.setEndTime(LocalDateTime.now());
 
     SudokuDataBO sudokuDataBO = gameRecord.getSudokuDataBO();
     AnswerSituation situation = judgeAnswerSituation(userMatrix, sudokuDataBO);

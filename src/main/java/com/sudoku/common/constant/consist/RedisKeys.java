@@ -25,6 +25,10 @@ public class RedisKeys {
    * 用户总数的key值
    */
   public static final String USER_TOTAL = "user_total";
+  /**
+   * 游戏总局数的key值
+   */
+  public static final String GAME_TOTAL = "game_total";
 
   private RedisKeys() {
   }

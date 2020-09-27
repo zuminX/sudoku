@@ -2,8 +2,9 @@ package com.sudoku.common.utils;
 
 import static java.lang.reflect.Array.newInstance;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -13,6 +14,10 @@ import java.util.stream.Collectors;
  */
 public class PublicUtils {
 
+  /**
+   * +8的时区
+   */
+  public static final ZoneOffset ZONE = ZoneOffset.of("+8");
   /**
    * 生成随机数的对象
    */
@@ -117,14 +122,14 @@ public class PublicUtils {
   }
 
   /**
-   * 获取两个日期的绝对差值
+   * 获取两个日期时间的绝对差值
    *
-   * @param date1 日期一
-   * @param date2 日期二
+   * @param dateTime1 日期时间一
+   * @param dateTime2 日期时间二
    * @return 以ms为单位的差值
    */
-  public static long getTwoDateAbsDiff(Date date1, Date date2) {
-    return Math.abs(date1.getTime() - date2.getTime());
+  public static long getTwoDateAbsDiff(LocalDateTime dateTime1, LocalDateTime dateTime2) {
+    return Math.abs(dateTime1.toInstant(ZONE).toEpochMilli() - dateTime2.toInstant(ZONE).toEpochMilli());
   }
 
 

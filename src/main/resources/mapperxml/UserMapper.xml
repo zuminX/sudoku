@@ -45,7 +45,7 @@
 
   <update id="updateRecentLoginTimeById">
     update `user`
-    set recent_login_time=#{updatedRecentLoginTime,jdbcType=TIMESTAMP}
+    set recent_login_time=#{loginTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 

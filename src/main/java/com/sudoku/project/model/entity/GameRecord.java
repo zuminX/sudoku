@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Data;
 
 /**
@@ -39,13 +39,13 @@ public class GameRecord implements Serializable {
    * 开始时间
    */
   @TableField(value = "start_time")
-  private Date startTime;
+  private LocalDateTime startTime;
 
   /**
    * 结束时间
    */
   @TableField(value = "end_time")
-  private Date endTime;
+  private LocalDateTime endTime;
 
   /**
    * 回答是否正确

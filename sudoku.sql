@@ -72,7 +72,8 @@ VALUES (1, 'sudoku:level:list', '数独等级列表'),
        (6, 'sudoku:user:information', '数独用户信息'),
        (7, 'sudoku:user:record', '数独用户游戏记录'),
        (8, 'system:user:add', '用户新增'),
-       (9, 'statistics:user:list', '用户统计信息列表')
+       (9, 'statistics:user:list', '用户统计信息列表'),
+       (10, 'statistics:user:total', '系统用户总数')
 ;
 
 
@@ -96,6 +97,7 @@ VALUES (1, 1, 1),
        (7, 7, 1),
        (8, 8, 2),
        (16, 9, 2),
+       (17, 10, 2),
        (9, 1, 2),
        (10, 2, 2),
        (11, 3, 2),
