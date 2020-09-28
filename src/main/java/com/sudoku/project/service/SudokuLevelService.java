@@ -5,7 +5,7 @@ import com.sudoku.project.model.vo.SudokuLevelVO;
 import java.util.List;
 
 /**
- * 资源业务层接口
+ * 数独等级业务层接口
  */
 public interface SudokuLevelService {
 

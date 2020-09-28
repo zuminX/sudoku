@@ -7,6 +7,7 @@ import com.sudoku.project.model.vo.GameRecordVO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.apache.ibatis.annotations.Param;
 
 public interface GameRecordMapper extends BaseMapper<GameRecord> {
@@ -22,7 +23,7 @@ public interface GameRecordMapper extends BaseMapper<GameRecord> {
    *
    * @return 最早结束的数独游戏的时间
    */
-  LocalDateTime findFirstEndTimeOrderByEndTime();
+  Optional<LocalDateTime> findFirstEndTimeOrderByEndTime();
 
   /**
    * 统计在[startDate,endDate)中游戏统计数据列表

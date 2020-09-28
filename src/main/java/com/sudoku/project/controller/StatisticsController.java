@@ -44,7 +44,7 @@ public class StatisticsController {
       @ApiImplicitParam(name = "endDate", value = "结束日期", dataTypeClass = LocalDateTime.class, required = true),
       @ApiImplicitParam(name = "date", value = "统计日期类", dataTypeClass = StatisticsDate.class, required = true)
   })
-  public List<StatisticsUserDataBO> getAssignDateStatisticsUserData(
+  public List<StatisticsUserDataBO> getAssignDateUserData(
       @RequestParam @NotNull(message = "开始日期不能为空") @Past(message = "开始日期必须是过去的时间") LocalDate startDate,
       @RequestParam @NotNull(message = "结束日期不能为空") LocalDate endDate,
       @RequestParam StatisticsDate date) {
@@ -57,10 +57,10 @@ public class StatisticsController {
   @ApiImplicitParams({
       @ApiImplicitParam(name = "date", value = "统计日期类", dataTypeClass = StatisticsDate.class, required = true)
   })
-  public List<StatisticsUserDataBO> getRecentDateStatisticsUserData(@RequestParam StatisticsDate date) {
+  public List<StatisticsUserDataBO> getRecentDateUserData(@RequestParam StatisticsDate date) {
     LocalDate endDate = LocalDate.now();
     LocalDate startDate = date.minus(endDate, 7L);
-    return getAssignDateStatisticsUserData(startDate, endDate, date);
+    return getAssignDateUserData(startDate, endDate, date);
   }
 
   @GetMapping("/user/total")
@@ -68,6 +68,40 @@ public class StatisticsController {
   @ApiOperation("获取系统的用户总数")
   public Integer getUserTotal() {
     return statisticsUserService.getUserTotal();
+  }
+
+  @GetMapping("/game/assignTotal")
+  @PreAuthorize("@ss.hasPermission('statistics:game:total')")
+  @ApiOperation("获取指定日期的游戏局数")
+  @ApiImplicitParams({
+      @ApiImplicitParam(name = "startDate", value = "开始日期", dataTypeClass = LocalDateTime.class, required = true),
+      @ApiImplicitParam(name = "endDate", value = "结束日期", dataTypeClass = LocalDateTime.class, required = true),
+      @ApiImplicitParam(name = "date", value = "统计日期类", dataTypeClass = StatisticsDate.class, required = true)
+  })
+  public List<Integer> getAssignDateGameTotal(
+      @RequestParam @NotNull(message = "开始日期不能为空") @Past(message = "开始日期必须是过去的时间") LocalDate startDate,
+      @RequestParam @NotNull(message = "结束日期不能为空") LocalDate endDate,
+      @RequestParam StatisticsDate date) {
+    return statisticsGameService.getGameTotal(startDate, endDate, date);
+  }
+
+  @GetMapping("/game/recentTotal")
+  @PreAuthorize("@ss.hasPermission('statistics:game:total')")
+    @ApiOperation("获取最近日期的游戏局数")
+  @ApiImplicitParams({
+      @ApiImplicitParam(name = "date", value = "统计日期类", dataTypeClass = StatisticsDate.class, required = true)
+  })
+  public List<Integer> getRecentDateStatisticsUserData(@RequestParam StatisticsDate date) {
+    LocalDate endDate = LocalDate.now();
+    LocalDate startDate = date.minus(endDate, 7L);
+    return getAssignDateGameTotal(startDate, endDate, date);
+  }
+
+  @GetMapping("/game/total")
+  @PreAuthorize("@ss.hasPermission('statistics:game:total')")
+  @ApiOperation("获取系统游戏总局数")
+  public Integer getGameTotal() {
+    return statisticsGameService.getGameTotal();
   }
 
   /**

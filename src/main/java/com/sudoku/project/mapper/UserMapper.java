@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sudoku.project.model.entity.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper extends BaseMapper<User> {
@@ -40,7 +41,8 @@ public interface UserMapper extends BaseMapper<User> {
    * @param endCreateTime   终止创建时间
    * @return 用户数
    */
-  Integer countByCreateTimeBetween(@Param("startCreateTime") LocalDate startCreateTime, @Param("endCreateTime") LocalDate endCreateTime);
+  Optional<Integer> countByCreateTimeBetween(@Param("startCreateTime") LocalDate startCreateTime,
+      @Param("endCreateTime") LocalDate endCreateTime);
 
   /**
    * 统计在[startLoginTime,endLoginTime)天中登录的用户数
@@ -49,7 +51,7 @@ public interface UserMapper extends BaseMapper<User> {
    * @param endLoginTime   终止登录时间
    * @return 用户数
    */
-  Integer countByRecentLoginTimeBetween(@Param("startLoginTime") LocalDate startLoginTime, @Param("endLoginTime") LocalDate endLoginTime);
+  Optional<Integer> countByRecentLoginTimeBetween(@Param("startLoginTime") LocalDate startLoginTime, @Param("endLoginTime") LocalDate endLoginTime);
 
   /**
    * 查找系统用户中最早注册的时间

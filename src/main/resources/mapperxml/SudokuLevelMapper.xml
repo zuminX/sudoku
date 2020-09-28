@@ -29,4 +29,9 @@
     from sudoku_level
     where `level` = #{level,jdbcType=INTEGER}
   </select>
+
+  <select id="selectId" resultType="java.lang.Integer">
+    select id
+    from sudoku_level
+  </select>
 </mapper>

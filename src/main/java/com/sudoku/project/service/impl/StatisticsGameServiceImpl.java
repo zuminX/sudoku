@@ -7,6 +7,7 @@ import com.sudoku.common.constant.enums.StatisticsDate;
 import com.sudoku.common.constant.enums.StatusCode;
 import com.sudoku.common.exception.StatisticsException;
 import com.sudoku.common.tools.DataStamped;
+import com.sudoku.common.utils.SudokuLevelUtils;
 import com.sudoku.project.convert.StatisticsGameConvert;
 import com.sudoku.project.core.UpdateOutDatedDataInRedis;
 import com.sudoku.project.core.UpdateStatisticsData;
@@ -15,6 +16,8 @@ import com.sudoku.project.mapper.StatisticsGameMapper;
 import com.sudoku.project.model.bo.StatisticsGameDataBO;
 import com.sudoku.project.service.StatisticsGameService;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -31,14 +34,16 @@ public class StatisticsGameServiceImpl implements StatisticsGameService {
   private StatisticsGameMapper statisticsGameMapper;
   @Autowired
   private GameRecordMapper gameRecordMapper;
+  @Autowired
+  private SudokuLevelUtils sudokuLevelUtils;
 
   /**
-   * 获取在[startDate,endDate)中的游戏总局数
+   * 获取在[startDate,endDate)中的游戏局数
    *
    * @param startDate 开始日期
    * @param endDate   结束日期
    * @param date      统计日期
-   * @return 游戏总局数
+   * @return 游戏局数
    */
   @Override
   @Cacheable(value = "statisticsGameData", keyGenerator = "simpleKG")
@@ -50,7 +55,7 @@ public class StatisticsGameServiceImpl implements StatisticsGameService {
   }
 
   /**
-   * 获取游戏总局数
+   * 获取系统游戏总局数
    *
    * @return 游戏总局数
    */
@@ -59,13 +64,13 @@ public class StatisticsGameServiceImpl implements StatisticsGameService {
     return new UpdateOutDatedDataInRedis<Integer>(RedisKeys.GAME_TOTAL) {
       @Override
       public Integer getLatestDataIfEmpty() {
-        return statisticsGameMapper.selectGameTotalByDateName(StatisticsDate.DAILY.getName());
+        return statisticsGameMapper.selectGameTotalByDateName(StatisticsDate.DAILY.getName()).orElse(0);
       }
 
       @Override
       public Integer getLatestData(DataStamped<Integer> oldData) {
         Integer newGameTotal = statisticsGameMapper.selectGameTotalByDateAfterAndDateName(oldData.getUpdateDate().plusDays(1L),
-            StatisticsDate.DAILY.getName());
+            StatisticsDate.DAILY.getName()).orElse(0);
         return oldData.getData() + newGameTotal;
       }
     }.updateData();
@@ -92,7 +97,6 @@ public class StatisticsGameServiceImpl implements StatisticsGameService {
     new UpdateGameStatisticsData(StatisticsDate.EACH_MONTH) {
       @Override
       public List<StatisticsGameDataBO> getStatisticsGameData(LocalDate startDate, LocalDate endDate) {
-        //获取该月的用户统计数据列表
         return statisticsGameMapper.selectCorrectTotalSumAndErrorTotalSumAndSudokuLevelIdByDateBetweenAndDateName(startDate, endDate,
             StatisticsDate.DAILY.getName());
       }
@@ -132,13 +136,28 @@ public class StatisticsGameServiceImpl implements StatisticsGameService {
     @Transactional
     protected void insertData(LocalDate startDate, LocalDate endDate) {
       List<StatisticsGameDataBO> statisticsGameData = getStatisticsGameData(startDate, endDate);
+      addLackData(statisticsGameData);
       statisticsGameMapper.insertList(statisticsGameData.stream()
           .map(data -> StatisticsGameConvert.INSTANCE.convert(data, getStatisticsDate().getName(), startDate))
           .collect(toList()));
     }
 
     /**
-     * 获取第一次统计数据的日期
+     * 添加缺失的数据，以保证数据的完整性
+     *
+     * @param gameDataBOList 游戏统计数据对象列表
+     */
+    private void addLackData(List<StatisticsGameDataBO> gameDataBOList) {
+      if (gameDataBOList == null) {
+        gameDataBOList = new ArrayList<>();
+      }
+      List<Integer> lackSudokuLevelId = sudokuLevelUtils.findLackSudokuLevelId(
+          gameDataBOList.stream().map(StatisticsGameDataBO::getSudokuLevelId).collect(toList()));
+      gameDataBOList.addAll(lackSudokuLevelId.stream().map(StatisticsGameDataBO::getZero).collect(toList()));
+    }
+
+    /**
+     * 获取最新统计数据的日期
      *
      * @return 第一次统计数据的日期
      */
@@ -154,7 +173,7 @@ public class StatisticsGameServiceImpl implements StatisticsGameService {
      */
     @Override
     protected LocalDate getFirstStatisticsDate() {
-      return gameRecordMapper.findFirstEndTimeOrderByEndTime().toLocalDate();
+      return gameRecordMapper.findFirstEndTimeOrderByEndTime().orElse(LocalDateTime.now()).toLocalDate();
     }
   }
 

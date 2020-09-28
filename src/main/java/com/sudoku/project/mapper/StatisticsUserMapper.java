@@ -5,6 +5,7 @@ import com.sudoku.project.model.bo.StatisticsUserDataBO;
 import com.sudoku.project.model.entity.StatisticsUser;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import org.apache.ibatis.annotations.Param;
 
 public interface StatisticsUserMapper extends BaseMapper<StatisticsUser> {
@@ -44,12 +45,12 @@ public interface StatisticsUserMapper extends BaseMapper<StatisticsUser> {
    *
    * @return 用户总数
    */
-  Integer selectNewUserTotalSumByDateName(@Param("dateName") String dateName);
+  Optional<Integer> selectNewUserTotalSumByDateName(@Param("dateName") String dateName);
 
   /**
    * 查询在startDate后，统计日期名字为dateName的用户总数
    *
    * @return 用户总数
    */
-  Integer selectNewUserTotalSumByDateAfterAndDateName(@Param("startDate") LocalDate startDate, @Param("dateName") String dateName);
+  Optional<Integer> selectNewUserTotalSumByDateAfterAndDateName(@Param("startDate") LocalDate startDate, @Param("dateName") String dateName);
 }

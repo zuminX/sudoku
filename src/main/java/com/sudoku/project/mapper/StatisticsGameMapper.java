@@ -5,6 +5,7 @@ import com.sudoku.project.model.bo.StatisticsGameDataBO;
 import com.sudoku.project.model.entity.StatisticsGame;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import org.apache.ibatis.annotations.Param;
 
 public interface StatisticsGameMapper extends BaseMapper<StatisticsGame> {
@@ -22,7 +23,7 @@ public interface StatisticsGameMapper extends BaseMapper<StatisticsGame> {
    *
    * @return 游戏总局数
    */
-  Integer selectGameTotalByDateName(@Param("dateName") String dateName);
+  Optional<Integer> selectGameTotalByDateName(@Param("dateName") String dateName);
 
   /**
    * 查询在[startDate,endDate)中，统计日期名字为dateName的游戏总局数
@@ -64,7 +65,7 @@ public interface StatisticsGameMapper extends BaseMapper<StatisticsGame> {
    *
    * @return 游戏总局数
    */
-  Integer selectGameTotalByDateAfterAndDateName(@Param("startDate") LocalDate startDate, @Param("dateName") String dateName);
+  Optional<Integer> selectGameTotalByDateAfterAndDateName(@Param("startDate") LocalDate startDate, @Param("dateName") String dateName);
 
   /**
    * 批量插入数据

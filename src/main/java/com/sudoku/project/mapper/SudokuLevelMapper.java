@@ -13,6 +13,9 @@ public interface SudokuLevelMapper extends BaseMapper<SudokuLevel> {
   @Cacheable(value = "sudokuLevels", keyGenerator = "simpleKG")
   List<SudokuLevel> selectAll();
 
+  @Cacheable(value = "sudokuIds", keyGenerator = "simpleKG")
+  List<Integer> selectId();
+
   @Cacheable(value = "sudokuLevelIdToNameMap", keyGenerator = "simpleKG")
   default Map<String, String> selectIdToName() {
     List<SudokuLevel> sudokuLevels = selectAll();

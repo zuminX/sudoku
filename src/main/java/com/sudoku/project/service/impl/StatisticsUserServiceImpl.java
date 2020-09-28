@@ -57,13 +57,13 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
     return new UpdateOutDatedDataInRedis<Integer>(RedisKeys.USER_TOTAL) {
       @Override
       public Integer getLatestDataIfEmpty() {
-        return statisticsUserMapper.selectNewUserTotalSumByDateName(StatisticsDate.DAILY.getName());
+        return statisticsUserMapper.selectNewUserTotalSumByDateName(StatisticsDate.DAILY.getName()).orElse(0);
       }
 
       @Override
       public Integer getLatestData(DataStamped<Integer> oldData) {
         Integer newUserTotal = statisticsUserMapper.selectNewUserTotalSumByDateAfterAndDateName(oldData.getUpdateDate().plusDays(1L),
-            StatisticsDate.DAILY.getName());
+            StatisticsDate.DAILY.getName()).orElse(0);
         return oldData.getData() + newUserTotal;
       }
     }.updateData();
@@ -77,8 +77,8 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
     new UpdateUserStatisticsData(StatisticsDate.DAILY) {
       @Override
       public StatisticsUserDataBO getStatisticsUserData(LocalDate startDate, LocalDate endDate) {
-        Integer newUserTotal = userMapper.countByCreateTimeBetween(startDate, endDate);
-        Integer activeUserTotal = userMapper.countByRecentLoginTimeBetween(startDate, endDate);
+        Integer newUserTotal = userMapper.countByCreateTimeBetween(startDate, endDate).orElse(0);
+        Integer activeUserTotal = userMapper.countByRecentLoginTimeBetween(startDate, endDate).orElse(0);
         return new StatisticsUserDataBO(newUserTotal, activeUserTotal);
       }
     }.updateData();
@@ -92,7 +92,6 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
     new UpdateUserStatisticsData(StatisticsDate.EACH_MONTH) {
       @Override
       public StatisticsUserDataBO getStatisticsUserData(LocalDate startDate, LocalDate endDate) {
-        //获取该月的用户统计数据列表
         return statisticsUserMapper.selectNewUserTotalSumAndActiveUserTotalSumByDateBetweenAndDateName(startDate, endDate,
             StatisticsDate.DAILY.getName());
       }
@@ -132,11 +131,14 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
     @Transactional
     protected void insertData(LocalDate startDate, LocalDate endDate) {
       StatisticsUserDataBO statisticsUserData = getStatisticsUserData(startDate, endDate);
+      if (statisticsUserData == null) {
+        statisticsUserData = StatisticsUserDataBO.getZero();
+      }
       statisticsUserMapper.insert(StatisticsUserConvert.INSTANCE.convert(statisticsUserData, getStatisticsDate().getName(), startDate));
     }
 
     /**
-     * 获取第一次统计数据的日期
+     * 获取最新统计数据的日期
      *
      * @return 第一次统计数据的日期
      */

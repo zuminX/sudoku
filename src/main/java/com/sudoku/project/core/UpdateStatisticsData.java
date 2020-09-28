@@ -53,8 +53,8 @@ public abstract class UpdateStatisticsData {
     LocalDate startDate = getStartDate();
     LocalDate nowDate = LocalDate.now();
     LocalDate endDate = getNextDate(startDate);
-    //插入数据，直到统计的时间超过当前时间
-    while (endDate.compareTo(nowDate) < 0) {
+    //插入数据，直到统计的时间在当前时间的前一天
+    while (endDate.compareTo(nowDate) <= 0) {
       insertData(startDate, endDate);
       startDate = getNextDate(startDate);
       endDate = getNextDate(startDate);

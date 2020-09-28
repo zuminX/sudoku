@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * 资源业务层实现类
+ * 数独等级业务层实现类
  */
 @Service
 public class SudokuLevelServiceImpl implements SudokuLevelService {

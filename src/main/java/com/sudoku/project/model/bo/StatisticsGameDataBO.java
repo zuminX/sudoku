@@ -18,4 +18,14 @@ public class StatisticsGameDataBO {
   private Integer errorTotal;
   @ApiModelProperty("数独难度ID")
   private Integer sudokuLevelId;
+
+  /**
+   * 获取统计数据为零的对象
+   *
+   * @param sudokuLevelId 数独难度ID
+   * @return 统计数据为零的对象
+   */
+  public static StatisticsGameDataBO getZero(Integer sudokuLevelId) {
+    return new StatisticsGameDataBO(0, 0, sudokuLevelId);
+  }
 }
