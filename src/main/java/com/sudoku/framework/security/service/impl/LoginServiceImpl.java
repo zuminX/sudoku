@@ -28,6 +28,8 @@ public class LoginServiceImpl implements LoginService {
   private AuthenticationManager authenticationManager;
   @Autowired
   private UserTokenService tokenService;
+  @Autowired
+  private UserConvert userConvert;
 
   /**
    * 用户登录
@@ -39,7 +41,7 @@ public class LoginServiceImpl implements LoginService {
   public LoginSuccessVO login(LoginBody loginBody) {
     LoginUserBO loginUserBO = checkPassword(loginBody);
     String token = tokenService.createToken(loginUserBO);
-    return new LoginSuccessVO(UserConvert.INSTANCE.convert(loginUserBO.getUser()), token);
+    return new LoginSuccessVO(userConvert.convert(loginUserBO.getUser()), token);
   }
 
   /**

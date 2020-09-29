@@ -6,15 +6,12 @@ import java.time.LocalDate;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.mapstruct.factory.Mappers;
 
 /**
  * 统计用户类的转换器
  */
 @Mapper
 public interface StatisticsUserConvert {
-
-  StatisticsUserConvert INSTANCE = Mappers.getMapper(StatisticsUserConvert.class);
 
   /**
    * 将用户统计数据类转化为统计用户表对应的实体类

@@ -6,15 +6,12 @@ import java.time.LocalDate;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.mapstruct.factory.Mappers;
 
 /**
  * 统计游戏类的转换器
  */
 @Mapper
 public interface StatisticsGameConvert {
-
-  StatisticsGameConvert INSTANCE = Mappers.getMapper(StatisticsGameConvert.class);
 
   /**
    * 将游戏统计数据类转化为统计游戏表对应的实体类

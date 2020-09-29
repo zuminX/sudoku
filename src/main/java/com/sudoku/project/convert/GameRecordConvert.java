@@ -1,19 +1,16 @@
 package com.sudoku.project.convert;
 
+import com.sudoku.common.utils.PublicUtils;
 import com.sudoku.project.model.bo.GameRecordBO;
 import com.sudoku.project.model.entity.GameRecord;
-import com.sudoku.common.utils.PublicUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 /**
  * 游戏记录对象转换器
  */
 @Mapper(imports = PublicUtils.class)
 public interface GameRecordConvert {
-
-  GameRecordConvert INSTANCE = Mappers.getMapper(GameRecordConvert.class);
 
   /**
    * 将游戏记录传输层对象转换为对应表对象

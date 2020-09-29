@@ -1,10 +1,10 @@
 package com.sudoku.project.convert;
 
 import com.sudoku.common.constant.consist.SettingParameter;
+import com.sudoku.common.utils.CoreUtils;
 import com.sudoku.project.model.bo.RankItemBO;
 import com.sudoku.project.model.vo.RankDataVO;
 import com.sudoku.project.model.vo.RankItemVO;
-import com.sudoku.common.utils.CoreUtils;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,9 +15,9 @@ import org.mapstruct.factory.Mappers;
  * 排行数据转换器
  */
 @Mapper
-public interface RankDataConvert {
+public abstract class RankDataConvert {
 
-  RankDataConvert INSTANCE = Mappers.getMapper(RankDataConvert.class);
+  private static final RankItemConvert CONVERT = Mappers.getMapper(RankItemConvert.class);
 
   /**
    * 将排行项传输层列表转换为排行数据显示层对象
@@ -27,12 +27,12 @@ public interface RankDataConvert {
    * @param <T>            数据的类型
    * @return 排行数据显示层对象
    */
-  default <T> RankDataVO<T> convert(List<RankItemBO<T>> rankItemBOList, String rankDataName) {
+  public <T> RankDataVO<T> convert(List<RankItemBO<T>> rankItemBOList, String rankDataName) {
     LinkedHashMap<String, List<RankItemVO<T>>> rankItemMap = new LinkedHashMap<>();
     ArrayList<RankItemVO<T>> rankItemVOList = new ArrayList<>(SettingParameter.RANKING_NUMBER);
     for (int i = 0, size = rankItemBOList.size(); i < size; i++) {
       RankItemBO<T> rankItemBO = rankItemBOList.get(i);
-      rankItemVOList.add(RankItemConvert.INSTANCE.convert(rankItemBO));
+      rankItemVOList.add(CONVERT.convert(rankItemBO));
 
       String levelName = rankItemBO.getSudokuLevelName();
       //若为最后一项，将其添加到Map中

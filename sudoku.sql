@@ -5,16 +5,19 @@ USE `sudoku`;
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`
 (
-    `id`                int         NOT NULL AUTO_INCREMENT COMMENT '用户ID',
-    `username`          varchar(32) NOT NULL COMMENT '用户名',
-    `password`          varchar(64) NOT NULL COMMENT '密码',
-    `nickname`          varchar(64) NOT NULL COMMENT '昵称',
-    `create_time`       DATETIME DEFAULT NOW() COMMENT '创建时间',
-    `recent_login_time` DATETIME DEFAULT NOW() COMMENT '最近登录时间',
-    `enabled`           tinyint  DEFAULT 1 COMMENT '是否启用',
-    PRIMARY KEY (`id`)
+    `id`                int UNSIGNED                                                 NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+    `username`          varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户名',
+    `password`          varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
+    `nickname`          varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
+    `create_time`       datetime                                                     NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `recent_login_time` datetime                                                     NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最近登录时间',
+    `enabled`           tinyint                                                      NULL DEFAULT 1 COMMENT '是否启用',
+    PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci
+  ROW_FORMAT = Dynamic;
+
 
 
 INSERT INTO `user`
@@ -25,12 +28,15 @@ VALUES (1, 'test1', '$2a$10$VaphyIrQ7C9aELKTx/Wh1.QqGVvBymhd57NrY/OoQhuAjMgNMoEO
 DROP TABLE IF EXISTS `user_role`;
 CREATE TABLE `user_role`
 (
-    `id`      int NOT NULL AUTO_INCREMENT COMMENT '用户角色ID',
-    `user_id` int NOT NULL COMMENT '用户ID',
-    `role_id` int NOT NULL COMMENT '角色ID',
-    PRIMARY KEY (`id`)
+    `id`      int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户角色ID',
+    `user_id` int          NOT NULL COMMENT '用户ID',
+    `role_id` int          NOT NULL COMMENT '角色ID',
+    PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci
+  ROW_FORMAT = Dynamic;
+
 
 INSERT INTO `user_role`
 VALUES (1, 1, 1),
@@ -56,12 +62,15 @@ VALUES (1, 'ROLE_USER', '用户'),
 DROP TABLE IF EXISTS `resource`;
 CREATE TABLE `resource`
 (
-    `id`      int         NOT NULL AUTO_INCREMENT COMMENT '资源ID',
-    `perms`   varchar(64) NOT NULL COMMENT '权限标识',
-    `name_zh` varchar(64) NOT NULL COMMENT '资源名称',
-    PRIMARY KEY (`id`)
+    `id`      int UNSIGNED                                                 NOT NULL AUTO_INCREMENT COMMENT '资源ID',
+    `perms`   varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '权限标识',
+    `name_zh` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '资源名称',
+    PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci
+  ROW_FORMAT = Dynamic;
+
 
 INSERT INTO `resource`
 VALUES (1, 'sudoku:level:list', '数独等级列表'),
@@ -81,12 +90,15 @@ VALUES (1, 'sudoku:level:list', '数独等级列表'),
 DROP TABLE IF EXISTS `resource_role`;
 CREATE TABLE `resource_role`
 (
-    `id`          int NOT NULL AUTO_INCREMENT COMMENT '资源角色ID',
-    `resource_id` int NOT NULL COMMENT '资源ID',
-    `role_id`     int NOT NULL COMMENT '角色ID',
-    PRIMARY KEY (`id`)
+    `id`          int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '资源角色ID',
+    `resource_id` int          NOT NULL COMMENT '资源ID',
+    `role_id`     int          NOT NULL COMMENT '角色ID',
+    PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci
+  ROW_FORMAT = Dynamic;
+
 
 INSERT INTO `resource_role`
 VALUES (1, 1, 1),
@@ -112,14 +124,17 @@ VALUES (1, 1, 1),
 DROP TABLE IF EXISTS `sudoku_level`;
 CREATE TABLE `sudoku_level`
 (
-    `id`        int         NOT NULL AUTO_INCREMENT COMMENT '数独难度ID',
-    `level`     tinyint DEFAULT 0 COMMENT '难度级别',
-    `name`      VARCHAR(64) NOT NULL COMMENT '难度名',
-    `min_empty` tinyint DEFAULT 35 COMMENT '最小的空缺格子数',
-    `max_empty` tinyint DEFAULT 35 COMMENT '最大的空缺格子数',
-    PRIMARY KEY (`id`)
+    `id`        int UNSIGNED                                                 NOT NULL AUTO_INCREMENT COMMENT '数独难度ID',
+    `level`     tinyint                                                      NULL DEFAULT 0 COMMENT '难度级别',
+    `name`      varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '难度名',
+    `min_empty` tinyint                                                      NULL DEFAULT 35 COMMENT '最小的空缺格子数',
+    `max_empty` tinyint                                                      NULL DEFAULT 35 COMMENT '最大的空缺格子数',
+    PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci
+  ROW_FORMAT = Dynamic;
+
 
 INSERT INTO `sudoku_level`
 VALUES (1, 0, '简单模式', 30, 35),
@@ -131,17 +146,20 @@ VALUES (1, 0, '简单模式', 30, 35),
 DROP TABLE IF EXISTS `user_game_information`;
 CREATE TABLE `user_game_information`
 (
-    `id`                 int NOT NULL AUTO_INCREMENT COMMENT '用户游戏信息的ID',
-    `total`              int DEFAULT 0 COMMENT '提交的次数',
-    `correct_number`     int DEFAULT 0 COMMENT '提交正确的次数',
-    `average_spend_time` int DEFAULT NULL COMMENT '平均用时',
-    `min_spend_time`     int DEFAULT NULL COMMENT '最短用时',
-    `max_spend_time`     int DEFAULT NULL COMMENT '最长用时',
-    `user_id`            int NOT NULL COMMENT '用户ID',
-    `sudoku_level_id`    int NOT NULL COMMENT '数独等级ID',
-    PRIMARY KEY (`id`)
+    `id`                 int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户游戏信息的ID',
+    `total`              int          NULL DEFAULT 0 COMMENT '提交的次数',
+    `correct_number`     int          NULL DEFAULT 0 COMMENT '提交正确的次数',
+    `average_spend_time` int          NULL DEFAULT NULL COMMENT '平均用时',
+    `min_spend_time`     int          NULL DEFAULT NULL COMMENT '最短用时',
+    `max_spend_time`     int          NULL DEFAULT NULL COMMENT '最长用时',
+    `user_id`            int          NOT NULL COMMENT '用户ID',
+    `sudoku_level_id`    int          NOT NULL COMMENT '数独等级ID',
+    PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci
+  ROW_FORMAT = Dynamic;
+
 
 INSERT INTO `user_game_information`
 VALUES (1, 1, 1, 600000, 600000, 600000, 1, 1),
@@ -157,17 +175,20 @@ VALUES (1, 1, 1, 600000, 600000, 600000, 1, 1),
 DROP TABLE IF EXISTS `game_record`;
 CREATE TABLE `game_record`
 (
-    `id`              int NOT NULL AUTO_INCREMENT COMMENT '游戏记录的ID',
-    `sudoku_matrix`   char(81) DEFAULT NULL COMMENT '数独矩阵',
-    `sudoku_holes`    char(81) DEFAULT NULL COMMENT '空缺的数独',
-    `start_time`      DATETIME DEFAULT NULL COMMENT '开始时间',
-    `end_time`        DATETIME DEFAULT NULL COMMENT '结束时间',
-    `correct`         tinyint  DEFAULT 0 COMMENT '回答是否正确',
-    `sudoku_level_id` int NOT NULL COMMENT '数独难度ID',
-    `user_id`         int NOT NULL COMMENT '用户ID',
-    PRIMARY KEY (`id`)
+    `id`              int UNSIGNED                                              NOT NULL AUTO_INCREMENT COMMENT '游戏记录的ID',
+    `sudoku_matrix`   char(81) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '数独矩阵',
+    `sudoku_holes`    char(81) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '空缺的数独',
+    `start_time`      datetime                                                  NULL DEFAULT NULL COMMENT '开始时间',
+    `end_time`        datetime                                                  NULL DEFAULT NULL COMMENT '结束时间',
+    `correct`         tinyint                                                   NULL DEFAULT 0 COMMENT '回答是否正确',
+    `sudoku_level_id` int                                                       NOT NULL COMMENT '数独难度ID',
+    `user_id`         int                                                       NOT NULL COMMENT '用户ID',
+    PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci
+  ROW_FORMAT = Dynamic;
+
 
 INSERT INTO `game_record`
 VALUES (1, '239187465586394127471625398942761583318459276657832914894516732723948651165273849',
@@ -177,25 +198,41 @@ VALUES (1, '23918746558639412747162539894276158331845927665783291489451673272394
 DROP TABLE IF EXISTS `statistics_user`;
 CREATE TABLE `statistics_user`
 (
-    `id`                int         NOT NULL AUTO_INCREMENT COMMENT '用户统计数据的ID',
-    `new_user_total`    int DEFAULT 0 COMMENT '新增用户总数',
-    `active_user_total` int DEFAULT 0 COMMENT '活跃用户总数',
-    `date_name`         VARCHAR(16) NOT NULL COMMENT '统计日期类型的名字',
-    `date`              DATE        NOT NULL COMMENT '统计的日期',
-    PRIMARY KEY (`id`)
+    `id`                int UNSIGNED                                                 NOT NULL AUTO_INCREMENT COMMENT '用户统计数据的ID',
+    `new_user_total`    int                                                          NULL DEFAULT 0 COMMENT '新增用户总数',
+    `active_user_total` int                                                          NULL DEFAULT 0 COMMENT '活跃用户总数',
+    `date_name`         VARCHAR(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '统计日期类型的名字',
+    `date`              date                                                         NOT NULL COMMENT '统计的日期',
+    PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci
+  ROW_FORMAT = Dynamic;
+
 
 DROP TABLE IF EXISTS `statistics_game`;
 CREATE TABLE `statistics_game`
 (
-    `id`              int         NOT NULL AUTO_INCREMENT COMMENT '游戏统计数据的ID',
-    `correct_total`   int DEFAULT 0 COMMENT '提交正确的总数',
-    `error_total`     int DEFAULT 0 COMMENT '提交错误的总数',
-    `sudoku_level_id` int         NOT NULL COMMENT '数独等级ID',
-    `date_name`       VARCHAR(16) NOT NULL COMMENT '统计日期类型的名字',
-    `date`            DATE        NOT NULL COMMENT '统计的日期',
-    PRIMARY KEY (`id`)
+    `id`              int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '游戏统计数据的ID',
+    `correct_total`   int          NULL DEFAULT 0 COMMENT '提交正确的总数',
+    `error_total`     int          NULL DEFAULT 0 COMMENT '提交错误的总数',
+    `sudoku_level_id` int          NOT NULL COMMENT '数独等级ID',
+    `date_name`       VARCHAR(16)  NOT NULL COMMENT '统计日期类型的名字',
+    `date`            date         NOT NULL COMMENT '统计的日期',
+    PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci
+  ROW_FORMAT = Dynamic;
+
+
+# ALTER TABLE `game_record` ADD CONSTRAINT `fk_game_record_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+# ALTER TABLE `game_record` ADD CONSTRAINT `fk_game_record_sudoku_level` FOREIGN KEY (`sudoku_level_id`) REFERENCES `sudoku_level` (`id`);
+# ALTER TABLE `resource_role` ADD CONSTRAINT `fk_resource_role_resource` FOREIGN KEY (`resource_id`) REFERENCES `resource` (`id`);
+# ALTER TABLE `resource_role` ADD CONSTRAINT `fk_resource_role_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`);
+# ALTER TABLE `statistics_game` ADD CONSTRAINT `fk_statistics_game_sudoku_level` FOREIGN KEY (`sudoku_level_id`) REFERENCES `sudoku_level` (`id`);
+# ALTER TABLE `user_game_information` ADD CONSTRAINT `fk_user_game_information_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+# ALTER TABLE `user_game_information` ADD CONSTRAINT `fk_user_game_information_sudoku_level` FOREIGN KEY (`sudoku_level_id`) REFERENCES `sudoku_level` (`id`);
+# ALTER TABLE `user_role` ADD CONSTRAINT `fk_user_role_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+# ALTER TABLE `user_role` ADD CONSTRAINT `fk_user_role_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`);
 

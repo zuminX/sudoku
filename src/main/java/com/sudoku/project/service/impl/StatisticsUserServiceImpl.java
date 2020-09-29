@@ -29,6 +29,8 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
   private StatisticsUserMapper statisticsUserMapper;
   @Autowired
   private UserMapper userMapper;
+  @Autowired
+  private StatisticsUserConvert statisticsUserConvert;
 
   /**
    * 获取在[startDate,endDate)中的用户统计信息列表
@@ -134,7 +136,7 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
       if (statisticsUserData == null) {
         statisticsUserData = StatisticsUserDataBO.getZero();
       }
-      statisticsUserMapper.insert(StatisticsUserConvert.INSTANCE.convert(statisticsUserData, getStatisticsDate().getName(), startDate));
+      statisticsUserMapper.insert(statisticsUserConvert.convert(statisticsUserData, getStatisticsDate().getName(), startDate));
     }
 
     /**

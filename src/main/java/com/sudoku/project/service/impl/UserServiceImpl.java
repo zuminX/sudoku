@@ -37,6 +37,8 @@ public class UserServiceImpl implements UserService {
   private UserRoleMapper userRoleMapper;
   @Autowired
   private SecurityUtils securityUtils;
+  @Autowired
+  private UserConvert userConvert;
 
   /**
    * 注册用户
@@ -56,7 +58,7 @@ public class UserServiceImpl implements UserService {
     userMapper.insert(user);
     insertUserRole(user);
 
-    return UserConvert.INSTANCE.convert(user);
+    return userConvert.convert(user);
   }
 
   /**

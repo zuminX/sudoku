@@ -34,6 +34,8 @@ public class SudokuServiceImpl implements SudokuService {
 
   @Autowired
   private GameUtils gameUtils;
+  @Autowired
+  private SubmitSudokuInformationConvert submitSudokuInformationConvert;
 
   /**
    * 生成数独题目
@@ -118,7 +120,7 @@ public class SudokuServiceImpl implements SudokuService {
         .matrix(gameRecord.getSudokuDataBO().getMatrix())
         .spendTime(PublicUtils.getTwoDateAbsDiff(gameRecord.getEndTime(), gameRecord.getStartTime()))
         .build();
-    return SubmitSudokuInformationConvert.INSTANCE.convert(informationBO);
+    return submitSudokuInformationConvert.convert(informationBO);
   }
 
   /**

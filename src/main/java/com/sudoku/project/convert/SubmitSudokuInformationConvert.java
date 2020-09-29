@@ -4,15 +4,12 @@ import com.sudoku.common.constant.enums.AnswerSituation;
 import com.sudoku.project.model.bo.SubmitSudokuInformationBO;
 import com.sudoku.project.model.vo.SubmitSudokuInformationVO;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 /**
  * 提交数独信息转换器
  */
 @Mapper
 public interface SubmitSudokuInformationConvert {
-
-  SubmitSudokuInformationConvert INSTANCE = Mappers.getMapper(SubmitSudokuInformationConvert.class);
 
   /**
    * 将提交数独信息传输层对象转换为显示层对象

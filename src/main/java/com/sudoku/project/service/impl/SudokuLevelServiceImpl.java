@@ -20,6 +20,8 @@ public class SudokuLevelServiceImpl implements SudokuLevelService {
 
   @Autowired
   private SudokuLevelMapper sudokuLevelMapper;
+  @Autowired
+  private SudokuLevelConvert sudokuLevelConvert;
 
   /**
    * 获取数独游戏的所有难度
@@ -29,7 +31,7 @@ public class SudokuLevelServiceImpl implements SudokuLevelService {
   @Override
   public List<SudokuLevelVO> getSudokuLevels() {
     return sudokuLevelMapper.selectAll().stream()
-        .map(SudokuLevelConvert.INSTANCE::convert)
+        .map(sudokuLevelConvert::convert)
         .collect(Collectors.toList());
   }
 

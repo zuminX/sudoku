@@ -27,6 +27,8 @@ public class GameRecordServiceImpl implements GameRecordService {
   private GameRecordMapper gameRecordMapper;
   @Autowired
   private GameUtils gameUtils;
+  @Autowired
+  private GameRecordConvert gameRecordConvert;
 
   /**
    * 保存游戏记录
@@ -49,7 +51,7 @@ public class GameRecordServiceImpl implements GameRecordService {
    * @param gameRecordBO 游戏记录
    */
   private void insertGameRecord(GameRecordBO gameRecordBO) {
-    GameRecord gameRecord = GameRecordConvert.INSTANCE.convert(gameRecordBO);
+    GameRecord gameRecord = gameRecordConvert.convert(gameRecordBO);
     gameRecordMapper.insertSelective(gameRecord);
 
     gameRecordBO.setId(gameRecord.getId());

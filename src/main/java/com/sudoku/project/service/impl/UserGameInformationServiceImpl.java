@@ -40,6 +40,10 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
   private SudokuLevelMapper sudokuLevelMapper;
   @Autowired
   private GameUtils gameUtils;
+  @Autowired
+  private RankDataConvert rankDataConvert;
+  @Autowired
+  private UserGameInformationConvert userGameInformationConvert;
 
   /**
    * 更新用户游戏信息
@@ -139,7 +143,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
     List<UserGameInformationVO> list = new ArrayList<>();
     Map<String, String> idToName = sudokuLevelMapper.selectIdToName();
     userGameInformationList.forEach(userGameInformation -> {
-      UserGameInformationVO convert = UserGameInformationConvert.INSTANCE.convert(userGameInformation);
+      UserGameInformationVO convert = userGameInformationConvert.convert(userGameInformation);
       convert.setSudokuLevelName(idToName.get(userGameInformation.getSudokuLevelId().toString()));
       list.add(convert);
     });
@@ -153,7 +157,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    */
   private RankDataVO<Integer> getCorrectNumberRankingList() {
     List<RankItemBO<Integer>> list = userGameInformationMapper.selectCorrectNumberRanking(SettingParameter.RANKING_NUMBER);
-    return RankDataConvert.INSTANCE.convert(list, RankDataName.CORRECT_NUMBER);
+    return rankDataConvert.convert(list, RankDataName.CORRECT_NUMBER);
   }
 
   /**
@@ -163,7 +167,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    */
   private RankDataVO<Integer> getMinSpendTimeRankingList() {
     List<RankItemBO<Integer>> list = userGameInformationMapper.selectMinSpendTimeRanking(SettingParameter.RANKING_NUMBER);
-    return RankDataConvert.INSTANCE.convert(list, RankDataName.MIN_SPEND_TIME);
+    return rankDataConvert.convert(list, RankDataName.MIN_SPEND_TIME);
   }
 
   /**
@@ -173,7 +177,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    */
   private RankDataVO<Integer> getAverageSpendTimeRankingList() {
     List<RankItemBO<Integer>> list = userGameInformationMapper.selectAverageSpendTimeRanking(SettingParameter.RANKING_NUMBER);
-    return RankDataConvert.INSTANCE.convert(list, RankDataName.AVERAGE_SPEND_TIME);
+    return rankDataConvert.convert(list, RankDataName.AVERAGE_SPEND_TIME);
   }
 
   /**

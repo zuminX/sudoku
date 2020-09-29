@@ -36,6 +36,8 @@ public class StatisticsGameServiceImpl implements StatisticsGameService {
   private GameRecordMapper gameRecordMapper;
   @Autowired
   private SudokuLevelUtils sudokuLevelUtils;
+  @Autowired
+  private StatisticsGameConvert statisticsGameConvert;
 
   /**
    * 获取在[startDate,endDate)中的游戏局数
@@ -138,7 +140,7 @@ public class StatisticsGameServiceImpl implements StatisticsGameService {
       List<StatisticsGameDataBO> statisticsGameData = getStatisticsGameData(startDate, endDate);
       addLackData(statisticsGameData);
       statisticsGameMapper.insertList(statisticsGameData.stream()
-          .map(data -> StatisticsGameConvert.INSTANCE.convert(data, getStatisticsDate().getName(), startDate))
+          .map(data -> statisticsGameConvert.convert(data, getStatisticsDate().getName(), startDate))
           .collect(toList()));
     }
 

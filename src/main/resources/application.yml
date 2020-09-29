@@ -45,7 +45,7 @@ logging:
   level:
     com.sudoku: warn
     org.springframework: warn
-    com.sudoku.project.mapper : debug
+#    com.sudoku.project.mapper : debug
 
 #token配置
 token:

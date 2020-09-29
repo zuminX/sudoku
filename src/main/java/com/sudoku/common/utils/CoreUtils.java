@@ -3,6 +3,7 @@ package com.sudoku.common.utils;
 import com.sudoku.common.constant.consist.SettingParameter;
 import com.sudoku.project.model.vo.RankItemVO;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * 业务相关工具类
@@ -22,9 +23,8 @@ public class CoreUtils {
    * @return 填充后的排行项列表
    */
   public static <T> List<RankItemVO<T>> fillUpRankItemList(List<RankItemVO<T>> rankItemVOArrayList) {
-    for (int i = rankItemVOArrayList.size(); i < SettingParameter.RANKING_NUMBER; i++) {
-      rankItemVOArrayList.add(new RankItemVO<>(null, null));
-    }
+    IntStream.range(rankItemVOArrayList.size(), SettingParameter.RANKING_NUMBER).<RankItemVO<T>>mapToObj(
+        i -> new RankItemVO<>(null, null)).forEach(rankItemVOArrayList::add);
     return rankItemVOArrayList;
   }
 

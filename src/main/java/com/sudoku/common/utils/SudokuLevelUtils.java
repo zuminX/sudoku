@@ -16,7 +16,6 @@ public class SudokuLevelUtils {
   @Autowired
   private SudokuLevelMapper sudokuLevelMapper;
 
-
   /**
    * 查找给定的ID列表中缺少的数独等级ID列表
    *
