@@ -1,19 +1,18 @@
 package com.sudoku.project.service.impl;
 
-import com.sudoku.project.convert.GameRecordConvert;
 import com.sudoku.common.log.BusinessType;
 import com.sudoku.common.log.Log;
+import com.sudoku.common.tools.page.Page;
+import com.sudoku.common.tools.page.PageParam;
+import com.sudoku.common.tools.page.PageUtils;
+import com.sudoku.common.utils.GameUtils;
+import com.sudoku.common.utils.SecurityUtils;
+import com.sudoku.project.convert.GameRecordConvert;
 import com.sudoku.project.mapper.GameRecordMapper;
 import com.sudoku.project.model.bo.GameRecordBO;
 import com.sudoku.project.model.entity.GameRecord;
 import com.sudoku.project.model.vo.GameRecordVO;
-import com.sudoku.project.model.vo.PageVO;
 import com.sudoku.project.service.GameRecordService;
-import com.sudoku.common.utils.GameUtils;
-import com.sudoku.common.tools.PageUtils;
-import com.sudoku.common.tools.PageUtils.PageParam;
-import com.sudoku.common.utils.SecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +22,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GameRecordServiceImpl implements GameRecordService {
 
-  @Autowired
-  private GameRecordMapper gameRecordMapper;
-  @Autowired
-  private GameUtils gameUtils;
-  @Autowired
-  private GameRecordConvert gameRecordConvert;
+  private final GameRecordMapper gameRecordMapper;
+  private final GameUtils gameUtils;
+  private final GameRecordConvert gameRecordConvert;
+
+  public GameRecordServiceImpl(GameRecordMapper gameRecordMapper, GameUtils gameUtils,
+      GameRecordConvert gameRecordConvert) {
+    this.gameRecordMapper = gameRecordMapper;
+    this.gameUtils = gameUtils;
+    this.gameRecordConvert = gameRecordConvert;
+  }
 
   /**
    * 保存游戏记录
@@ -75,8 +78,8 @@ public class GameRecordServiceImpl implements GameRecordService {
    * @return 游戏记录的分页信息
    */
   @Override
-  public PageVO<GameRecordVO> getHistoryGameRecord(Integer page, Integer pageSize) {
-    return PageUtils.getPageVO(PageParam.<GameRecordVO>builder()
+  public Page<GameRecordVO> getHistoryGameRecord(Integer page, Integer pageSize) {
+    return PageUtils.getPage(PageParam.<GameRecordVO>builder()
         .queryFunc(() -> gameRecordMapper.findByUidOrderByStartTimeDesc(SecurityUtils.getUserId()))
         .page(page)
         .pageSize(pageSize)

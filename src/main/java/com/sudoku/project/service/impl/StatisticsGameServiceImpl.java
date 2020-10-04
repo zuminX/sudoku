@@ -19,7 +19,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,14 +29,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class StatisticsGameServiceImpl implements StatisticsGameService {
 
-  @Autowired
-  private StatisticsGameMapper statisticsGameMapper;
-  @Autowired
-  private GameRecordMapper gameRecordMapper;
-  @Autowired
-  private SudokuLevelUtils sudokuLevelUtils;
-  @Autowired
-  private StatisticsGameConvert statisticsGameConvert;
+  private final StatisticsGameMapper statisticsGameMapper;
+  private final GameRecordMapper gameRecordMapper;
+  private final SudokuLevelUtils sudokuLevelUtils;
+  private final StatisticsGameConvert statisticsGameConvert;
+
+  public StatisticsGameServiceImpl(StatisticsGameMapper statisticsGameMapper,
+      GameRecordMapper gameRecordMapper, SudokuLevelUtils sudokuLevelUtils, StatisticsGameConvert statisticsGameConvert) {
+    this.statisticsGameMapper = statisticsGameMapper;
+    this.gameRecordMapper = gameRecordMapper;
+    this.sudokuLevelUtils = sudokuLevelUtils;
+    this.statisticsGameConvert = statisticsGameConvert;
+  }
 
   /**
    * 获取在[startDate,endDate)中的游戏局数

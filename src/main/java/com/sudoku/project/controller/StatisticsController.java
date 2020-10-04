@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
@@ -31,10 +30,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "统计信息API接口")
 public class StatisticsController {
 
-  @Autowired
-  private StatisticsUserService statisticsUserService;
-  @Autowired
-  private StatisticsGameService statisticsGameService;
+  private final StatisticsUserService statisticsUserService;
+  private final StatisticsGameService statisticsGameService;
+
+  public StatisticsController(StatisticsUserService statisticsUserService,
+      StatisticsGameService statisticsGameService) {
+    this.statisticsUserService = statisticsUserService;
+    this.statisticsGameService = statisticsGameService;
+  }
 
   @GetMapping("/user/assignDate")
   @PreAuthorize("@ss.hasPermission('statistics:user:list')")
@@ -91,7 +94,7 @@ public class StatisticsController {
   @ApiImplicitParams({
       @ApiImplicitParam(name = "date", value = "统计日期类", dataTypeClass = StatisticsDate.class, required = true)
   })
-  public List<Integer> getRecentDateStatisticsUserData(@RequestParam StatisticsDate date) {
+  public List<Integer> getRecentDateGameTotal(@RequestParam StatisticsDate date) {
     LocalDate endDate = LocalDate.now();
     LocalDate startDate = date.minus(endDate, 7L);
     return getAssignDateGameTotal(startDate, endDate, date);

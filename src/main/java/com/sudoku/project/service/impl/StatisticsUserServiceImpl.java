@@ -14,7 +14,6 @@ import com.sudoku.project.model.bo.StatisticsUserDataBO;
 import com.sudoku.project.service.StatisticsUserService;
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,12 +24,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class StatisticsUserServiceImpl implements StatisticsUserService {
 
-  @Autowired
-  private StatisticsUserMapper statisticsUserMapper;
-  @Autowired
-  private UserMapper userMapper;
-  @Autowired
-  private StatisticsUserConvert statisticsUserConvert;
+  private final StatisticsUserMapper statisticsUserMapper;
+  private final UserMapper userMapper;
+  private final StatisticsUserConvert statisticsUserConvert;
+
+  public StatisticsUserServiceImpl(StatisticsUserMapper statisticsUserMapper,
+      UserMapper userMapper, StatisticsUserConvert statisticsUserConvert) {
+    this.statisticsUserMapper = statisticsUserMapper;
+    this.userMapper = userMapper;
+    this.statisticsUserConvert = statisticsUserConvert;
+  }
 
   /**
    * 获取在[startDate,endDate)中的用户统计信息列表

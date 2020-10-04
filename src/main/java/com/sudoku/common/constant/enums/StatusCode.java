@@ -32,6 +32,7 @@ public enum StatusCode {
   USER_NOT_AUTHORITY(203, HttpStatus.FORBIDDEN, "没有权限访问该地址"),
   USER_REPEAT_PASSWORD_ERROR(204, HttpStatus.BAD_REQUEST, "重复密码与密码不一致"),
   USER_NOT_ENABLED(205, HttpStatus.FORBIDDEN, "该用户处于禁用状态"),
+  USER_NOT_MODIFY_AUTHORITY(206, HttpStatus.FORBIDDEN, "没有修改的权限"),
 
   //登录异常
   LOGIN_ERROR(300, HttpStatus.BAD_REQUEST, "登录时发生错误"),

@@ -2,24 +2,30 @@ package com.sudoku.project.service.impl;
 
 import static java.util.stream.Collectors.toCollection;
 
+import cn.hutool.core.collection.CollUtil;
 import com.sudoku.common.constant.consist.PermissionConstants;
 import com.sudoku.common.constant.enums.StatusCode;
-import com.sudoku.project.convert.UserConvert;
 import com.sudoku.common.exception.UserException;
 import com.sudoku.common.log.Log;
+import com.sudoku.common.tools.page.Page;
+import com.sudoku.common.tools.page.PageParam;
+import com.sudoku.common.tools.page.PageUtils;
+import com.sudoku.common.utils.SecurityUtils;
+import com.sudoku.project.convert.UserConvert;
 import com.sudoku.project.mapper.RoleMapper;
 import com.sudoku.project.mapper.UserMapper;
 import com.sudoku.project.mapper.UserRoleMapper;
+import com.sudoku.project.model.body.AddUserBody;
+import com.sudoku.project.model.body.ModifyUserBody;
 import com.sudoku.project.model.body.RegisterUserBody;
 import com.sudoku.project.model.entity.User;
 import com.sudoku.project.model.entity.UserRole;
+import com.sudoku.project.model.vo.UserDetailVO;
 import com.sudoku.project.model.vo.UserVO;
 import com.sudoku.project.service.UserService;
-import com.sudoku.common.utils.SecurityUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,16 +35,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserServiceImpl implements UserService {
 
-  @Autowired
-  private UserMapper userMapper;
-  @Autowired
-  private RoleMapper roleMapper;
-  @Autowired
-  private UserRoleMapper userRoleMapper;
-  @Autowired
-  private SecurityUtils securityUtils;
-  @Autowired
-  private UserConvert userConvert;
+  private final UserMapper userMapper;
+  private final RoleMapper roleMapper;
+  private final UserRoleMapper userRoleMapper;
+  private final UserConvert userConvert;
+
+  public UserServiceImpl(UserMapper userMapper, RoleMapper roleMapper, UserRoleMapper userRoleMapper,
+       UserConvert userConvert) {
+    this.userMapper = userMapper;
+    this.roleMapper = roleMapper;
+    this.userRoleMapper = userRoleMapper;
+    this.userConvert = userConvert;
+  }
 
   /**
    * 注册用户
@@ -51,13 +59,10 @@ public class UserServiceImpl implements UserService {
   @Log("注册用户")
   public UserVO registerUser(RegisterUserBody registerUserBody) {
     checkRepeatPassword(registerUserBody);
-
     User user = convertToUser(registerUserBody);
-    checkUsername(user);
-
+    checkUsername(user.getUsername());
     userMapper.insert(user);
-    insertUserRole(user);
-
+    insertUserRole(user.getId(), PermissionConstants.USER_ROLE_NAME);
     return userConvert.convert(user);
   }
 
@@ -83,12 +88,70 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
-   * 检查注册的用户名在数据库中是否已经存在
+   * 获取系统用户列表
    *
-   * @param user 用户对象
+   * @param page     当前查询页
+   * @param pageSize 每页显示的条数
+   * @return 用户详情的分页信息
    */
-  private void checkUsername(User user) {
-    if (userMapper.selectByUsername(user.getUsername()) != null) {
+  @Override
+  public Page<UserDetailVO> getUserList(Integer page, Integer pageSize) {
+    return PageUtils.getPage(PageParam.<User>builder()
+            .queryFunc(userMapper::selectAllWithRole)
+            .page(page)
+            .pageSize(pageSize)
+            .build(),
+        userConvert::convertUserToUserDetailVO);
+  }
+
+  /**
+   * 修改用户信息
+   *
+   * @param modifyUserBody 修改的用户信息
+   */
+  @Override
+  public void modifyUser(ModifyUserBody modifyUserBody) {
+    checkRoleName(modifyUserBody);
+    checkUsername(modifyUserBody.getUsername());
+    userMapper.updateModifyById(modifyUserBody);
+    userRoleMapper.updateRoleIdByUserId(modifyUserBody.getId(), roleMapper.selectIdsByNames(modifyUserBody.getRoleNameList()));
+  }
+
+  /**
+   * 新增用户
+   *
+   * @param addUserBody 新增用户的信息
+   */
+  @Override
+  public void addUser(AddUserBody addUserBody) {
+    checkUsername(addUserBody.getUsername());
+    User user = userConvert.convert(addUserBody);
+    userMapper.insert(user);
+    insertUserRole(user.getId(), addUserBody.getRoleNameList());
+  }
+
+  /**
+   * 检查待修改的用户的角色名列表是否为空或管理员。若是，则抛出用户异常
+   *
+   * @param modifyUserBody 修改的用户对象
+   */
+  private void checkRoleName(ModifyUserBody modifyUserBody) {
+    List<String> roleNameList = roleMapper.selectNameZhByUserId(modifyUserBody.getId());
+    if (CollUtil.isEmpty(roleNameList)) {
+      throw new UserException(StatusCode.USER_NOT_FOUND);
+    }
+    if (SecurityUtils.hasAdmin(roleNameList)) {
+      throw new UserException(StatusCode.USER_NOT_MODIFY_AUTHORITY);
+    }
+  }
+
+  /**
+   * 检查指定的用户名在数据库中是否已经存在
+   *
+   * @param username 用户名
+   */
+  private void checkUsername(String username) {
+    if (userMapper.selectByUsername(username) != null) {
       throw new UserException(StatusCode.USER_HAS_EQUAL_NAME);
     }
   }
@@ -107,12 +170,13 @@ public class UserServiceImpl implements UserService {
   /**
    * 插入用户角色
    *
-   * @param user 用户对象
+   * @param userId       用户ID
+   * @param roleNameList 角色名列表
    */
-  private void insertUserRole(User user) {
-    List<Integer> roleIds = roleMapper.selectIdsByNames(PermissionConstants.USER_ROLE_NAME);
+  private void insertUserRole(Integer userId, List<String> roleNameList) {
+    List<Integer> roleIds = roleMapper.selectIdsByNames(roleNameList);
     List<UserRole> userRoles = roleIds.stream()
-        .map(roleId -> new UserRole(user.getId(), roleId))
+        .map(roleId -> new UserRole(userId, roleId))
         .collect(toCollection(() -> new ArrayList<>(roleIds.size())));
     userRoleMapper.batchInsert(userRoles);
   }
@@ -125,7 +189,7 @@ public class UserServiceImpl implements UserService {
    */
   private User convertToUser(RegisterUserBody registerUserBody) {
     return new User(registerUserBody.getUsername().trim(),
-        securityUtils.encodePassword(registerUserBody.getPassword()),
+        SecurityUtils.encodePassword(registerUserBody.getPassword()),
         registerUserBody.getNickname(),
         true);
   }

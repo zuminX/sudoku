@@ -6,7 +6,6 @@ import com.sudoku.project.service.StatisticsGameService;
 import com.sudoku.project.service.StatisticsUserService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.annotation.XxlJob;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,10 +14,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class StatisticsTask {
 
-  @Autowired
-  private StatisticsUserService statisticsUserService;
-  @Autowired
-  private StatisticsGameService statisticsGameService;
+  private final StatisticsUserService statisticsUserService;
+  private final StatisticsGameService statisticsGameService;
+
+  public StatisticsTask(StatisticsUserService statisticsUserService,
+      StatisticsGameService statisticsGameService) {
+    this.statisticsUserService = statisticsUserService;
+    this.statisticsGameService = statisticsGameService;
+  }
 
   @XxlJob("statisticsUserDailyTask")
   @Log(value = "统计每日用户数据", businessType = BusinessType.INSERT)

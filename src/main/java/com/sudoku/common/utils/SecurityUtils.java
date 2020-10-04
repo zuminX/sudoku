@@ -1,25 +1,25 @@
 package com.sudoku.common.utils;
 
+import static java.util.stream.Collectors.toList;
+
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import com.sudoku.common.constant.consist.PermissionConstants;
-import com.sudoku.project.model.entity.User;
 import com.sudoku.framework.security.model.LoginUserBO;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sudoku.project.model.entity.Role;
+import com.sudoku.project.model.entity.User;
+import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 /**
  * 安全服务工具类
  */
-@Component
 public class SecurityUtils {
-
-  @Autowired
-  private PasswordEncoder passwordEncoder;
 
   /**
    * 获取密码编码器
@@ -65,10 +65,17 @@ public class SecurityUtils {
    * @return 是管理员返回true，否则返回false
    */
   public static boolean isAdmin(User user) {
-    if (isUserRolesEmpty(user)) {
-      return false;
-    }
-    return user.getRoles().stream().anyMatch(r -> r.getName().equals(PermissionConstants.ADMIN_NAME));
+    return !isUserRolesEmpty(user) && hasAdmin(user.getRoles().stream().map(Role::getNameZh).collect(toList()));
+  }
+
+  /**
+   * 判断该角色名列表是否包含管理员
+   *
+   * @param roleNameList 角色名列表
+   * @return 包含返回true，否则返回false
+   */
+  public static boolean hasAdmin(@NotNull List<String> roleNameList) {
+    return roleNameList.stream().anyMatch(s -> s.equals(PermissionConstants.ADMIN_NAME));
   }
 
   /**
@@ -107,7 +114,7 @@ public class SecurityUtils {
    * @param password 原始密码
    * @return 加密后的密码
    */
-  public String encodePassword(String password) {
-    return passwordEncoder.encode(password);
+  public static String encodePassword(String password) {
+    return SpringUtil.getBean(PasswordEncoder.class).encode(password);
   }
 }

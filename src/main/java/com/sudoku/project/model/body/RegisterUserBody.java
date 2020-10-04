@@ -16,26 +16,26 @@ public class RegisterUserBody implements Serializable {
 
   private static final long serialVersionUID = 7615402214779318417L;
 
-  @ApiModelProperty(value = "用户名", required = true)
+  @ApiModelProperty("用户名")
   @Length(min = 4, max = 16, message = "用户名的长度为4-16位")
   private String username;
 
-  @ApiModelProperty(value = "密码", required = true)
+  @ApiModelProperty("密码")
   @Length(min = 6, max = 32, message = "密码的长度为6-32位")
   private String password;
 
-  @ApiModelProperty(value = "重复密码", required = true)
+  @ApiModelProperty("重复密码")
   @Length(min = 6, max = 32, message = "重复密码的长度为6-32位")
   private String repeatPassword;
 
-  @ApiModelProperty(value = "用户昵称", required = true)
+  @ApiModelProperty("用户昵称")
   @Length(min = 4, max = 32, message = "昵称的长度为4-32位")
   private String nickname;
 
-  @ApiModelProperty(value = "验证码", required = true)
+  @ApiModelProperty("验证码")
   @Length(min = 4, max = 4, message = "验证码必须为4位")
   private String code;
 
-  @ApiModelProperty(value = "唯一标识", required = true)
+  @ApiModelProperty("唯一标识")
   private String uuid;
 }

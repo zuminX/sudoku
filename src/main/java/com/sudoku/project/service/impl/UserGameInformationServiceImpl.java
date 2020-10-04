@@ -2,10 +2,13 @@ package com.sudoku.project.service.impl;
 
 import com.sudoku.common.constant.consist.RankDataName;
 import com.sudoku.common.constant.consist.SettingParameter;
-import com.sudoku.project.convert.RankDataConvert;
-import com.sudoku.project.convert.UserGameInformationConvert;
 import com.sudoku.common.log.BusinessType;
 import com.sudoku.common.log.Log;
+import com.sudoku.common.utils.GameUtils;
+import com.sudoku.common.utils.PublicUtils;
+import com.sudoku.common.utils.SecurityUtils;
+import com.sudoku.project.convert.RankDataConvert;
+import com.sudoku.project.convert.UserGameInformationConvert;
 import com.sudoku.project.mapper.SudokuLevelMapper;
 import com.sudoku.project.mapper.UserGameInformationMapper;
 import com.sudoku.project.model.bo.GameRecordBO;
@@ -15,15 +18,11 @@ import com.sudoku.project.model.entity.UserGameInformation;
 import com.sudoku.project.model.vo.RankDataVO;
 import com.sudoku.project.model.vo.UserGameInformationVO;
 import com.sudoku.project.service.UserGameInformationService;
-import com.sudoku.common.utils.GameUtils;
-import com.sudoku.common.utils.PublicUtils;
-import com.sudoku.common.utils.SecurityUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,16 +33,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserGameInformationServiceImpl implements UserGameInformationService {
 
-  @Autowired
-  private UserGameInformationMapper userGameInformationMapper;
-  @Autowired
-  private SudokuLevelMapper sudokuLevelMapper;
-  @Autowired
-  private GameUtils gameUtils;
-  @Autowired
-  private RankDataConvert rankDataConvert;
-  @Autowired
-  private UserGameInformationConvert userGameInformationConvert;
+  private final UserGameInformationMapper userGameInformationMapper;
+  private final SudokuLevelMapper sudokuLevelMapper;
+  private final GameUtils gameUtils;
+  private final RankDataConvert rankDataConvert;
+  private final UserGameInformationConvert userGameInformationConvert;
+
+  public UserGameInformationServiceImpl(
+      UserGameInformationMapper userGameInformationMapper, SudokuLevelMapper sudokuLevelMapper, GameUtils gameUtils,
+      RankDataConvert rankDataConvert, UserGameInformationConvert userGameInformationConvert) {
+    this.userGameInformationMapper = userGameInformationMapper;
+    this.sudokuLevelMapper = sudokuLevelMapper;
+    this.gameUtils = gameUtils;
+    this.rankDataConvert = rankDataConvert;
+    this.userGameInformationConvert = userGameInformationConvert;
+  }
 
   /**
    * 更新用户游戏信息

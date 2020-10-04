@@ -12,19 +12,19 @@ import com.sudoku.common.tools.RedisUtils;
 import com.sudoku.framework.security.model.CaptchaVO;
 import com.sudoku.framework.security.service.CaptchaService;
 import java.util.concurrent.TimeUnit;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 /**
  * 验证码业务层实现类
  */
-@Data
+@Setter
 @Service
 @ConfigurationProperties("captcha")
 public class CaptchaServiceImpl implements CaptchaService {
 
+  private final RedisUtils redisUtils;
   /**
    * 验证码的宽度
    */
@@ -46,8 +46,9 @@ public class CaptchaServiceImpl implements CaptchaService {
    */
   private int expireTime;
 
-  @Autowired
-  private RedisUtils redisUtils;
+  public CaptchaServiceImpl(RedisUtils redisUtils) {
+    this.redisUtils = redisUtils;
+  }
 
   /**
    * 生成验证码

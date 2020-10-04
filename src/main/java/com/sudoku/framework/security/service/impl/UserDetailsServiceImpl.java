@@ -2,11 +2,10 @@ package com.sudoku.framework.security.service.impl;
 
 import com.sudoku.common.constant.enums.StatusCode;
 import com.sudoku.common.exception.UserException;
-import com.sudoku.project.model.entity.User;
 import com.sudoku.framework.security.model.LoginUserBO;
+import com.sudoku.project.model.entity.User;
 import com.sudoku.project.service.ResourceService;
 import com.sudoku.project.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,10 +17,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-  @Autowired
-  private UserService userService;
-  @Autowired
-  private ResourceService resourceService;
+  private final UserService userService;
+  private final ResourceService resourceService;
+
+  public UserDetailsServiceImpl(UserService userService, ResourceService resourceService) {
+    this.userService = userService;
+    this.resourceService = resourceService;
+  }
 
   /**
    * 根据用户名查询用户对象

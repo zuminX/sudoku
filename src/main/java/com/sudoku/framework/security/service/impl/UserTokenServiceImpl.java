@@ -6,27 +6,27 @@ import static com.sudoku.common.constant.consist.RedisKeys.TOKEN_PREFIX;
 
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
+import com.sudoku.common.tools.RedisUtils;
 import com.sudoku.framework.security.model.LoginUserBO;
 import com.sudoku.framework.security.service.UserTokenService;
-import com.sudoku.common.tools.RedisUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 /**
  * 用户令牌业务层实现类
  */
-@Data
+@Setter
 @Service
 @ConfigurationProperties("token")
 public class UserTokenServiceImpl implements UserTokenService {
 
+  private final RedisUtils redisUtils;
   /**
    * 令牌标识
    */
@@ -44,8 +44,9 @@ public class UserTokenServiceImpl implements UserTokenService {
    */
   private int refreshTime;
 
-  @Autowired
-  private RedisUtils redisUtils;
+  public UserTokenServiceImpl(RedisUtils redisUtils) {
+    this.redisUtils = redisUtils;
+  }
 
   /**
    * 获取登录用户

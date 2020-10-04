@@ -1,16 +1,15 @@
 package com.sudoku.framework.security.controller;
 
-import com.sudoku.project.model.vo.CommonResult;
 import com.sudoku.framework.security.model.LoginBody;
 import com.sudoku.framework.security.model.LoginSuccessVO;
 import com.sudoku.framework.security.service.CaptchaService;
 import com.sudoku.framework.security.service.LoginService;
+import com.sudoku.project.model.vo.CommonResult;
 import com.sudoku.project.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,12 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "登录API接口")
 public class LoginController {
 
-  @Autowired
-  private LoginService loginService;
-  @Autowired
-  private CaptchaService captchaService;
-  @Autowired
-  private UserService userService;
+  private final LoginService loginService;
+  private final CaptchaService captchaService;
+  private final UserService userService;
+
+  public LoginController(LoginService loginService, CaptchaService captchaService, UserService userService) {
+    this.loginService = loginService;
+    this.captchaService = captchaService;
+    this.userService = userService;
+  }
 
   @PostMapping("/login")
   @ApiOperation("登录")

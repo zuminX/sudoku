@@ -17,19 +17,14 @@ public class UserGameInformationVO implements Serializable {
 
   @ApiModelProperty("提交的次数")
   private Integer total;
-
   @ApiModelProperty("提交正确的次数")
   private Integer correctNumber;
-
   @ApiModelProperty("平均用时")
   private Integer averageSpendTime;
-
   @ApiModelProperty("最短用时")
   private Integer minSpendTime;
-
   @ApiModelProperty("最长用时")
   private Integer maxSpendTime;
-
   @ApiModelProperty("数独等级名")
   private String sudokuLevelName;
 }

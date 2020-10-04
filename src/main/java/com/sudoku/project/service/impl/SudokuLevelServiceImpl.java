@@ -1,15 +1,14 @@
 package com.sudoku.project.service.impl;
 
 import com.sudoku.common.constant.enums.StatusCode;
-import com.sudoku.project.convert.SudokuLevelConvert;
 import com.sudoku.common.exception.GameException;
+import com.sudoku.project.convert.SudokuLevelConvert;
 import com.sudoku.project.mapper.SudokuLevelMapper;
 import com.sudoku.project.model.entity.SudokuLevel;
 import com.sudoku.project.model.vo.SudokuLevelVO;
 import com.sudoku.project.service.SudokuLevelService;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,10 +17,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class SudokuLevelServiceImpl implements SudokuLevelService {
 
-  @Autowired
-  private SudokuLevelMapper sudokuLevelMapper;
-  @Autowired
-  private SudokuLevelConvert sudokuLevelConvert;
+  private final SudokuLevelMapper sudokuLevelMapper;
+  private final SudokuLevelConvert sudokuLevelConvert;
+
+  public SudokuLevelServiceImpl(SudokuLevelMapper sudokuLevelMapper,
+      SudokuLevelConvert sudokuLevelConvert) {
+    this.sudokuLevelMapper = sudokuLevelMapper;
+    this.sudokuLevelConvert = sudokuLevelConvert;
+  }
 
   /**
    * 获取数独游戏的所有难度

@@ -1,12 +1,11 @@
 package com.sudoku.project.service.impl;
 
+import com.sudoku.common.utils.SecurityUtils;
 import com.sudoku.project.mapper.ResourceMapper;
 import com.sudoku.project.model.entity.User;
 import com.sudoku.project.service.ResourceService;
-import com.sudoku.common.utils.SecurityUtils;
 import java.util.Collections;
 import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,8 +14,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ResourceServiceImpl implements ResourceService {
 
-  @Autowired
-  private ResourceMapper resourceMapper;
+  private final ResourceMapper resourceMapper;
+
+  public ResourceServiceImpl(ResourceMapper resourceMapper) {
+    this.resourceMapper = resourceMapper;
+  }
 
   /**
    * 获取所有资源及其拥有的角色

@@ -79,12 +79,7 @@ public class RedisConfig {
    */
   @Bean
   public KeyGenerator simpleKG() {
-    return new KeyGeneratorTemplateMethod() {
-      @Override
-      public String parameterToString(Object... parameter) {
-        return Arrays.stream(parameter).map(Object::toString).collect(Collectors.joining("-"));
-      }
-    }.getKeyGenerator();
+    return ((KeyGeneratorTemplateMethod) parameter -> Arrays.stream(parameter).map(Object::toString).collect(Collectors.joining("-"))).getKeyGenerator();
   }
 
   /**
@@ -94,14 +89,9 @@ public class RedisConfig {
    */
   @Bean
   public KeyGenerator localDateTimeKG() {
-    return new KeyGeneratorTemplateMethod() {
-      @Override
-      public String parameterToString(Object... parameter) {
-        return Arrays.stream(parameter)
-            .map(object -> object instanceof LocalDateTime ? ((LocalDateTime) object).toLocalDate().toString() : object.toString())
-            .collect(Collectors.joining("-"));
-      }
-    }.getKeyGenerator();
+    return ((KeyGeneratorTemplateMethod) parameter -> Arrays.stream(parameter)
+        .map(object -> object instanceof LocalDateTime ? ((LocalDateTime) object).toLocalDate().toString() : object.toString())
+        .collect(Collectors.joining("-"))).getKeyGenerator();
   }
 
   /**
@@ -136,14 +126,14 @@ public class RedisConfig {
   /**
    * Key生成器的模板方法
    */
-  private abstract static class KeyGeneratorTemplateMethod {
+  private interface KeyGeneratorTemplateMethod {
 
     /**
      * 获取Key生成器
      *
      * @return Key生成器对象
      */
-    public KeyGenerator getKeyGenerator() {
+    default KeyGenerator getKeyGenerator() {
       return (o, method, objects) -> o.getClass().getSimpleName()
           + "."
           + method.getName()
@@ -158,6 +148,6 @@ public class RedisConfig {
      * @param parameter 参数
      * @return 转化后的字符串
      */
-    public abstract String parameterToString(Object... parameter);
+    String parameterToString(Object... parameter);
   }
 }

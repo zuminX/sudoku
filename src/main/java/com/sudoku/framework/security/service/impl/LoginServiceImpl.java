@@ -3,15 +3,14 @@ package com.sudoku.framework.security.service.impl;
 import static com.sudoku.common.constant.enums.StatusCode.LOGIN_ERROR;
 import static com.sudoku.common.constant.enums.StatusCode.LOGIN_PASSWORD_ERROR;
 
-import com.sudoku.project.convert.UserConvert;
 import com.sudoku.common.exception.LoginException;
 import com.sudoku.framework.security.model.LoginBody;
 import com.sudoku.framework.security.model.LoginSuccessVO;
 import com.sudoku.framework.security.model.LoginUserBO;
 import com.sudoku.framework.security.service.LoginService;
 import com.sudoku.framework.security.service.UserTokenService;
+import com.sudoku.project.convert.UserConvert;
 import javax.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,12 +23,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class LoginServiceImpl implements LoginService {
 
+  private final UserTokenService tokenService;
+  private final UserConvert userConvert;
   @Resource
   private AuthenticationManager authenticationManager;
-  @Autowired
-  private UserTokenService tokenService;
-  @Autowired
-  private UserConvert userConvert;
+
+  public LoginServiceImpl(UserTokenService tokenService, UserConvert userConvert) {
+    this.tokenService = tokenService;
+    this.userConvert = userConvert;
+  }
 
   /**
    * 用户登录

@@ -71,4 +71,39 @@
     order by create_time
     limit 1
   </select>
+
+  <select id="selectAll" resultMap="UserWithRole">
+    select
+    <include refid="Base_Column_List"/>
+    from `user`
+  </select>
+
+  <update id="updateModifyById">
+    update `user`
+    <set>
+      <if test="user.username != null">
+        username = #{user.username,jdbcType=VARCHAR},
+      </if>
+      <if test="user.nickname != null">
+        nickname = #{user.nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="user.createTime != null">
+        create_time = #{user.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="user.recentLoginTime != null">
+        recent_login_time = #{user.recentLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="user.enabled != null">
+        enabled = #{user.enabled,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{user.id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectAllWithRole" resultMap="UserWithRole">
+    select user.*, r.`id` as rid, r.`name` as rname, r.name_zh as rnameZh
+    from user
+           inner join user_role ur on ur.user_id = user.id
+           inner join role r on r.`id` = ur.role_id
+  </select>
 </mapper>

@@ -1,4 +1,4 @@
-package com.sudoku.project.model.vo;
+package com.sudoku.common.tools.page;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,14 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@ApiModel("分页数据显示层类")
-public class PageVO<T> implements Serializable {
+@ApiModel("分页数据类")
+public class Page<T> implements Serializable {
 
   private static final long serialVersionUID = 4427124527401721636L;
 
   @ApiModelProperty("分页信息")
   private PageInformation pageInformation;
-
   @ApiModelProperty("分页数据")
   private List<T> list;
 
@@ -32,10 +31,8 @@ public class PageVO<T> implements Serializable {
 
     @ApiModelProperty("总页数")
     private Integer totalPage;
-
     @ApiModelProperty("当前页")
     private Integer currentPage;
-
     @ApiModelProperty("每页的数量")
     private Integer pageSize;
   }

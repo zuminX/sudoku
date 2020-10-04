@@ -23,7 +23,6 @@ import com.sudoku.project.service.SudokuService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -32,10 +31,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class SudokuServiceImpl implements SudokuService {
 
-  @Autowired
-  private GameUtils gameUtils;
-  @Autowired
-  private SubmitSudokuInformationConvert submitSudokuInformationConvert;
+  private final GameUtils gameUtils;
+  private final SubmitSudokuInformationConvert submitSudokuInformationConvert;
+
+  public SudokuServiceImpl(GameUtils gameUtils,
+      SubmitSudokuInformationConvert submitSudokuInformationConvert) {
+    this.gameUtils = gameUtils;
+    this.submitSudokuInformationConvert = submitSudokuInformationConvert;
+  }
 
   /**
    * 生成数独题目

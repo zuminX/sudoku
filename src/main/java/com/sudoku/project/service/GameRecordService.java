@@ -1,7 +1,7 @@
 package com.sudoku.project.service;
 
 import com.sudoku.project.model.vo.GameRecordVO;
-import com.sudoku.project.model.vo.PageVO;
+import com.sudoku.common.tools.page.Page;
 
 /**
  * 游戏记录业务层接口
@@ -20,5 +20,5 @@ public interface GameRecordService {
    * @param pageSize 每页显示的条数
    * @return 游戏记录的分页信息
    */
-  PageVO<GameRecordVO> getHistoryGameRecord(Integer page, Integer pageSize);
+  Page<GameRecordVO> getHistoryGameRecord(Integer page, Integer pageSize);
 }

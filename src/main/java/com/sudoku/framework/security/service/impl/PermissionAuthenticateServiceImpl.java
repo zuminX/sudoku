@@ -6,12 +6,11 @@ import static com.sudoku.common.utils.SecurityUtils.isLoginUserRolesEmpty;
 
 import cn.hutool.core.util.StrUtil;
 import com.sudoku.common.constant.consist.PermissionConstants;
+import com.sudoku.common.tools.ServletUtils;
 import com.sudoku.framework.security.model.LoginUserBO;
 import com.sudoku.framework.security.service.PermissionAuthenticateService;
 import com.sudoku.framework.security.service.UserTokenService;
-import com.sudoku.common.tools.ServletUtils;
 import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,8 +19,11 @@ import org.springframework.stereotype.Service;
 @Service("ss")
 public class PermissionAuthenticateServiceImpl implements PermissionAuthenticateService {
 
-  @Autowired
-  private UserTokenService tokenService;
+  private final UserTokenService tokenService;
+
+  public PermissionAuthenticateServiceImpl(UserTokenService tokenService) {
+    this.tokenService = tokenService;
+  }
 
   /**
    * 验证当前用户是否具有指定权限

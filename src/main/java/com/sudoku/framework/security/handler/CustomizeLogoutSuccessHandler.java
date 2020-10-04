@@ -1,13 +1,12 @@
 package com.sudoku.framework.security.handler;
 
+import com.sudoku.common.tools.ServletUtils;
 import com.sudoku.framework.security.model.LoginUserBO;
 import com.sudoku.framework.security.service.UserTokenService;
-import com.sudoku.common.tools.ServletUtils;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -18,8 +17,11 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 @Configuration
 public class CustomizeLogoutSuccessHandler implements LogoutSuccessHandler {
 
-  @Autowired
-  private UserTokenService tokenService;
+  private final UserTokenService tokenService;
+
+  public CustomizeLogoutSuccessHandler(UserTokenService tokenService) {
+    this.tokenService = tokenService;
+  }
 
   /**
    * 登出成功处理

@@ -1,14 +1,13 @@
 package com.sudoku.framework.security.filter;
 
+import com.sudoku.common.utils.SecurityUtils;
 import com.sudoku.framework.security.model.LoginUserBO;
 import com.sudoku.framework.security.service.UserTokenService;
-import com.sudoku.common.utils.SecurityUtils;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -21,8 +20,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
-  @Autowired
-  private UserTokenService tokenService;
+  private final UserTokenService tokenService;
+
+  public JwtAuthenticationTokenFilter(UserTokenService tokenService) {
+    this.tokenService = tokenService;
+  }
 
   /**
    * 过滤处理

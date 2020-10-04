@@ -1,6 +1,7 @@
 package com.sudoku.project.model.vo;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,33 +15,16 @@ public class GameRecordVO implements Serializable {
 
   private static final long serialVersionUID = -1976268450582740297L;
 
-  /**
-   * 数独矩阵
-   */
+  @ApiModelProperty("数独矩阵字符串")
   private String sudokuMatrix;
-
-  /**
-   * 数独空缺
-   */
+  @ApiModelProperty("数独格子字符串")
   private String sudokuHoles;
-
-  /**
-   * 开始时间
-   */
+  @ApiModelProperty("开始时间")
   private String startTime;
-
-  /**
-   * 结束时间
-   */
+  @ApiModelProperty("结束时间")
   private String endTime;
-
-  /**
-   * 回答是否正确
-   */
+  @ApiModelProperty("回答是否正确")
   private Boolean correct;
-
-  /**
-   * 数独难度名
-   */
+  @ApiModelProperty("数独难度名")
   private String sudokuLevelName;
 }
