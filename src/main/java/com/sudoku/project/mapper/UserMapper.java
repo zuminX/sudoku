@@ -2,6 +2,7 @@ package com.sudoku.project.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sudoku.project.model.body.ModifyUserBody;
+import com.sudoku.project.model.body.SearchUserBody;
 import com.sudoku.project.model.entity.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,11 +36,26 @@ public interface UserMapper extends BaseMapper<User> {
   List<User> selectAll();
 
   /**
-   * 查找系统所有用户且用户带有角色信息
+   * 查找系统所有用户，且用户带有角色信息
    *
    * @return 用户列表
    */
   List<User> selectAllWithRole();
+
+  /**
+   * 查找系统符合条件的用户，且用户带有角色信息
+   *
+   * @return 用户列表
+   */
+  List<User> selectByConditionWithRole(@Param("user") SearchUserBody user);
+
+  /**
+   * 查找系统中用户名或昵称中包含指定名称的用户给，且用户带有角色信息
+   *
+   * @param name 名称
+   * @return 用户列表
+   */
+  List<User> selectByNameWithRole(@Param("name") String name);
 
   /**
    * 根据ID更新用户
@@ -84,4 +100,5 @@ public interface UserMapper extends BaseMapper<User> {
    * @return 最早注册的时间
    */
   LocalDateTime findFirstCreateTimeOrderByCreateTime();
+
 }

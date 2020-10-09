@@ -16,9 +16,9 @@
   <select id="selectPermsByUserId" resultType="java.lang.String">
     select distinct resource.perms, ur.user_id
     from resource
-           inner join resource_role rr on resource.`id` = rr.resource_id
+           inner join merge_resource_role rr on resource.`id` = rr.resource_id
            inner join role r on r.`id` = rr.role_id
-           inner join user_role ur on r.id = ur.role_id
+           inner join merge_user_role ur on r.id = ur.role_id
     where user_id = #{userId}
   </select>
 </mapper>

@@ -7,30 +7,31 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import lombok.Data;
 
-/**
- * 资源角色对应的实体类
- */
 @Data
-@TableName(value = "resource_role")
-public class ResourceRole implements Serializable {
+@TableName(value = "merge_user_role")
+public class MergeUserRole implements Serializable {
 
-  private static final long serialVersionUID = -6996653235064535889L;
-
+  private static final long serialVersionUID = 6802935173945726932L;
   /**
-   * 资源角色ID
+   * 用户角色ID
    */
   @TableId(value = "id", type = IdType.AUTO)
   private Integer id;
 
   /**
-   * 资源ID
+   * 用户ID
    */
-  @TableField(value = "resource_id")
-  private Integer resourceId;
+  @TableField(value = "user_id")
+  private Integer userId;
 
   /**
    * 角色ID
    */
   @TableField(value = "role_id")
   private Integer roleId;
+
+  public MergeUserRole(Integer userId, Integer roleId) {
+    this.userId = userId;
+    this.roleId = roleId;
+  }
 }

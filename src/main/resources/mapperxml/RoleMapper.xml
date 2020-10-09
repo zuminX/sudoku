@@ -17,7 +17,7 @@
   <select id="selectByUserId" resultMap="BaseResultMap">
     select r.*
     from role r,
-         user_role ur
+         merge_user_role ur
     where ur.role_id = r.`id`
       and ur.user_id = #{id,jdbcType=INTEGER};
   </select>
@@ -34,7 +34,7 @@
   <select id="selectNameZhByUserId" resultType="java.lang.String">
     select r.name_zh
     from role r,
-         user_role ur
+         merge_user_role ur
     where ur.role_id = r.`id`
       and ur.user_id = #{id,jdbcType=INTEGER};
   </select>

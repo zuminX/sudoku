@@ -4,6 +4,7 @@ import com.sudoku.common.tools.page.Page;
 import com.sudoku.project.model.body.AddUserBody;
 import com.sudoku.project.model.body.ModifyUserBody;
 import com.sudoku.project.model.body.RegisterUserBody;
+import com.sudoku.project.model.body.SearchUserBody;
 import com.sudoku.project.model.entity.User;
 import com.sudoku.project.model.vo.UserDetailVO;
 import com.sudoku.project.model.vo.UserVO;
@@ -58,4 +59,22 @@ public interface UserService {
    * @param addUserBody 新增用户的信息
    */
   void addUser(AddUserBody addUserBody);
+
+  /**
+   * 根据条件搜索用户
+   *
+   * @param searchUserBody 搜索用户的条件
+   * @return 用户详情的分页信息
+   */
+  Page<UserDetailVO> searchUser(SearchUserBody searchUserBody);
+
+  /**
+   * 根据名称搜索用户
+   *
+   * @param name     名称
+   * @param page     当前查询页
+   * @param pageSize 每页显示的条数
+   * @return 用户详情的分页信息
+   */
+  Page<UserDetailVO> searchUserByName(String name, Integer page, Integer pageSize);
 }

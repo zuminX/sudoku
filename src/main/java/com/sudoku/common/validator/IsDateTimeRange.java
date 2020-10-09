@@ -11,15 +11,15 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 /**
- * 验证数独矩阵注解
+ * 验证时间日期范围类的注解
  */
 @Target({PARAMETER, FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = IsSudokuMatrixValidator.class)
-public @interface IsSudokuMatrix {
+@Constraint(validatedBy = IsDateTimeRangeValidator.class)
+public @interface IsDateTimeRange {
 
-  String message() default "该数组必须是一个数独矩阵";
+  String message() default "开始的日期时间必须早于结束的日期时间";
 
   Class<?>[] groups() default {};
 

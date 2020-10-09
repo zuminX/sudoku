@@ -20,22 +20,16 @@ public class UserDetailVO implements Serializable {
 
   @ApiModelProperty("用户ID")
   private Integer id;
-
   @ApiModelProperty("用户名")
   private String username;
-
   @ApiModelProperty("昵称")
   private String nickname;
-
   @ApiModelProperty("创建时间")
   private LocalDateTime createTime;
-
   @ApiModelProperty("最近登录时间")
   private LocalDateTime recentLoginTime;
-
   @ApiModelProperty("是否启用")
   private Boolean enabled;
-
-  @ApiModelProperty("角色名列表")
-  private List<String> roleNameList;
+  @ApiModelProperty("角色列表")
+  private List<RoleVO> roleList;
 }

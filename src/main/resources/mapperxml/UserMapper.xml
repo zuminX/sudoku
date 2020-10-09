@@ -23,9 +23,9 @@
 
   <resultMap extends="BaseResultMap" id="UserWithRole" type="com.sudoku.project.model.entity.User">
     <collection ofType="com.sudoku.project.model.entity.Role" property="roles">
-      <id column="rid" property="id"/>
-      <result column="rname" property="name"/>
-      <result column="rnameZh" property="nameZh"/>
+      <id column="role_id" property="id"/>
+      <result column="role_name" property="name"/>
+      <result column="role_name_zh" property="nameZh"/>
     </collection>
   </resultMap>
 
@@ -36,10 +36,8 @@
   </select>
 
   <select id="selectWithRoleByUsername" resultMap="UserWithRole">
-    select user.*, r.`id` as rid, r.`name` as rname, r.name_zh as rnameZh
-    from user
-           inner join user_role ur on ur.user_id = user.id
-           inner join role r on r.`id` = ur.role_id
+    select *
+    from user_role_merge_user_role_v
     where username = #{username,jdbcType=VARCHAR}
   </select>
 
@@ -101,9 +99,67 @@
   </update>
 
   <select id="selectAllWithRole" resultMap="UserWithRole">
-    select user.*, r.`id` as rid, r.`name` as rname, r.name_zh as rnameZh
-    from user
-           inner join user_role ur on ur.user_id = user.id
-           inner join role r on r.`id` = ur.role_id
+    select *
+    from user_role_merge_user_role_v
+  </select>
+
+  <sql id="ConditionSearchData">
+    WITH dads as (
+    select *
+    from user_role_merge_user_role_v
+    <where>
+      <if test="user.createTimeRange != null">
+        create_time <![CDATA[>=]]> #{user.createTimeRange.start,jdbcType=TIMESTAMP}
+        and create_time <![CDATA[<=]]> #{user.createTimeRange.end,jdbcType=TIMESTAMP}
+      </if>
+      <if test="user.recentLoginTimeRange != null">
+        and recent_login_time <![CDATA[>=]]> #{user.recentLoginTimeRange.start,jdbcType=TIMESTAMP}
+        and recent_login_time <![CDATA[<=]]> #{user.recentLoginTimeRange.end,jdbcType=TIMESTAMP}
+      </if>
+      <if test="user.username != null">
+        and username like concat('%', #{user.username,jdbcType=VARCHAR}, '%')
+      </if>
+      <if test="user.nickname != null">
+        and nickname like concat('%', #{user.username,jdbcType=VARCHAR}, '%')
+      </if>
+      <if test="user.enabled != null and user.roleNameList.size() > 0">
+        and enabled = #{user.enabled,jdbcType=BOOLEAN}
+      </if>
+      <if test="user.roleNameList != null">
+        role_name_zh in
+        <foreach close=")" collection="user.roleNameList" item="name" open="(" separator=",">
+          #{name,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+    </where>
+    )
+  </sql>
+
+  <select id="selectByConditionWithRole" resultMap="BaseResultMap">
+    <include refid="ConditionSearchData"/>
+    select *
+    from data
+    <where>
+      <if test="user.roleNameList != null and user.roleNameList.size() > 0">
+        id in (
+          select ids.u_id
+          from (
+                 select user_role.id as u_id, count(1) as role_count
+                 from user_role_merge_user_role_v user_role
+                 group by u_id) as ids
+          where ids.role_count = ${user.roleNameList.size()})
+      </if>
+    </where>
+  </select>
+
+  <select id="selectByNameWithRole" resultMap="BaseResultMap">
+    select *
+    from user_role_merge_user_role_v
+    <where>
+      <if test="name != null and name != ''">
+        username like concat('%', #{name,jdbcType=VARCHAR}, '%')
+          or nickname like concat('%', #{name,jdbcType=VARCHAR}, '%')
+      </if>
+    </where>
   </select>
 </mapper>

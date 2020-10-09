@@ -8,7 +8,6 @@ import com.sudoku.project.model.vo.RoleVO;
 import com.sudoku.project.model.vo.UserDetailVO;
 import com.sudoku.project.model.vo.UserVO;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -55,16 +54,6 @@ public interface UserConvert {
    * @param user 用户表对应的对象
    * @return 用户详情显示层对象
    */
-  @Mapping(target = "roleNameList", source = "roles")
+  @Mapping(target = "roleList", source = "roles")
   UserDetailVO convertUserToUserDetailVO(User user);
-
-  /**
-   * 自定义角色列表属性的转换
-   *
-   * @param roleList 角色列表
-   * @return 角色名列表
-   */
-  default List<String> roleListToRoleNameList(List<Role> roleList) {
-    return roleList == null ? null : roleList.stream().map(Role::getNameZh).collect(Collectors.toList());
-  }
 }

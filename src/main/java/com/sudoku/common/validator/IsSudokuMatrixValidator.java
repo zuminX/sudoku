@@ -21,7 +21,7 @@ public class IsSudokuMatrixValidator implements ConstraintValidator<IsSudokuMatr
   /**
    * 校验二维数组是否为数独矩阵
    *
-   * @param value   带校验的数组
+   * @param value   待校验的数组
    * @param context 约束校验器上下文对象
    * @return 验证通过返回true，验证失败返回false
    */

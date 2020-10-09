@@ -1,6 +1,5 @@
 package com.sudoku.framework.security;
 
-import com.sudoku.common.utils.SecurityUtils;
 import com.sudoku.common.tools.ServletUtils;
 import com.sudoku.framework.security.filter.JwtAuthenticationTokenFilter;
 import com.sudoku.framework.security.handler.CustomizeLogoutSuccessHandler;
@@ -15,6 +14,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -32,6 +33,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired
   private JwtAuthenticationTokenFilter authenticationTokenFilter;
 
+
+  /**
+   * 获取密码编码器
+   *
+   * @return BCrypt密码编码器
+   */
+  @Bean
+  public static PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
   /**
    * 设置用户服务对象
    *
@@ -39,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
    */
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userDetailsService).passwordEncoder(SecurityUtils.passwordEncoder());
+    auth.userDetailsService(userDetailsService).passwordEncoder(SecurityConfig.passwordEncoder());
   }
 
   /**

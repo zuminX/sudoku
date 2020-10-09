@@ -1,30 +1,28 @@
 package com.sudoku.project.service.impl;
 
-import static java.util.stream.Collectors.toCollection;
-
 import cn.hutool.core.collection.CollUtil;
 import com.sudoku.common.constant.consist.PermissionConstants;
 import com.sudoku.common.constant.enums.StatusCode;
 import com.sudoku.common.exception.UserException;
+import com.sudoku.common.log.BusinessType;
 import com.sudoku.common.log.Log;
 import com.sudoku.common.tools.page.Page;
 import com.sudoku.common.tools.page.PageParam;
 import com.sudoku.common.tools.page.PageUtils;
 import com.sudoku.common.utils.SecurityUtils;
 import com.sudoku.project.convert.UserConvert;
+import com.sudoku.project.mapper.MergeUserRoleMapper;
 import com.sudoku.project.mapper.RoleMapper;
 import com.sudoku.project.mapper.UserMapper;
-import com.sudoku.project.mapper.UserRoleMapper;
 import com.sudoku.project.model.body.AddUserBody;
 import com.sudoku.project.model.body.ModifyUserBody;
 import com.sudoku.project.model.body.RegisterUserBody;
+import com.sudoku.project.model.body.SearchUserBody;
 import com.sudoku.project.model.entity.User;
-import com.sudoku.project.model.entity.UserRole;
 import com.sudoku.project.model.vo.UserDetailVO;
 import com.sudoku.project.model.vo.UserVO;
 import com.sudoku.project.service.UserService;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,14 +35,14 @@ public class UserServiceImpl implements UserService {
 
   private final UserMapper userMapper;
   private final RoleMapper roleMapper;
-  private final UserRoleMapper userRoleMapper;
+  private final MergeUserRoleMapper mergeUserRoleMapper;
   private final UserConvert userConvert;
 
-  public UserServiceImpl(UserMapper userMapper, RoleMapper roleMapper, UserRoleMapper userRoleMapper,
-       UserConvert userConvert) {
+  public UserServiceImpl(UserMapper userMapper, RoleMapper roleMapper, MergeUserRoleMapper mergeUserRoleMapper,
+      UserConvert userConvert) {
     this.userMapper = userMapper;
     this.roleMapper = roleMapper;
-    this.userRoleMapper = userRoleMapper;
+    this.mergeUserRoleMapper = mergeUserRoleMapper;
     this.userConvert = userConvert;
   }
 
@@ -56,7 +54,7 @@ public class UserServiceImpl implements UserService {
    */
   @Override
   @Transactional
-  @Log("注册用户")
+  @Log(value = "注册用户", isSaveParameterData = false)
   public UserVO registerUser(RegisterUserBody registerUserBody) {
     checkRepeatPassword(registerUserBody);
     User user = convertToUser(registerUserBody);
@@ -110,11 +108,13 @@ public class UserServiceImpl implements UserService {
    * @param modifyUserBody 修改的用户信息
    */
   @Override
+  @Transactional
+  @Log(value = "修改用户", businessType = BusinessType.UPDATE)
   public void modifyUser(ModifyUserBody modifyUserBody) {
     checkRoleName(modifyUserBody);
-    checkUsername(modifyUserBody.getUsername());
+    checkReUsername(modifyUserBody.getUsername(), modifyUserBody.getId());
     userMapper.updateModifyById(modifyUserBody);
-    userRoleMapper.updateRoleIdByUserId(modifyUserBody.getId(), roleMapper.selectIdsByNames(modifyUserBody.getRoleNameList()));
+    mergeUserRoleMapper.updateRoleIdByUserId(modifyUserBody.getId(), roleMapper.selectIdsByNames(modifyUserBody.getRoleNameList()));
   }
 
   /**
@@ -123,11 +123,47 @@ public class UserServiceImpl implements UserService {
    * @param addUserBody 新增用户的信息
    */
   @Override
+  @Transactional
+  @Log(value = "新增用户", isSaveParameterData = false)
   public void addUser(AddUserBody addUserBody) {
     checkUsername(addUserBody.getUsername());
     User user = userConvert.convert(addUserBody);
     userMapper.insert(user);
     insertUserRole(user.getId(), addUserBody.getRoleNameList());
+  }
+
+  /**
+   * 根据条件搜索用户
+   *
+   * @param searchUserBody 搜索用户的条件
+   * @return 用户详情的分页信息
+   */
+  @Override
+  public Page<UserDetailVO> searchUser(SearchUserBody searchUserBody) {
+    return PageUtils.getPage(PageParam.<User>builder()
+            .queryFunc(() -> userMapper.selectByConditionWithRole(searchUserBody))
+            .page(searchUserBody.getPage())
+            .pageSize(searchUserBody.getPageSize())
+            .build(),
+        userConvert::convertUserToUserDetailVO);
+  }
+
+  /**
+   * 根据用户名或昵称搜索用户
+   *
+   * @param name     名称
+   * @param page     当前查询页
+   * @param pageSize 每页显示的条数
+   * @return 用户详情的分页信息
+   */
+  @Override
+  public Page<UserDetailVO> searchUserByName(String name, Integer page, Integer pageSize) {
+    return PageUtils.getPage(PageParam.<User>builder()
+            .queryFunc(() -> userMapper.selectByNameWithRole(name))
+            .page(page)
+            .pageSize(pageSize)
+            .build(),
+        userConvert::convertUserToUserDetailVO);
   }
 
   /**
@@ -157,6 +193,19 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
+   * 检查重新设置的用户名在数据库中是否已经存在
+   *
+   * @param username 用户名
+   * @param userId   用户ID
+   */
+  private void checkReUsername(String username, Integer userId) {
+    User user = userMapper.selectByUsername(username);
+    if (user != null && !user.getId().equals(userId)) {
+      throw new UserException(StatusCode.USER_HAS_EQUAL_NAME);
+    }
+  }
+
+  /**
    * 检查注的用户的密码和重复密码是否一致
    *
    * @param registerUserBody 注册用户对象
@@ -175,10 +224,7 @@ public class UserServiceImpl implements UserService {
    */
   private void insertUserRole(Integer userId, List<String> roleNameList) {
     List<Integer> roleIds = roleMapper.selectIdsByNames(roleNameList);
-    List<UserRole> userRoles = roleIds.stream()
-        .map(roleId -> new UserRole(userId, roleId))
-        .collect(toCollection(() -> new ArrayList<>(roleIds.size())));
-    userRoleMapper.batchInsert(userRoles);
+    mergeUserRoleMapper.batchInsert(userId, roleIds);
   }
 
   /**

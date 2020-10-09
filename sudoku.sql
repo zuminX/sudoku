@@ -25,8 +25,8 @@ VALUES (1, 'test1', '$2a$10$VaphyIrQ7C9aELKTx/Wh1.QqGVvBymhd57NrY/OoQhuAjMgNMoEO
        (2, 'test2', '$2a$10$VaphyIrQ7C9aELKTx/Wh1.QqGVvBymhd57NrY/OoQhuAjMgNMoEO6', '测试用户', NOW(), NOW(), 1);
 
 
-DROP TABLE IF EXISTS `user_role`;
-CREATE TABLE `user_role`
+DROP TABLE IF EXISTS `merge_user_role`;
+CREATE TABLE `merge_user_role`
 (
     `id`      int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户角色ID',
     `user_id` int          NOT NULL COMMENT '用户ID',
@@ -38,7 +38,7 @@ CREATE TABLE `user_role`
   ROW_FORMAT = Dynamic;
 
 
-INSERT INTO `user_role`
+INSERT INTO `merge_user_role`
 VALUES (1, 1, 1),
        (2, 1, 2),
        (3, 2, 1);
@@ -90,8 +90,8 @@ VALUES (1, 'sudoku:level:list', '数独等级列表'),
 ;
 
 
-DROP TABLE IF EXISTS `resource_role`;
-CREATE TABLE `resource_role`
+DROP TABLE IF EXISTS `merge_resource_role`;
+CREATE TABLE `merge_resource_role`
 (
     `id`          int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '资源角色ID',
     `resource_id` int          NOT NULL COMMENT '资源ID',
@@ -103,7 +103,7 @@ CREATE TABLE `resource_role`
   ROW_FORMAT = Dynamic;
 
 
-INSERT INTO `resource_role`
+INSERT INTO `merge_resource_role`
 VALUES (1, 1, 1),
        (2, 2, 1),
        (3, 3, 1),
@@ -230,6 +230,12 @@ CREATE TABLE `statistics_game`
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci
   ROW_FORMAT = Dynamic;
+
+CREATE OR REPLACE VIEW user_role_merge_user_role_v AS
+select user.*, r.`id` as role_id, r.`name` as role_name, r.name_zh as role_name_zh
+from user
+         inner join merge_user_role ur on ur.user_id = user.id
+         inner join role r on r.`id` = ur.role_id;
 
 
 # ALTER TABLE `game_record` ADD CONSTRAINT `fk_game_record_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);

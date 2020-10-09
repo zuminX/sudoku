@@ -5,6 +5,7 @@ import com.sudoku.framework.security.service.CaptchaService;
 import com.sudoku.project.model.body.AddUserBody;
 import com.sudoku.project.model.body.ModifyUserBody;
 import com.sudoku.project.model.body.RegisterUserBody;
+import com.sudoku.project.model.body.SearchUserBody;
 import com.sudoku.project.model.vo.GameRecordVO;
 import com.sudoku.project.model.vo.UserDetailVO;
 import com.sudoku.project.model.vo.UserGameInformationVO;
@@ -83,8 +84,8 @@ public class UserController {
       @ApiImplicitParam(name = "page", value = "当前查询页", dataTypeClass = Integer.class, required = true),
       @ApiImplicitParam(name = "pageSize", value = "每页显示的条数", dataTypeClass = Integer.class, required = true)
   })
-  public Page<UserDetailVO> getUserList(@RequestParam("page") Integer page,
-      @RequestParam("pageSize") @Range(min = 1, max = 20, message = "每页显示的用户数在1-20个之间") Integer pageSize) {
+  public Page<UserDetailVO> getUserList(@RequestParam Integer page,
+      @RequestParam @Range(min = 1, max = 20, message = "每页显示的用户数在1-20个之间") Integer pageSize) {
     return userService.getUserList(page, pageSize);
   }
 
@@ -102,5 +103,27 @@ public class UserController {
   @ApiImplicitParam(name = "addUserBody", value = "新增用户的信息", dataTypeClass = AddUserBody.class, required = true)
   public void addUser(@RequestBody @Valid AddUserBody addUserBody) {
     userService.addUser(addUserBody);
+  }
+
+  @PostMapping("/searchUser")
+  @PreAuthorize("@ss.hasPermission('system:user:search')")
+  @ApiOperation("根据条件搜索用户")
+  @ApiImplicitParam(name = "searchUserBody", value = "搜索用户的条件", dataTypeClass = SearchUserBody.class, required = true)
+  public Page<UserDetailVO> searchUser(@RequestBody @Valid SearchUserBody searchUserBody) {
+    return userService.searchUser(searchUserBody);
+  }
+
+  @GetMapping("/searchUserByName")
+  @PreAuthorize("@ss.hasPermission('system:user:search')")
+  @ApiOperation("根据名称搜索用户")
+  @ApiImplicitParams({
+      @ApiImplicitParam(name = "username", value = "名称", dataTypeClass = String.class, required = true),
+      @ApiImplicitParam(name = "page", value = "当前查询页", dataTypeClass = Integer.class, required = true),
+      @ApiImplicitParam(name = "pageSize", value = "每页显示的条数", dataTypeClass = Integer.class, required = true)
+  })
+  public Page<UserDetailVO> searchUserByName(@RequestParam String name,
+      @RequestParam Integer page,
+      @RequestParam @Range(min = 1, max = 20, message = "每页显示的用户数在1-20个之间") Integer pageSize) {
+    return userService.searchUserByName(name, page, pageSize);
   }
 }

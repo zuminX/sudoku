@@ -10,10 +10,8 @@ import com.sudoku.project.model.entity.Role;
 import com.sudoku.project.model.entity.User;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
@@ -21,15 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 public class SecurityUtils {
 
-  /**
-   * 获取密码编码器
-   *
-   * @return BCrypt密码编码器
-   */
-  @Bean
-  public static PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+
 
   /**
    * 获取当前登录的用户
