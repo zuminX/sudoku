@@ -86,7 +86,8 @@ VALUES (1, 'sudoku:level:list', '数独等级列表'),
        (11, 'statistics:game:total', '数独游戏局数'),
        (12, 'system:user:list', '用户列表'),
        (13, 'system:user:modify', '修改用户'),
-       (14, 'system:role:list', '系统角色名列表')
+       (14, 'system:role:list', '系统角色名列表'),
+       (15, 'system:user:search', '查询系统用户')
 ;
 
 
@@ -118,6 +119,7 @@ VALUES (1, 1, 1),
        (19, 12, 2),
        (20, 13, 2),
        (21, 14, 2),
+       (22, 15, 2),
        (9, 1, 2),
        (10, 2, 2),
        (11, 3, 2),

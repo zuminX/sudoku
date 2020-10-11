@@ -1,6 +1,7 @@
 package com.sudoku.project.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.sudoku.common.constant.consist.PermissionConstants;
 import com.sudoku.common.constant.enums.StatusCode;
 import com.sudoku.common.exception.UserException;
@@ -140,6 +141,8 @@ public class UserServiceImpl implements UserService {
    */
   @Override
   public Page<UserDetailVO> searchUser(SearchUserBody searchUserBody) {
+    searchUserBody.setUsername(StrUtil.trim(searchUserBody.getUsername()));
+    searchUserBody.setNickname(StrUtil.trim(searchUserBody.getNickname()));
     return PageUtils.getPage(PageParam.<User>builder()
             .queryFunc(() -> userMapper.selectByConditionWithRole(searchUserBody))
             .page(searchUserBody.getPage())

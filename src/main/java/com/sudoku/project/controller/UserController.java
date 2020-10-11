@@ -121,8 +121,7 @@ public class UserController {
       @ApiImplicitParam(name = "page", value = "当前查询页", dataTypeClass = Integer.class, required = true),
       @ApiImplicitParam(name = "pageSize", value = "每页显示的条数", dataTypeClass = Integer.class, required = true)
   })
-  public Page<UserDetailVO> searchUserByName(@RequestParam String name,
-      @RequestParam Integer page,
+  public Page<UserDetailVO> searchUserByName(@RequestParam String name, @RequestParam Integer page,
       @RequestParam @Range(min = 1, max = 20, message = "每页显示的用户数在1-20个之间") Integer pageSize) {
     return userService.searchUserByName(name, page, pageSize);
   }

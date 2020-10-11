@@ -104,7 +104,7 @@
   </select>
 
   <sql id="ConditionSearchData">
-    WITH dads as (
+    WITH data as (
     select *
     from user_role_merge_user_role_v
     <where>
@@ -122,10 +122,10 @@
       <if test="user.nickname != null">
         and nickname like concat('%', #{user.username,jdbcType=VARCHAR}, '%')
       </if>
-      <if test="user.enabled != null and user.roleNameList.size() > 0">
+      <if test="user.enabled != null">
         and enabled = #{user.enabled,jdbcType=BOOLEAN}
       </if>
-      <if test="user.roleNameList != null">
+      <if test="user.roleNameList != null and user.roleNameList.size() > 0">
         role_name_zh in
         <foreach close=")" collection="user.roleNameList" item="name" open="(" separator=",">
           #{name,jdbcType=VARCHAR}
@@ -135,7 +135,7 @@
     )
   </sql>
 
-  <select id="selectByConditionWithRole" resultMap="BaseResultMap">
+  <select id="selectByConditionWithRole" resultMap="UserWithRole">
     <include refid="ConditionSearchData"/>
     select *
     from data
@@ -152,7 +152,7 @@
     </where>
   </select>
 
-  <select id="selectByNameWithRole" resultMap="BaseResultMap">
+  <select id="selectByNameWithRole" resultMap="UserWithRole">
     select *
     from user_role_merge_user_role_v
     <where>
