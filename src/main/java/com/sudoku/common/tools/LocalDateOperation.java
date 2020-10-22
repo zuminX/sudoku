@@ -1,4 +1,4 @@
-package com.sudoku.common.core;
+package com.sudoku.common.tools;
 
 import java.time.LocalDate;
 import org.jetbrains.annotations.NotNull;

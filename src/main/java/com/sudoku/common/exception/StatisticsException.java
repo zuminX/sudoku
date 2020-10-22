@@ -1,10 +1,12 @@
 package com.sudoku.common.exception;
 
 import com.sudoku.common.constant.enums.StatusCode;
+import lombok.Getter;
 
 /**
  * 统计异常类
  */
+@Getter
 public class StatisticsException extends BaseException {
 
   private static final long serialVersionUID = 5955311444611029160L;

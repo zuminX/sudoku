@@ -6,7 +6,7 @@ import com.sudoku.common.tools.DataStamped;
 import java.time.LocalDate;
 
 /**
- * 更新Redis中过期数据类
+ * 更新Redis中过期数据的模板方法
  */
 public abstract class UpdateOutDatedDataInRedis<T> {
 

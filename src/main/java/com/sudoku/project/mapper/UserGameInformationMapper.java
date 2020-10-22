@@ -22,9 +22,9 @@ public interface UserGameInformationMapper extends BaseMapper<UserGameInformatio
   int updateTotalByUserIdAndSudokuLevelId(@Param("updatedTotal") Integer updatedTotal, @Param("userId") Integer userId,
       @Param("sudokuLevelId") Integer sudokuLevelId);
 
-  List<RankItemBO<Integer>> selectAverageSpendTimeRanking(@Param("limitNumber") Integer limitNumber);
+  List<RankItemBO> selectAverageSpendTimeRanking(@Param("limitNumber") Integer limitNumber);
 
-  List<RankItemBO<Integer>> selectMinSpendTimeRanking(@Param("limitNumber") Integer limitNumber);
+  List<RankItemBO> selectMinSpendTimeRanking(@Param("limitNumber") Integer limitNumber);
 
-  List<RankItemBO<Integer>> selectCorrectNumberRanking(@Param("limitNumber") Integer limitNumber);
+  List<RankItemBO> selectCorrectNumberRanking(@Param("limitNumber") Integer limitNumber);
 }

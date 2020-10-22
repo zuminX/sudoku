@@ -1,8 +1,8 @@
 package com.sudoku.common.tools.page;
 
 import com.github.pagehelper.PageInfo;
-import com.sudoku.common.tools.page.PageConvert.PageInformationConvert;
 import com.sudoku.common.tools.page.Page.PageInformation;
+import com.sudoku.common.tools.page.PageConvert.PageInformationConvert;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

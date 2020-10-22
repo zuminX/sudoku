@@ -79,8 +79,34 @@ public class GameRecordServiceImpl implements GameRecordService {
    */
   @Override
   public Page<GameRecordVO> getHistoryGameRecord(Integer page, Integer pageSize) {
+    return getHistoryGameRecord(SecurityUtils.getCurrentUserId(), page, pageSize);
+  }
+
+
+  /**
+   * 根据用户ID，获取其历史游戏记录
+   *
+   * @param userId       用户ID
+   * @param page     当前查询页
+   * @param pageSize 每页显示的条数
+   * @return 游戏记录的分页信息
+   */
+  @Override
+  public Page<GameRecordVO> getHistoryGameRecordById(Integer userId, Integer page, Integer pageSize) {
+    return getHistoryGameRecord(userId, page, pageSize);
+  }
+
+  /**
+   * 获取指定用户的历史游戏记录
+   *
+   * @param id       用户ID
+   * @param page     当前查询页
+   * @param pageSize 每页显示的条数
+   * @return 游戏记录的分页信息
+   */
+  private Page<GameRecordVO> getHistoryGameRecord(Integer id, Integer page, Integer pageSize) {
     return PageUtils.getPage(PageParam.<GameRecordVO>builder()
-        .queryFunc(() -> gameRecordMapper.findByUidOrderByStartTimeDesc(SecurityUtils.getUserId()))
+        .queryFunc(() -> gameRecordMapper.findByUidOrderByStartTimeDesc(id))
         .page(page)
         .pageSize(pageSize)
         .build());

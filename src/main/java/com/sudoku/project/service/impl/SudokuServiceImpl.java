@@ -191,7 +191,7 @@ public class SudokuServiceImpl implements SudokuService {
     gameUtils.setGameRecord(GameRecordBO.initBuilder()
         .sudokuDataBO(sudokuDataBO)
         .sudokuLevelId(sudokuLevelId)
-        .userId(SecurityUtils.getUserId())
+        .userId(SecurityUtils.getCurrentUserId())
         .isRecord(isRecord)
         .build());
   }

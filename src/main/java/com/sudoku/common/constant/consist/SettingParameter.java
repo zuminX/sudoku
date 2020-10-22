@@ -5,7 +5,7 @@ package com.sudoku.common.constant.consist;
  */
 public class SettingParameter {
 
-  public static final Integer RANKING_NUMBER = 3;
+  public static final Integer RANKING_NUMBER = 10_000;
 
   private SettingParameter() {
   }

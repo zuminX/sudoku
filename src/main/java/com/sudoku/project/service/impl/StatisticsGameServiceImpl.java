@@ -7,7 +7,7 @@ import com.sudoku.common.constant.enums.StatisticsDate;
 import com.sudoku.common.constant.enums.StatusCode;
 import com.sudoku.common.exception.StatisticsException;
 import com.sudoku.common.tools.DataStamped;
-import com.sudoku.common.utils.SudokuLevelUtils;
+import com.sudoku.common.utils.project.SudokuLevelUtils;
 import com.sudoku.project.convert.StatisticsGameConvert;
 import com.sudoku.project.core.UpdateOutDatedDataInRedis;
 import com.sudoku.project.core.UpdateStatisticsData;
@@ -86,12 +86,8 @@ public class StatisticsGameServiceImpl implements StatisticsGameService {
    */
   @Override
   public void updateDailyDataUntilNow() {
-    new UpdateGameStatisticsData(StatisticsDate.DAILY) {
-      @Override
-      public List<StatisticsGameDataBO> getStatisticsGameData(LocalDate startDate, LocalDate endDate) {
-        return gameRecordMapper.countCorrectTotalAndErrorTotalSudokuLevelIdByEndTimeBetween(startDate, endDate);
-      }
-    }.updateData();
+    UpdateGameStatisticsData updateGameStatisticsData = new UpdateGameStatisticsData(StatisticsDate.DAILY);
+    updateGameStatisticsData.updateData(gameRecordMapper::countCorrectTotalAndErrorTotalSudokuLevelIdByEndTimeBetween);
   }
 
   /**
@@ -99,19 +95,16 @@ public class StatisticsGameServiceImpl implements StatisticsGameService {
    */
   @Override
   public void updateEachMonthDataUntilNow() {
-    new UpdateGameStatisticsData(StatisticsDate.EACH_MONTH) {
-      @Override
-      public List<StatisticsGameDataBO> getStatisticsGameData(LocalDate startDate, LocalDate endDate) {
-        return statisticsGameMapper.selectCorrectTotalSumAndErrorTotalSumAndSudokuLevelIdByDateBetweenAndDateName(startDate, endDate,
-            StatisticsDate.DAILY.getName());
-      }
-    }.updateData();
+    UpdateGameStatisticsData updateGameStatisticsData = new UpdateGameStatisticsData(StatisticsDate.EACH_MONTH);
+    updateGameStatisticsData.updateData(
+        (LocalDate startDate, LocalDate endDate) -> statisticsGameMapper.selectCorrectTotalSumAndErrorTotalSumAndSudokuLevelIdByDateBetweenAndDateName(
+            startDate, endDate, StatisticsDate.DAILY.getName()));
   }
 
   /**
    * 更新游戏统计数据的模板方法
    */
-  private abstract class UpdateGameStatisticsData extends UpdateStatisticsData {
+  private class UpdateGameStatisticsData extends UpdateStatisticsData<List<StatisticsGameDataBO>> {
 
     /**
      * 该类的构造方法
@@ -123,24 +116,16 @@ public class StatisticsGameServiceImpl implements StatisticsGameService {
     }
 
     /**
-     * 获取待插入数据库的游戏统计数据列表
-     *
-     * @param startDate 开始日期
-     * @param endDate   结束日期
-     * @return 游戏的统计数据列表
-     */
-    public abstract List<StatisticsGameDataBO> getStatisticsGameData(LocalDate startDate, LocalDate endDate);
-
-    /**
      * 向数据库插入游戏统计数据
      *
      * @param startDate 开始日期
      * @param endDate   结束日期
+     * @param callback  获取游戏的统计数据列表的回调方法
      */
     @Override
     @Transactional
-    protected void insertData(LocalDate startDate, LocalDate endDate) {
-      List<StatisticsGameDataBO> statisticsGameData = getStatisticsGameData(startDate, endDate);
+    protected void insertData(LocalDate startDate, LocalDate endDate, StatisticsDataCallback<List<StatisticsGameDataBO>> callback) {
+      List<StatisticsGameDataBO> statisticsGameData = callback.getStaticsData(startDate, endDate);
       addLackData(statisticsGameData);
       statisticsGameMapper.insertList(statisticsGameData.stream()
           .map(data -> statisticsGameConvert.convert(data, getStatisticsDate().getName(), startDate))

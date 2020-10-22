@@ -19,8 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 public class SecurityUtils {
 
-
-
   /**
    * 获取当前登录的用户
    *
@@ -40,12 +38,21 @@ public class SecurityUtils {
   }
 
   /**
-   * 获取当前登录的用户的ID
+   * 获取当前用户的ID
    *
    * @return 用户ID
    */
-  public static Integer getUserId() {
-    return getLoginUser().getUser().getId();
+  public static Integer getCurrentUserId() {
+    return getCurrentUser().getId();
+  }
+
+  /**
+   * 获取当前用户
+   *
+   * @return 用户对象
+   */
+  public static User getCurrentUser() {
+    return getLoginUser().getUser();
   }
 
   /**

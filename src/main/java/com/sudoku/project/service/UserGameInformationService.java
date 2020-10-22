@@ -1,9 +1,8 @@
 package com.sudoku.project.service;
 
-import com.sudoku.project.model.vo.RankDataVO;
+import com.sudoku.project.model.entity.UserGameInformation;
 import com.sudoku.project.model.vo.UserGameInformationVO;
 import java.util.List;
-import org.springframework.cache.annotation.Cacheable;
 
 /**
  * 用户游戏信息业务层接口
@@ -12,8 +11,10 @@ public interface UserGameInformationService {
 
   /**
    * 更新用户游戏信息
+   *
+   * @return 更新后的用户游戏信息
    */
-  void updateUserGameInformation();
+  UserGameInformation updateUserGameInformation();
 
   /**
    * 获取用户游戏信息
@@ -23,12 +24,12 @@ public interface UserGameInformationService {
   List<UserGameInformationVO> getUserGameInformation();
 
   /**
-   * 获取排行数据列表
+   * 根据用户ID，获取其游戏信息
    *
-   * @return 排行数据显示层列表
+   * @param userId 用户ID
+   * @return 用户游戏信息的显示层列表
    */
-  @Cacheable(value = "rankList", keyGenerator = "simpleKG")
-  List<RankDataVO<?>> getRankList();
+  List<UserGameInformationVO> getUserGameInformationById(Integer userId);
 
   /**
    * 初始化用户游戏信息
@@ -36,4 +37,5 @@ public interface UserGameInformationService {
    * @param id 用户ID
    */
   void initUserGameInformation(Integer id);
+
 }

@@ -14,10 +14,11 @@
   </resultMap>
 
   <resultMap id="RankItemBOMap" type="com.sudoku.project.model.bo.RankItemBO">
-    <!--@Table user_game_information-->
-    <result column="name" jdbcType="VARCHAR" property="sudokuLevelName"/>
-    <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
-    <result column="data" jdbcType="INTEGER" property="data"/>
+    <result column="sudoku_level_id" property="sudokuLevelId"/>
+    <collection property="rankItemDataList" ofType="com.sudoku.project.model.bo.RankItemDataBO">
+      <result column="username" property="username"/>
+      <result column="data" property="data"/>
+    </collection>
   </resultMap>
 
   <sql id="Base_Column_List">
@@ -31,49 +32,60 @@
     sudoku_level_id
   </sql>
 
-   <sql id="RankNumberItemData">
+  <sql id="RankCorrectNumberItemData">
     WITH tmp as (
         select sl.name,
-               u.nickname,
-               ugi.sudoku_level_id,
-               ugi.${itemName},
-               row_number() over ( partition by sl.name order by ugi.${itemName} desc) as rn
-        from user_game_information ugi
-                 inner join user u on ugi.user_id = u.id
-                 inner join sudoku_level sl on ugi.sudoku_level_id = sl.id
-        where ugi.${itemName} > 0
-    )
+            u.username,
+            ugi.sudoku_level_id,
+            ugi.correct_number,
+            row_number() over ( partition by sl.name order by ugi.correct_number desc) as rn
+    from user_game_information ugi
+        inner join user u on ugi.user_id = u.id
+        inner join sudoku_level sl on ugi.sudoku_level_id = sl.id
+    where ugi.correct_number > 0)
   </sql>
 
-  <sql id="RankTimeItemData">
+  <sql id="RankAverageSpendTimeItemData">
     WITH tmp as (
         select sl.name,
-               u.nickname,
-               ugi.sudoku_level_id,
-               ugi.${itemName},
-               row_number() over ( partition by sl.name order by ugi.${itemName}) as rn
-        from user_game_information ugi
-                 inner join user u on ugi.user_id = u.id
-                 inner join sudoku_level sl on ugi.sudoku_level_id = sl.id
-        where ugi.${itemName} is not null
-    )
+            u.username,
+            ugi.sudoku_level_id,
+            ugi.average_spend_time,
+            row_number() over ( partition by sl.name order by ugi.average_spend_time) as rn
+    from user_game_information ugi
+        inner join user u on ugi.user_id = u.id
+        inner join sudoku_level sl on ugi.sudoku_level_id = sl.id
+    where ugi.average_spend_time is not null)
   </sql>
 
-  <sql id="RankItemCondition">
-    rn  <![CDATA[<]]>= ${limitNumber}
-    order by sudoku_level_id
+  <sql id="RankMinSpendTimeItemData">
+    WITH tmp as (
+        select sl.name,
+            u.username,
+            ugi.sudoku_level_id,
+            ugi.min_spend_time,
+            row_number() over ( partition by sl.name order by ugi.min_spend_time) as rn
+    from user_game_information ugi
+        inner join user u on ugi.user_id = u.id
+        inner join sudoku_level sl on ugi.sudoku_level_id = sl.id
+    where ugi.min_spend_time is not null)
   </sql>
 
-   <sql id="Rank_Item_Column_List">
-    `name`,
-    `nickname`,
-    `rn`
+  <sql id="RankItemDataCondition">
+    where
+    rn  <![CDATA[<=]]> ${limitNumber}
+  </sql>
+
+  <sql id="Rank_Item_Column_List">
+    `sudoku_level_id`,
+    any_value(`username`) as username,
+    any_value(`rn`)       as rn
   </sql>
 
   <insert id="batchInsertByUserIdAndSudokuLevelIds">
     insert into user_game_information (user_id, sudoku_level_id)
       values
-    <foreach collection="sudokuLevelIds " item="item" separator=",">
+    <foreach collection="sudokuLevelIds" item="item" separator=",">
       (#{userId,jdbcType=INTEGER}, #{item,jdbcType=INTEGER})
     </foreach>
   </insert>
@@ -100,39 +112,27 @@
   </select>
 
   <select id="selectAverageSpendTimeRanking" resultMap="RankItemBOMap">
-    <include refid="RankTimeItemData">
-      <property name="itemName" value="average_spend_time"/>
-    </include>
-      select average_spend_time as data,
-            <include refid="Rank_Item_Column_List" />
-      from tmp
-      <where>
-          <include refid="RankItemCondition" />
-      </where>
+    <include refid="RankAverageSpendTimeItemData" />
+    select any_value(average_spend_time) as data,
+    <include refid="Rank_Item_Column_List"/>
+    from tmp
+    <include refid="RankItemDataCondition"/>
   </select>
 
   <select id="selectMinSpendTimeRanking" resultMap="RankItemBOMap">
-    <include refid="RankTimeItemData">
-      <property name="itemName" value="min_spend_time"/>
-    </include>
-      select min_spend_time as data,
-            <include refid="Rank_Item_Column_List" />
-      from tmp
-      <where>
-          <include refid="RankItemCondition" />
-      </where>
+    <include refid="RankMinSpendTimeItemData" />
+    select any_value(min_spend_time) as data,
+    <include refid="Rank_Item_Column_List"/>
+    from tmp
+    <include refid="RankItemDataCondition"/>
   </select>
 
   <select id="selectCorrectNumberRanking" resultMap="RankItemBOMap">
-    <include refid="RankNumberItemData">
-      <property name="itemName" value="correct_number"/>
-    </include>
-      select correct_number as data,
-            <include refid="Rank_Item_Column_List" />
-      from tmp
-      <where>
-          <include refid="RankItemCondition" />
-      </where>
+    <include refid="RankCorrectNumberItemData" />
+    select any_value(correct_number) as data,
+    <include refid="Rank_Item_Column_List"/>
+    from tmp
+    <include refid="RankItemDataCondition"/>
   </select>
 
   <update id="updateByUserIdAndSudokuLevelId">

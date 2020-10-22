@@ -51,6 +51,10 @@ public enum StatusCode {
   //统计异常
   STATISTICS_ERROR(600, HttpStatus.BAD_REQUEST, "统计信息时发生错误"),
   STATISTICS_INQUIRY_DATE_INVALID(601, HttpStatus.BAD_REQUEST, "查询统计信息的日期无效"),
+
+  //数独等级异常
+  SUDOKU_LEVEL_ERROR(700, HttpStatus.BAD_REQUEST, "获取数独等级时发生错误"),
+  SUDOKU_LEVEL_NOT_FOUND(701, HttpStatus.NOT_FOUND, "没有找到对应的数独等级")
   ;
 
   /**

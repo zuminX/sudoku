@@ -29,6 +29,9 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+/**
+ * Redis配置类
+ */
 @Configuration
 public class RedisConfig {
 
@@ -47,6 +50,12 @@ public class RedisConfig {
     return redisCacheConfigurationMap;
   }
 
+  /**
+   * 设置Redis模板
+   *
+   * @param redisConnectionFactory redis连接工厂
+   * @return Redis模板对象
+   */
   @Bean
   public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
     RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
@@ -79,7 +88,9 @@ public class RedisConfig {
    */
   @Bean
   public KeyGenerator simpleKG() {
-    return ((KeyGeneratorTemplateMethod) parameter -> Arrays.stream(parameter).map(Object::toString).collect(Collectors.joining("-"))).getKeyGenerator();
+    return ((KeyGeneratorTemplateMethod) parameter -> Arrays.stream(parameter)
+        .map(Object::toString)
+        .collect(Collectors.joining("-"))).getKeyGenerator();
   }
 
   /**

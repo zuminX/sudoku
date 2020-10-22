@@ -1,10 +1,12 @@
 package com.sudoku.common.exception;
 
 import com.sudoku.common.constant.enums.StatusCode;
+import lombok.Getter;
 
 /**
  * 验证码异常类
  */
+@Getter
 public class CaptchaException extends BaseException {
 
   private static final long serialVersionUID = -2676690140146545943L;

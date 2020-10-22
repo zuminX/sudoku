@@ -6,7 +6,6 @@ import com.sudoku.common.tools.RedisUtils;
 import com.sudoku.project.model.bo.GameRecordBO;
 import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,8 +19,11 @@ public class GameUtils {
    */
   private static final int GAME_MAX_TIME = 2;
 
-  @Autowired
-  private RedisUtils redisUtils;
+  private final RedisUtils redisUtils;
+
+  public GameUtils(RedisUtils redisUtils) {
+    this.redisUtils = redisUtils;
+  }
 
   /**
    * 判断游戏是否结束
@@ -67,6 +69,6 @@ public class GameUtils {
    * @return 游戏记录在redis中的key值
    */
   private String getGameRecordKey() {
-    return GAME_RECORD_PREFIX + SecurityUtils.getUserId();
+    return GAME_RECORD_PREFIX + SecurityUtils.getCurrentUserId();
   }
 }

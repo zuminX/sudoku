@@ -1,29 +1,22 @@
 package com.sudoku.project.service.impl;
 
-import com.sudoku.common.constant.consist.RankDataName;
-import com.sudoku.common.constant.consist.SettingParameter;
 import com.sudoku.common.log.BusinessType;
 import com.sudoku.common.log.Log;
 import com.sudoku.common.utils.GameUtils;
 import com.sudoku.common.utils.PublicUtils;
 import com.sudoku.common.utils.SecurityUtils;
-import com.sudoku.project.convert.RankDataConvert;
 import com.sudoku.project.convert.UserGameInformationConvert;
 import com.sudoku.project.mapper.SudokuLevelMapper;
 import com.sudoku.project.mapper.UserGameInformationMapper;
+import com.sudoku.project.mapper.UserMapper;
 import com.sudoku.project.model.bo.GameRecordBO;
-import com.sudoku.project.model.bo.RankItemBO;
-import com.sudoku.project.model.entity.SudokuLevel;
 import com.sudoku.project.model.entity.UserGameInformation;
-import com.sudoku.project.model.vo.RankDataVO;
 import com.sudoku.project.model.vo.UserGameInformationVO;
 import com.sudoku.project.service.UserGameInformationService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import org.springframework.cache.annotation.Cacheable;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,36 +29,35 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
   private final UserGameInformationMapper userGameInformationMapper;
   private final SudokuLevelMapper sudokuLevelMapper;
   private final GameUtils gameUtils;
-  private final RankDataConvert rankDataConvert;
   private final UserGameInformationConvert userGameInformationConvert;
 
   public UserGameInformationServiceImpl(
       UserGameInformationMapper userGameInformationMapper, SudokuLevelMapper sudokuLevelMapper, GameUtils gameUtils,
-      RankDataConvert rankDataConvert, UserGameInformationConvert userGameInformationConvert) {
+      UserGameInformationConvert userGameInformationConvert, UserMapper userMapper) {
     this.userGameInformationMapper = userGameInformationMapper;
     this.sudokuLevelMapper = sudokuLevelMapper;
     this.gameUtils = gameUtils;
-    this.rankDataConvert = rankDataConvert;
     this.userGameInformationConvert = userGameInformationConvert;
   }
 
   /**
    * 更新用户游戏信息
+   *
+   * @return 更新后的用户游戏信息
    */
   @Override
   @Transactional
   @Log(value = "更新用户游戏信息", businessType = BusinessType.UPDATE)
-  public void updateUserGameInformation() {
+  public UserGameInformation updateUserGameInformation() {
     GameRecordBO gameRecord = gameUtils.getGameRecord();
     UserGameInformation information = userGameInformationMapper.selectByUserIdAndSudokuLevelId(gameRecord.getUserId(),
         gameRecord.getSudokuLevelId());
     if (GameUtils.isGameStart(gameRecord)) {
-      plusUserGameTotal(gameRecord, information.getTotal());
-      return;
-    }
-    if (gameRecord.getCorrect()) {
+      plusUserGameTotal(gameRecord, information);
+    } else if (gameRecord.getCorrect()) {
       updateInformation(gameRecord, information);
     }
+    return information;
   }
 
   /**
@@ -74,34 +66,19 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    * @return 用户游戏信息的显示层列表
    */
   @Override
-  @Transactional
   public List<UserGameInformationVO> getUserGameInformation() {
-    //获取当前用户的游戏信息
-    Integer userId = SecurityUtils.getUserId();
-    List<UserGameInformation> userGameInformationList = userGameInformationMapper.selectByUserId(userId);
-    //获取数独级别列表
-    List<SudokuLevel> sudokuLevels = sudokuLevelMapper.selectAll();
-    //若当前用户的游戏信息比数独级别数少，则缺少了信息
-    if (sudokuLevels.size() > userGameInformationList.size()) {
-      insertUserLackSudokuLevelInformation(userGameInformationList, sudokuLevels, userId);
-      userGameInformationList = userGameInformationMapper.selectByUserId(userId);
-    }
-    return convertToUserGameInformationVOList(userGameInformationList);
+    return getUserGameInformation(SecurityUtils.getCurrentUserId());
   }
 
   /**
-   * 获取排行数据列表
+   * 根据用户ID，获取其游戏信息
    *
-   * @return 排行数据显示层列表
+   * @param userId 用户ID
+   * @return 用户游戏信息的显示层列表
    */
   @Override
-  @Cacheable(value = "rankList", keyGenerator = "simpleKG")
-  public List<RankDataVO<?>> getRankList() {
-    List<RankDataVO<?>> rankList = new ArrayList<>(3);
-    rankList.add(getCorrectNumberRankingList());
-    rankList.add(getMinSpendTimeRankingList());
-    rankList.add(getAverageSpendTimeRankingList());
-    return rankList;
+  public List<UserGameInformationVO> getUserGameInformationById(Integer userId) {
+    return getUserGameInformation(userId);
   }
 
   /**
@@ -117,24 +94,15 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
   }
 
   /**
-   * 插入用户缺少的数独级别信息
+   * 获取指定用户的游戏信息
    *
-   * @param userGameInformationList 用户游戏信息列表
-   * @param sudokuLevels            数独级别
-   * @param userId                  用户ID
+   * @param userId 用户ID
+   * @return 用户游戏信息的显示层列表
    */
-  @Log(value = "插入用户缺少的数独等级信息", isSaveParameterData = false)
-  private void insertUserLackSudokuLevelInformation(List<UserGameInformation> userGameInformationList, List<SudokuLevel> sudokuLevels,
-      Integer userId) {
-    Set<Integer> slids = userGameInformationList.stream().map(UserGameInformation::getSudokuLevelId).collect(Collectors.toSet());
-    List<Integer> lackSlids = new ArrayList<>(sudokuLevels.size() - userGameInformationList.size());
-    sudokuLevels.forEach(sudokuLevel -> {
-      Integer slid = sudokuLevel.getId();
-      if (!slids.contains(slid)) {
-        lackSlids.add(slid);
-      }
-    });
-    userGameInformationMapper.batchInsertByUserIdAndSudokuLevelIds(userId, lackSlids);
+  @NotNull
+  private List<UserGameInformationVO> getUserGameInformation(@NotNull Integer userId) {
+    List<UserGameInformation> userGameInformationList = userGameInformationMapper.selectByUserId(userId);
+    return convertToUserGameInformationVOList(userGameInformationList);
   }
 
   /**
@@ -152,36 +120,6 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
       list.add(convert);
     });
     return list;
-  }
-
-  /**
-   * 获取以回答正确个数排名的列表
-   *
-   * @return 排行数据显示层
-   */
-  private RankDataVO<Integer> getCorrectNumberRankingList() {
-    List<RankItemBO<Integer>> list = userGameInformationMapper.selectCorrectNumberRanking(SettingParameter.RANKING_NUMBER);
-    return rankDataConvert.convert(list, RankDataName.CORRECT_NUMBER);
-  }
-
-  /**
-   * 获取以最少用时排名的列表
-   *
-   * @return 排行数据显示层
-   */
-  private RankDataVO<Integer> getMinSpendTimeRankingList() {
-    List<RankItemBO<Integer>> list = userGameInformationMapper.selectMinSpendTimeRanking(SettingParameter.RANKING_NUMBER);
-    return rankDataConvert.convert(list, RankDataName.MIN_SPEND_TIME);
-  }
-
-  /**
-   * 获取以平均用时排名的列表
-   *
-   * @return 排行数据显示层
-   */
-  private RankDataVO<Integer> getAverageSpendTimeRankingList() {
-    List<RankItemBO<Integer>> list = userGameInformationMapper.selectAverageSpendTimeRanking(SettingParameter.RANKING_NUMBER);
-    return rankDataConvert.convert(list, RankDataName.AVERAGE_SPEND_TIME);
   }
 
   /**
@@ -204,11 +142,13 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
   /**
    * 增加用户游戏总数
    *
-   * @param gameRecord 游戏记录
-   * @param total      用户之前总数
+   * @param gameRecord  游戏记录
+   * @param information 用户游戏信息
    */
-  private void plusUserGameTotal(GameRecordBO gameRecord, Integer total) {
-    userGameInformationMapper.updateTotalByUserIdAndSudokuLevelId(total + 1, gameRecord.getUserId(), gameRecord.getSudokuLevelId());
+  private void plusUserGameTotal(GameRecordBO gameRecord, UserGameInformation information) {
+    information.setTotal(information.getTotal() + 1);
+    userGameInformationMapper.updateTotalByUserIdAndSudokuLevelId(information.getTotal(), gameRecord.getUserId(),
+        gameRecord.getSudokuLevelId());
   }
 
   /**

@@ -5,7 +5,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -40,15 +39,6 @@ public class ServletUtils {
    */
   public static HttpServletRequest getRequest() {
     return getRequestAttributes().getRequest();
-  }
-
-  /**
-   * 获取响应对象
-   *
-   * @return 响应对象
-   */
-  public static HttpServletResponse getResponse() {
-    return getRequestAttributes().getResponse();
   }
 
   /**

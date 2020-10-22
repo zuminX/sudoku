@@ -73,11 +73,7 @@ CREATE TABLE `resource`
 
 
 INSERT INTO `resource`
-VALUES (1, 'sudoku:level:list', '数独等级列表'),
-       (2, 'sudoku:game:generator', '数独游戏生成'),
-       (3, 'sudoku:game:help', '数独游戏提示'),
-       (4, 'sudoku:game:check', '数独游戏检查'),
-       (5, 'sudoku:rank:list', '数独排行列表'),
+VALUES (5, 'sudoku:rank:list', '数独排行列表'),
        (6, 'sudoku:user:information', '数独用户信息'),
        (7, 'sudoku:user:record', '数独用户游戏记录'),
        (8, 'system:user:add', '用户新增'),
@@ -105,13 +101,7 @@ CREATE TABLE `merge_resource_role`
 
 
 INSERT INTO `merge_resource_role`
-VALUES (1, 1, 1),
-       (2, 2, 1),
-       (3, 3, 1),
-       (4, 4, 1),
-       (5, 5, 1),
-       (6, 6, 1),
-       (7, 7, 1),
+VALUES  (5, 5, 1),
        (8, 8, 2),
        (16, 9, 2),
        (17, 10, 2),
@@ -120,10 +110,6 @@ VALUES (1, 1, 1),
        (20, 13, 2),
        (21, 14, 2),
        (22, 15, 2),
-       (9, 1, 2),
-       (10, 2, 2),
-       (11, 3, 2),
-       (12, 4, 2),
        (13, 5, 2),
        (14, 6, 2),
        (15, 7, 2);

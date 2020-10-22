@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sudoku.project.model.entity.SudokuLevel;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.cache.annotation.Cacheable;
@@ -13,7 +14,10 @@ public interface SudokuLevelMapper extends BaseMapper<SudokuLevel> {
   @Cacheable(value = "sudokuLevels", keyGenerator = "simpleKG")
   List<SudokuLevel> selectAll();
 
-  @Cacheable(value = "sudokuIds", keyGenerator = "simpleKG")
+  @Cacheable(value = "sudokuIdByName", keyGenerator = "simpleKG")
+  Optional<Integer> selectIdByName(@Param("name")String name);
+
+  @Cacheable(value = "sudokuLevelIds", keyGenerator = "simpleKG")
   List<Integer> selectId();
 
   @Cacheable(value = "sudokuLevelIdToNameMap", keyGenerator = "simpleKG")

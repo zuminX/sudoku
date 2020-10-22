@@ -1,10 +1,12 @@
 package com.sudoku.common.tools;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,10 +15,12 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundSetOperations;
+import org.springframework.data.redis.core.BoundZSetOperations;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 import org.springframework.stereotype.Component;
 
 /**
@@ -156,6 +160,135 @@ public class RedisUtils {
   }
 
   /**
+   * 缓存排序集合数据
+   *
+   * @param key    缓存键值
+   * @param tuples 值-分数对集合
+   */
+  public <T> void setZSet(String key, Set<TypedTuple<T>> tuples) {
+    if (isKeyNull(key) || tuples == null) {
+      return;
+    }
+    deleteObject(key);
+    BoundZSetOperations<String, T> setOperation = redisTemplate.boundZSetOps(key);
+    setOperation.add(tuples);
+  }
+
+  /**
+   * 向排序集合增加数据
+   *
+   * @param key   缓存键值
+   * @param value 值
+   * @param score 分数
+   */
+  public <T> void addZSet(String key, T value, double score) {
+    if (isKeyValueNull(key, value)) {
+      return;
+    }
+    BoundZSetOperations<String, T> setOperation = redisTemplate.boundZSetOps(key);
+    setOperation.add(value, score);
+  }
+
+  /**
+   * 向排序集合增加数据
+   *
+   * @param key   缓存键值
+   * @param tuple 值-分数对
+   */
+  public <T> void addZSet(String key, TypedTuple<T> tuple) {
+    if (isKeyValueNull(key, tuple)) {
+      return;
+    }
+    BoundZSetOperations<String, T> setOperation = redisTemplate.boundZSetOps(key);
+    setOperation.add(Collections.singleton(tuple));
+  }
+
+  /**
+   * 获得排序集合数据
+   *
+   * @param key 缓存键值
+   * @return 缓存键值对应的数据
+   */
+  public <T> Set<T> getZSet(String key) {
+    return getZSetByRange(key, 0, -1);
+  }
+
+  /**
+   * 获得下标为[start,end]的排序集合数据
+   *
+   * @param key   缓存键值
+   * @param start 起始下标
+   * @param end   结束下标
+   * @return 缓存键值对应的数据
+   */
+  public <T> Set<T> getZSetByRange(String key, long start, long end) {
+    if (isKeyNull(key)) {
+      return CollectionUtil.empty(Set.class);
+    }
+    BoundZSetOperations<String, T> operation = redisTemplate.boundZSetOps(key);
+    return operation.range(start, end);
+  }
+
+  /**
+   * 获得下标为[start,end]的排序集合数据
+   *
+   * @param key   缓存键值
+   * @param start 起始下标
+   * @param end   结束下标
+   * @return 缓存键值对应的数据
+   */
+  public <T> Set<TypedTuple<T>> getZSetByRangeWithScores(String key, long start, long end) {
+    if (isKeyNull(key)) {
+      return CollectionUtil.empty(Set.class);
+    }
+    BoundZSetOperations<String, T> operation = redisTemplate.boundZSetOps(key);
+    return operation.rangeWithScores(start, end);
+  }
+
+  /**
+   * 获得排序集合中指定value的排名
+   *
+   * @param key   缓存键值
+   * @param value 值
+   * @return 排名
+   */
+  public <T> Long getZSetRank(String key, T value) {
+    if (isKeyNull(key)) {
+      return null;
+    }
+    BoundZSetOperations<String, T> operation = redisTemplate.boundZSetOps(key);
+    return operation.rank(value);
+  }
+
+  /**
+   * 获得排序集合的大小
+   *
+   * @param key 缓存键值
+   * @return 集合的大小
+   */
+  public <T> Long getZSetSize(String key) {
+    if (isKeyNull(key)) {
+      return null;
+    }
+    return redisTemplate.boundZSetOps(key).size();
+  }
+
+  /**
+   * 删除[start,end]中排序集合的数据
+   *
+   * @param key   缓存键值
+   * @param start 起始下标
+   * @param end   结束下标
+   */
+  public void removeZSetByRange(String key, long start, long end) {
+    if (isKeyNull(key)) {
+      return;
+    }
+    BoundZSetOperations boundZSetOperations = redisTemplate.boundZSetOps(key);
+    boundZSetOperations.removeRange(start, end);
+  }
+
+  /**
    * 缓存Map数据
    *
    * @param key     缓存键值
@@ -222,6 +355,6 @@ public class RedisUtils {
    * @return 有一为空返回true，否则返回false
    */
   private boolean isKeyCollectionNull(String key, Collection collection) {
-    return isKeyNull(key) || CollectionUtil.isEmpty(collection);
+    return isKeyNull(key) || CollUtil.isEmpty(collection);
   }
 }

@@ -79,14 +79,12 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
    */
   @Override
   public void updateDailyDataUntilNow() {
-    new UpdateUserStatisticsData(StatisticsDate.DAILY) {
-      @Override
-      public StatisticsUserDataBO getStatisticsUserData(LocalDate startDate, LocalDate endDate) {
-        Integer newUserTotal = userMapper.countByCreateTimeBetween(startDate, endDate).orElse(0);
-        Integer activeUserTotal = userMapper.countByRecentLoginTimeBetween(startDate, endDate).orElse(0);
-        return new StatisticsUserDataBO(newUserTotal, activeUserTotal);
-      }
-    }.updateData();
+    UpdateUserStatisticsData updateUserStatisticsData = new UpdateUserStatisticsData(StatisticsDate.DAILY);
+    updateUserStatisticsData.updateData((LocalDate startDate, LocalDate endDate) -> {
+      Integer newUserTotal = userMapper.countByCreateTimeBetween(startDate, endDate).orElse(0);
+      Integer activeUserTotal = userMapper.countByRecentLoginTimeBetween(startDate, endDate).orElse(0);
+      return new StatisticsUserDataBO(newUserTotal, activeUserTotal);
+    });
   }
 
   /**
@@ -94,19 +92,16 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
    */
   @Override
   public void updateEachMonthDataUntilNow() {
-    new UpdateUserStatisticsData(StatisticsDate.EACH_MONTH) {
-      @Override
-      public StatisticsUserDataBO getStatisticsUserData(LocalDate startDate, LocalDate endDate) {
-        return statisticsUserMapper.selectNewUserTotalSumAndActiveUserTotalSumByDateBetweenAndDateName(startDate, endDate,
-            StatisticsDate.DAILY.getName());
-      }
-    }.updateData();
+    UpdateUserStatisticsData updateUserStatisticsData = new UpdateUserStatisticsData(StatisticsDate.EACH_MONTH);
+    updateUserStatisticsData.updateData(
+        (LocalDate startDate, LocalDate endDate) -> statisticsUserMapper.selectNewUserTotalSumAndActiveUserTotalSumByDateBetweenAndDateName(
+            startDate, endDate, StatisticsDate.DAILY.getName()));
   }
 
   /**
-   * 更新用户统计数据的模板方法
+   * 更新用户统计数据类
    */
-  private abstract class UpdateUserStatisticsData extends UpdateStatisticsData {
+  private class UpdateUserStatisticsData extends UpdateStatisticsData<StatisticsUserDataBO> {
 
     /**
      * 该类的构造方法
@@ -118,24 +113,16 @@ public class StatisticsUserServiceImpl implements StatisticsUserService {
     }
 
     /**
-     * 获取待插入数据库的用户统计数据
-     *
-     * @param startDate 开始日期
-     * @param endDate   结束日期
-     * @return 用户的统计数据
-     */
-    public abstract StatisticsUserDataBO getStatisticsUserData(LocalDate startDate, LocalDate endDate);
-
-    /**
      * 向数据库插入用户统计数据
      *
      * @param startDate 开始日期
      * @param endDate   结束日期
+     * @param callback  获取用户的统计数据的回调方法
      */
     @Override
     @Transactional
-    protected void insertData(LocalDate startDate, LocalDate endDate) {
-      StatisticsUserDataBO statisticsUserData = getStatisticsUserData(startDate, endDate);
+    protected void insertData(LocalDate startDate, LocalDate endDate, StatisticsDataCallback<StatisticsUserDataBO> callback) {
+      StatisticsUserDataBO statisticsUserData = callback.getStaticsData(startDate, endDate);
       if (statisticsUserData == null) {
         statisticsUserData = StatisticsUserDataBO.getZero();
       }

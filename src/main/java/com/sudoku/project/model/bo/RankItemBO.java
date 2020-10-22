@@ -1,34 +1,30 @@
 package com.sudoku.project.model.bo;
 
+import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
  * 排行项业务类
- *
- * @param <T> 数据的类型
  */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class RankItemBO<T> implements Serializable {
+public class RankItemBO implements Serializable {
 
-  private static final long serialVersionUID = 1559554219049093889L;
-
-  /**
-   * 数独等级名称
-   */
-  private String sudokuLevelName;
+  @Serial
+  private static final long serialVersionUID = 4710978968972411799L;
 
   /**
-   * 用户昵称
+   * 数独等级ID
    */
-  private String nickname;
+  private Integer sudokuLevelId;
 
   /**
-   * 排行项数据
+   * 排行项数据列表
    */
-  private T data;
+  private List<RankItemDataBO> rankItemDataList;
 }

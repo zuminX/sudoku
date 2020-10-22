@@ -7,8 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 更新统计数据的模板方法
+ *
+ * @param <T> 统计数据的类型
  */
-public abstract class UpdateStatisticsData {
+public abstract class UpdateStatisticsData<T> {
 
   @Getter
   private final StatisticsDate statisticsDate;
@@ -27,9 +29,10 @@ public abstract class UpdateStatisticsData {
    *
    * @param startDate 开始日期
    * @param endDate   结束日期
+   * @param callback  获取统计数据的回调方法
    */
   @Transactional
-  protected abstract void insertData(LocalDate startDate, LocalDate endDate);
+  protected abstract void insertData(LocalDate startDate, LocalDate endDate, StatisticsDataCallback<T> callback);
 
   /**
    * 获取最新的更新日期
@@ -47,15 +50,17 @@ public abstract class UpdateStatisticsData {
 
   /**
    * 更新统计数据
+   *
+   * @param callback 获取统计数据的回调方法
    */
-  public void updateData() {
+  public void updateData(StatisticsDataCallback<T> callback) {
     //从最新统计的日期后一个统计日期开始
     LocalDate startDate = getStartDate();
     LocalDate nowDate = LocalDate.now();
     LocalDate endDate = getNextDate(startDate);
     //插入数据，直到统计的时间在当前时间的前一天
     while (endDate.compareTo(nowDate) <= 0) {
-      insertData(startDate, endDate);
+      insertData(startDate, endDate, callback);
       startDate = getNextDate(startDate);
       endDate = getNextDate(startDate);
     }
@@ -79,6 +84,23 @@ public abstract class UpdateStatisticsData {
    */
   private LocalDate getNextDate(LocalDate date) {
     return statisticsDate.plus(date, 1L);
+  }
+
+  /**
+   * 获取统计数据的回调方法
+   *
+   * @param <T> 统计数据的类型
+   */
+  public interface StatisticsDataCallback<T> {
+
+    /**
+     * 获取统计数据
+     *
+     * @param startDate 开始日期
+     * @param endDate   结束日期
+     * @return 统计数据
+     */
+    T getStaticsData(LocalDate startDate, LocalDate endDate);
   }
 
 }
