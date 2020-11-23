@@ -6,7 +6,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * 时间日期范围类的验证器
+ * 时间日期范围类的验证器类
  */
 public class DateTimeRangeValidator implements ConstraintValidator<IsDateTimeRange, DateTimeRange> {
 

@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 /**
- * 数独游戏的构建类
+ * 数独游戏构建类
  */
 public class SudokuBuilder {
 

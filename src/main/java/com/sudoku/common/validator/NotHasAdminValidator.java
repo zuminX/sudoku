@@ -7,7 +7,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * 角色名列表验证器
+ * 角色名列表验证器类
  */
 public class NotHasAdminValidator implements ConstraintValidator<NotHasAdmin, List<String>> {
 

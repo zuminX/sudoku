@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 /**
- * 数独游戏的工具类
+ * 数独游戏工具类
  */
 public class SudokuUtils {
 
@@ -90,6 +90,12 @@ public class SudokuUtils {
             .anyMatch(col -> row != i && col != j && matrix[row][col] == matrix[i][j]));
   }
 
+  /**
+   * 将字符串还原为数独矩阵数组
+   *
+   * @param sudokuMatrix 数独矩阵数组的字符串形式
+   * @return 数独矩阵数组
+   */
   public static int[][] unzipToMatrix(String sudokuMatrix) {
     int[][] matrix = new int[9][9];
     for (int i = 0, index = 0; i < 9; i++) {
@@ -100,6 +106,12 @@ public class SudokuUtils {
     return matrix;
   }
 
+  /**
+   * 将字符串还原为题目空缺数组
+   *
+   * @param sudokuHoles 题目空缺数组的字符串形式
+   * @return 题目空缺数组
+   */
   public static boolean[][] unzipToHoles(String sudokuHoles) {
     boolean[][] holes = new boolean[9][9];
     for (int i = 0, index = 0; i < 9; i++) {

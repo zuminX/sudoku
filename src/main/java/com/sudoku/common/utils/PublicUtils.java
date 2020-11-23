@@ -10,7 +10,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
- * 业务无关工具类
+ * 公共工具类
  */
 public class PublicUtils {
 

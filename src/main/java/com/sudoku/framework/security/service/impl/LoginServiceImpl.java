@@ -18,7 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 /**
- * 登录功能业务层实现类
+ * 登录业务层实现类
  */
 @Service
 public class LoginServiceImpl implements LoginService {

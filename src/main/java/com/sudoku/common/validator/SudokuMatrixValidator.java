@@ -5,7 +5,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * 数独矩阵验证器
+ * 数独矩阵验证器类
  */
 public class SudokuMatrixValidator {
 

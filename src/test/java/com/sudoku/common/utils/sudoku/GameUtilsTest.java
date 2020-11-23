@@ -24,8 +24,14 @@ public class GameUtilsTest {
 
   private GameUtils gameUtils;
 
+  /**
+   * 数独数据
+   */
   private SudokuDataBO sudokuData;
 
+  /**
+   * 初始化测试数据
+   */
   @Before
   public void setUp() {
     gameUtils = new GameUtils(redisUtils);
