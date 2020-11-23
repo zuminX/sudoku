@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.Data;
@@ -14,6 +15,7 @@ import lombok.Data;
 @Data
 @TableName(value = "game_record")
 public class GameRecord implements Serializable {
+
 
   private static final long serialVersionUID = 9118930828203696159L;
 

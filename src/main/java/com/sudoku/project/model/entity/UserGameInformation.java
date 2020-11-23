@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import lombok.Data;
 
@@ -13,6 +14,7 @@ import lombok.Data;
 @Data
 @TableName(value = "user_game_information")
 public class UserGameInformation implements Serializable {
+
 
   private static final long serialVersionUID = 4670246285232369453L;
 

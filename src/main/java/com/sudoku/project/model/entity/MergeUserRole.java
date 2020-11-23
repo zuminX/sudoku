@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import lombok.Data;
 
@@ -11,7 +12,9 @@ import lombok.Data;
 @TableName(value = "merge_user_role")
 public class MergeUserRole implements Serializable {
 
+
   private static final long serialVersionUID = 6802935173945726932L;
+
   /**
    * 用户角色ID
    */

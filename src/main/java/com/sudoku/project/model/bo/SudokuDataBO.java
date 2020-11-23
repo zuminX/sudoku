@@ -1,7 +1,7 @@
 package com.sudoku.project.model.bo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sudoku.common.utils.PublicUtils;
+import com.sudoku.common.utils.sudoku.SudokuUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
@@ -30,14 +30,19 @@ public class SudokuDataBO implements Serializable {
   }
 
   /**
-   * 复制数独数据
+   * 隐藏空缺的格子信息
    *
-   * @return 克隆数独数据
+   * @return 隐藏后的数独数据对象
    */
-  @JsonIgnore
-  public SudokuDataBO getClone() {
+  public SudokuDataBO hideVacancyGrid() {
     int[][] cloneMatrix = PublicUtils.clone(this.matrix, int[].class);
-    boolean[][] cloneHoles = PublicUtils.clone(this.holes, boolean[].class);
-    return new SudokuDataBO(cloneMatrix, cloneHoles);
+    for (int i = 0; i < 9; i++) {
+      for (int j = 0; j < 9; j++) {
+        if (SudokuUtils.isHole(this.holes, i, j)) {
+          cloneMatrix[i][j] = 0;
+        }
+      }
+    }
+    return new SudokuDataBO(cloneMatrix, this.holes);
   }
 }

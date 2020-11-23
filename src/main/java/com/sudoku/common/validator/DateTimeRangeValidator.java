@@ -8,14 +8,15 @@ import javax.validation.ConstraintValidatorContext;
 /**
  * 时间日期范围类的验证器
  */
-public class IsDateTimeRangeValidator implements ConstraintValidator<IsDateTimeRange, DateTimeRange> {
+public class DateTimeRangeValidator implements ConstraintValidator<IsDateTimeRange, DateTimeRange> {
 
-  /**
-   * 初始化验证器
-   *
-   * @param constraint 验证时间日期范围类的注解
-   */
-  public void initialize(IsDateTimeRange constraint) {
+  private boolean startTimeNotNull;
+  private boolean endTimeNotNull;
+
+  @Override
+  public void initialize(IsDateTimeRange constraintAnnotation) {
+    this.startTimeNotNull = !constraintAnnotation.startCanNull();
+    this.endTimeNotNull = !constraintAnnotation.endTimeCanNull();
   }
 
   /**
@@ -27,10 +28,12 @@ public class IsDateTimeRangeValidator implements ConstraintValidator<IsDateTimeR
    */
   public boolean isValid(DateTimeRange range, ConstraintValidatorContext context) {
     if (range == null) {
-      return true;
+      return false;
     }
-    LocalDateTime start = range.getStart();
-    LocalDateTime end = range.getEnd();
+    LocalDateTime start = range.getStart(), end = range.getEnd();
+    if (startTimeNotNull && start == null || endTimeNotNull && end == null) {
+      return false;
+    }
     return start == null || end == null || end.compareTo(start) >= 0;
   }
 }

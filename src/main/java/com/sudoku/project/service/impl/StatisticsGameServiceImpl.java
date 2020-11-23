@@ -141,7 +141,7 @@ public class StatisticsGameServiceImpl implements StatisticsGameService {
       if (gameDataBOList == null) {
         gameDataBOList = new ArrayList<>();
       }
-      List<Integer> lackSudokuLevelId = sudokuLevelUtils.findLackSudokuLevelId(
+      List<Integer> lackSudokuLevelId = sudokuLevelUtils.findLackId(
           gameDataBOList.stream().map(StatisticsGameDataBO::getSudokuLevelId).collect(toList()));
       gameDataBOList.addAll(lackSudokuLevelId.stream().map(StatisticsGameDataBO::getZero).collect(toList()));
     }

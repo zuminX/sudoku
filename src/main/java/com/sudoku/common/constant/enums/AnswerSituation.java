@@ -5,16 +5,12 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * 用户提交填写数独的结果情况
+ * 用户提交填写数独的结果情况类
  */
 @AllArgsConstructor
 @Getter
 @ToString
 public enum AnswerSituation {
-  /**
-   * 与答案一致
-   */
-  IDENTICAL(0),
   /**
    * 与答案不一致，但正确
    */
@@ -22,7 +18,11 @@ public enum AnswerSituation {
   /**
    * 错误
    */
-  ERROR(2);
+  ERROR(2),
+  /**
+   * 与答案一致
+   */
+  IDENTICAL(0);
 
   /**
    * 编号
@@ -30,7 +30,7 @@ public enum AnswerSituation {
   private final int code;
 
   /**
-   * 该状态是否正确
+   * 回答是否正确
    *
    * @return 正确返回true，错误返回false
    */

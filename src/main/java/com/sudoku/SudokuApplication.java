@@ -5,10 +5,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Import;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 
 /**
  * 数独游戏服务器的启动类
  */
+@EnableOpenApi
 @SpringBootApplication
 @EnableCaching
 @MapperScan("com.sudoku.project.mapper")

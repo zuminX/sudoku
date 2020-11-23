@@ -1,5 +1,6 @@
 package com.sudoku.framework.config;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -9,13 +10,11 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * 配置Swagger接口文档
  */
 @Configuration
-@EnableSwagger2
 public class SwaggerConfiguration {
 
   /**
@@ -25,11 +24,10 @@ public class SwaggerConfiguration {
    */
   @Bean
   public Docket createRestApi() {
-    return new Docket(DocumentationType.SWAGGER_2)
-        .apiInfo(this.apiInfo())
+    return new Docket(DocumentationType.OAS_30)
+        .apiInfo(apiInfo())
         .select()
-        //设置controller的路径，获取api
-        .apis(RequestHandlerSelectors.basePackage("com.sudoku.project.controller"))
+        .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
         .paths(PathSelectors.any())
         .build();
   }

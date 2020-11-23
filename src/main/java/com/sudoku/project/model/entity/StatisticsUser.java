@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import lombok.Data;
@@ -17,7 +18,9 @@ import lombok.NoArgsConstructor;
 @TableName(value = "statistics_user")
 public class StatisticsUser implements Serializable {
 
+
   private static final long serialVersionUID = -6871484199539215302L;
+
   /**
    * 用户统计数据的ID
    */

@@ -2,6 +2,7 @@ package com.sudoku.framework.security.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @ApiModel("验证码显示类")
 public class CaptchaVO implements Serializable {
+
 
   private static final long serialVersionUID = 8718519598958140442L;
 

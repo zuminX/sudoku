@@ -3,6 +3,7 @@ package com.sudoku.project.model.body;
 import com.sudoku.common.validator.NotHasAdmin;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.hibernate.validator.constraints.Length;
 @Data
 @ApiModel("修改用户信息体类")
 public class ModifyUserBody implements Serializable {
+
 
   private static final long serialVersionUID = -2912099437520184948L;
 

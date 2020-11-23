@@ -2,6 +2,7 @@ package com.sudoku.framework.security.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 @ApiModel("登录用户信息体类")
 public class LoginBody implements Serializable {
+
 
   private static final long serialVersionUID = 9125412007527553474L;
 

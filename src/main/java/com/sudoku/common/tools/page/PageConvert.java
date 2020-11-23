@@ -11,6 +11,7 @@ import org.mapstruct.factory.Mappers;
  * 分页对象转换器
  */
 @Mapper(imports = PageInformationConvert.class)
+@SuppressWarnings("all")
 public interface PageConvert {
 
   PageConvert INSTANCE = Mappers.getMapper(PageConvert.class);

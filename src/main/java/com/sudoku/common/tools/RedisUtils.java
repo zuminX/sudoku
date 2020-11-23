@@ -13,7 +13,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.BoundZSetOperations;
 import org.springframework.data.redis.core.HashOperations;
@@ -30,8 +29,11 @@ import org.springframework.stereotype.Component;
 @SuppressWarnings(value = {"unchecked", "rawtypes"})
 public class RedisUtils {
 
-  @Autowired
-  public RedisTemplate redisTemplate;
+  public final RedisTemplate redisTemplate;
+
+  public RedisUtils(RedisTemplate redisTemplate) {
+    this.redisTemplate = redisTemplate;
+  }
 
   /**
    * 缓存对象
@@ -185,8 +187,7 @@ public class RedisUtils {
     if (isKeyValueNull(key, value)) {
       return;
     }
-    BoundZSetOperations<String, T> setOperation = redisTemplate.boundZSetOps(key);
-    setOperation.add(value, score);
+    redisTemplate.boundZSetOps(key).add(value, score);
   }
 
   /**
@@ -199,8 +200,7 @@ public class RedisUtils {
     if (isKeyValueNull(key, tuple)) {
       return;
     }
-    BoundZSetOperations<String, T> setOperation = redisTemplate.boundZSetOps(key);
-    setOperation.add(Collections.singleton(tuple));
+    redisTemplate.boundZSetOps(key).add(Collections.singleton(tuple));
   }
 
   /**
@@ -225,8 +225,7 @@ public class RedisUtils {
     if (isKeyNull(key)) {
       return CollectionUtil.empty(Set.class);
     }
-    BoundZSetOperations<String, T> operation = redisTemplate.boundZSetOps(key);
-    return operation.range(start, end);
+    return redisTemplate.boundZSetOps(key).range(start, end);
   }
 
   /**
@@ -241,8 +240,7 @@ public class RedisUtils {
     if (isKeyNull(key)) {
       return CollectionUtil.empty(Set.class);
     }
-    BoundZSetOperations<String, T> operation = redisTemplate.boundZSetOps(key);
-    return operation.rangeWithScores(start, end);
+    return redisTemplate.boundZSetOps(key).rangeWithScores(start, end);
   }
 
   /**
@@ -256,8 +254,7 @@ public class RedisUtils {
     if (isKeyNull(key)) {
       return null;
     }
-    BoundZSetOperations<String, T> operation = redisTemplate.boundZSetOps(key);
-    return operation.rank(value);
+    return redisTemplate.boundZSetOps(key).rank(value);
   }
 
   /**
@@ -284,8 +281,21 @@ public class RedisUtils {
     if (isKeyNull(key)) {
       return;
     }
-    BoundZSetOperations boundZSetOperations = redisTemplate.boundZSetOps(key);
-    boundZSetOperations.removeRange(start, end);
+    redisTemplate.boundZSetOps(key).removeRange(start, end);
+  }
+
+  /**
+   * 删除排序集合中值在[min,max]中的数据
+   *
+   * @param key 缓存键值
+   * @param min 最小值
+   * @param max 最大值
+   */
+  public void removeZSetByScoreRange(String key, double min, double max) {
+    if (isKeyNull(key)) {
+      return;
+    }
+    redisTemplate.boundZSetOps(key).removeRangeByScore(min, max);
   }
 
   /**

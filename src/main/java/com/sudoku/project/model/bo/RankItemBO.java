@@ -1,6 +1,6 @@
 package com.sudoku.project.model.bo;
 
-import java.io.Serial;
+
 import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class RankItemBO implements Serializable {
 
-  @Serial
+
   private static final long serialVersionUID = 4710978968972411799L;
 
   /**

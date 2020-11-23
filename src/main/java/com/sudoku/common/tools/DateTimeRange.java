@@ -15,6 +15,7 @@ public class DateTimeRange {
 
   @ApiModelProperty("开始的日期时间")
   private LocalDateTime start;
+
   @ApiModelProperty("结束的日期时间")
   private LocalDateTime end;
 }

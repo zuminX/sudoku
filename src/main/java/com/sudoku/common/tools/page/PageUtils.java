@@ -6,6 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import java.util.List;
 import java.util.function.Function;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,13 +37,9 @@ public class PageUtils {
    * @param <T>       源数据类型
    * @return 分页数据
    */
-  public static <T> Page<T> getPage(PageParam<T> pageParam) {
-    return new PageTemplateMethod<T>(pageParam) {
-      @Override
-      public PageInfo<T> getPageInfo(List<T> queryList) {
-        return new PageInfo<>(queryList);
-      }
-    }.getPage();
+  public static <T> Page<T> getPage(@NotNull PageParam<T> pageParam) {
+    PageTemplateMethod<T> pageTemplateMethod = new PageTemplateMethod<>(pageParam);
+    return pageTemplateMethod.getPage(PageInfo::of);
   }
 
   /**
@@ -55,21 +52,30 @@ public class PageUtils {
    * @return 分页数据
    */
   @SuppressWarnings("all")
-  public static <T, V> Page<V> getPage(PageParam<T> pageParam, Function<T, V> converter) {
-    return (Page<V>) new PageTemplateMethod<T>(pageParam) {
-      /**
-       * 将转换后的数据代替原先分页查询的数据
-       * @param queryList 查询数据列表
-       * @return 分页信息对象
-       */
-      @Override
-      public PageInfo<T> getPageInfo(List<T> queryList) {
-        List<V> targetList = queryList.stream().map(converter).collect(toList());
-        PageInfo pageInfo = new PageInfo(queryList);
-        pageInfo.setList(targetList);
-        return pageInfo;
-      }
-    }.getPage();
+  public static <T, V> Page<V> getPage(@NotNull PageParam<T> pageParam,@NotNull Function<T, V> converter) {
+    PageTemplateMethod<T> pageTemplateMethod = new PageTemplateMethod<>(pageParam);
+    return (Page<V>) pageTemplateMethod.getPage(queryList -> {
+      List<V> targetList = queryList.stream().map(converter).collect(toList());
+      PageInfo pageInfo = PageInfo.of(queryList);
+      pageInfo.setList(targetList);
+      return pageInfo;
+    });
+  }
+
+  /**
+   * 获取分页信息对象的回调方法
+   *
+   * @param <T> 分页数据的类型
+   */
+  private interface GetPageInfoCallBack<T> {
+
+    /**
+     * 获取分页信息对象
+     *
+     * @param queryList 查询数据列表
+     * @return 分页信息对象
+     */
+    PageInfo<T> getPageInfo(List<T> queryList);
   }
 
   /**
@@ -77,7 +83,7 @@ public class PageUtils {
    *
    * @param <T> 分页数据的类型
    */
-  private static abstract class PageTemplateMethod<T> {
+  private static class PageTemplateMethod<T> {
 
     private final PageParam<T> pageParam;
 
@@ -86,22 +92,16 @@ public class PageUtils {
     }
 
     /**
-     * 获取分页信息对象
-     *
-     * @param queryList 查询数据列表
-     * @return 分页信息对象
-     */
-    public abstract PageInfo<T> getPageInfo(List<T> queryList);
-
-    /**
      * 获取分页数据
      *
+     * @param callBack 获取分页信息对象的回调方法
      * @return 分页数据
      */
-    public Page<T> getPage() {
+    @SuppressWarnings("all")
+    public Page<T> getPage(GetPageInfoCallBack<T> callBack) {
       setStartPage(pageParam.getPage(), pageParam.getPageSize());
       List<T> queryList = pageParam.getQueryFunc().get();
-      return PageConvert.INSTANCE.convert(getPageInfo(queryList));
+      return PageConvert.INSTANCE.convert(callBack.getPageInfo(queryList));
     }
 
     /**

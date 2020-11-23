@@ -20,15 +20,24 @@ public class SudokuLevelUtils {
   }
 
   /**
-   * 查找给定的ID列表中缺少的数独等级ID列表
+   * 获取所有的数独等级ID
+   *
+   * @return 数独等级ID列表
+   */
+  public List<Integer> getIdList() {
+    return sudokuLevelMapper.selectId();
+  }
+
+  /**
+   * 查找除给定的ID列表外缺少的数独等级ID列表
    *
    * @param sudokuLeveIds 数独等级ID列表
    * @return 缺少的数独等级ID列表
    */
-  public List<Integer> findLackSudokuLevelId(List<Integer> sudokuLeveIds) {
+  public List<Integer> findLackId(List<Integer> sudokuLeveIds) {
     List<Integer> allSudokuLevelIds = sudokuLevelMapper.selectId();
-    return CollUtil.isEmpty(sudokuLeveIds) ? allSudokuLevelIds : sudokuLeveIds.stream()
-        .filter(sudokuLevel -> !allSudokuLevelIds.contains(sudokuLevel))
+    return CollUtil.isEmpty(sudokuLeveIds) ? allSudokuLevelIds : allSudokuLevelIds.stream()
+        .filter(sudokuLevel -> !sudokuLeveIds.contains(sudokuLevel))
         .collect(Collectors.toList());
   }
 
@@ -37,8 +46,7 @@ public class SudokuLevelUtils {
    *
    * @return 数独等级ID
    */
-  public Optional<Integer> getSudokuLevelIdByName(String sudokuLevelName) {
+  public Optional<Integer> getIdByName(String sudokuLevelName) {
     return sudokuLevelMapper.selectIdByName(sudokuLevelName);
   }
-
 }

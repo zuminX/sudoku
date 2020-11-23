@@ -18,6 +18,7 @@ import com.sudoku.project.model.bo.RankItemDataBO;
 import com.sudoku.project.model.entity.User;
 import com.sudoku.project.model.entity.UserGameInformation;
 import com.sudoku.project.service.GameRankService;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -97,6 +98,15 @@ public class GameRankServiceImpl implements GameRankService {
   }
 
   /**
+   * 删除排行榜中超过排行榜人数限制的数据
+   */
+  @Override
+  public void removeExceedNumberData() {
+    Arrays.stream(RankingType.values()).map(RankingType::getRedisPrefix).forEach(prefix -> sudokuLevelUtils.getIdList()
+        .forEach(id -> redisUtils.removeZSetByRange(getRankingKey(prefix, id), SettingParameter.RANKING_NUMBER, -1)));
+  }
+
+  /**
    * 更新用户的排名
    *
    * @param rankingType   排行类型
@@ -132,7 +142,7 @@ public class GameRankServiceImpl implements GameRankService {
    * @return 对应排行的key
    */
   private String getRankingKey(RankingType rankingType, String sudokuLevelName) {
-    Integer sudokuLevelId = sudokuLevelUtils.getSudokuLevelIdByName(sudokuLevelName)
+    Integer sudokuLevelId = sudokuLevelUtils.getIdByName(sudokuLevelName)
         .orElseThrow(SudokuLevelException.supplier(StatusCode.SUDOKU_LEVEL_NOT_FOUND));
     return getRankingKey(rankingType.getRedisPrefix(), sudokuLevelId);
   }

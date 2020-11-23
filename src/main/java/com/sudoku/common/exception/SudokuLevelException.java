@@ -28,6 +28,12 @@ public class SudokuLevelException extends BaseException {
     super(statusCode);
   }
 
+  /**
+   * 返回数独等级异常类的提供者
+   *
+   * @param statusCode 状态编码
+   * @return 数独等级异常类的提供者
+   */
   public static Supplier<SudokuLevelException> supplier(StatusCode statusCode) {
     return () -> new SudokuLevelException(statusCode);
   }

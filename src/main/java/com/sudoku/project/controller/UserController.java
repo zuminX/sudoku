@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 @Validated
 @Api(tags = "用户API接口")
-public class UserController {
+public class UserController extends BaseController {
 
   private final UserService userService;
   private final UserGameInformationService userGameInformationService;

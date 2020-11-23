@@ -12,14 +12,6 @@ import javax.validation.ConstraintValidatorContext;
 public class NotHasAdminValidator implements ConstraintValidator<NotHasAdmin, List<String>> {
 
   /**
-   * 初始化验证器
-   *
-   * @param constraint 验证角色名列表注解
-   */
-  public void initialize(NotHasAdmin constraint) {
-  }
-
-  /**
    * 校验角色名列表中是否含有管理员
    *
    * @param roleNameList 角色名列表

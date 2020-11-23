@@ -4,6 +4,7 @@ import com.sudoku.common.tools.DateTimeRange;
 import com.sudoku.common.validator.IsDateTimeRange;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import org.hibernate.validator.constraints.Range;
 @Data
 @ApiModel("搜索用户信息体类")
 public class SearchUserBody implements Serializable {
+
 
   private static final long serialVersionUID = -231977380846579412L;
 

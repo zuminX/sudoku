@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/role")
 @Api(tags = "系统角色API接口")
-public class RoleController {
+public class RoleController extends BaseController {
 
   private final RoleService roleService;
 

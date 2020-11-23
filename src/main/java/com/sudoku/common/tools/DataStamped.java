@@ -26,5 +26,4 @@ public class DataStamped<T> {
     this.data = data;
     this.updateDate = LocalDate.now();
   }
-
 }

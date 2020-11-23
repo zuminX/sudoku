@@ -15,7 +15,7 @@ public interface SudokuLevelMapper extends BaseMapper<SudokuLevel> {
   List<SudokuLevel> selectAll();
 
   @Cacheable(value = "sudokuIdByName", keyGenerator = "simpleKG")
-  Optional<Integer> selectIdByName(@Param("name")String name);
+  Optional<Integer> selectIdByName(@Param("name") String name);
 
   @Cacheable(value = "sudokuLevelIds", keyGenerator = "simpleKG")
   List<Integer> selectId();
@@ -25,9 +25,9 @@ public interface SudokuLevelMapper extends BaseMapper<SudokuLevel> {
     List<SudokuLevel> sudokuLevels = selectAll();
     //此处存在bug，redis返回的数据类型为Map<String,String>
     return sudokuLevels.stream()
-                       .collect(
-                           Collectors.toMap(sudokuLevel -> String.valueOf(sudokuLevel.getId()), SudokuLevel::getName,
-                               (a, b) -> b));
+        .collect(
+            Collectors.toMap(sudokuLevel -> String.valueOf(sudokuLevel.getId()), SudokuLevel::getName,
+                (a, b) -> b));
   }
 
   @Cacheable(cacheNames = "sudokuLevelByLevel", keyGenerator = "simpleKG")

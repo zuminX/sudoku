@@ -4,12 +4,14 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import lombok.Data;
 
 @Data
 @TableName(value = "merge_resource_role")
 public class MergeResourceRole implements Serializable {
+
 
   private static final long serialVersionUID = -1138514723502720806L;
 

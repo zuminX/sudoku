@@ -1,6 +1,7 @@
 package com.sudoku.common.exception;
 
 import com.sudoku.common.constant.enums.StatusCode;
+import java.util.function.Supplier;
 import lombok.Getter;
 
 /**
@@ -25,5 +26,15 @@ public class GameException extends BaseException {
    */
   public GameException(StatusCode statusCode) {
     super(statusCode);
+  }
+
+  /**
+   * 返回数独游戏异常类的提供者
+   *
+   * @param statusCode 状态编码
+   * @return 数独游戏异常类的提供者
+   */
+  public static Supplier<GameException> supplier(StatusCode statusCode) {
+    return () -> new GameException(statusCode);
   }
 }

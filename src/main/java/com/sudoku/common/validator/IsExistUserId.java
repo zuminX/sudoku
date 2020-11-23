@@ -16,7 +16,7 @@ import javax.validation.Payload;
 @Target({PARAMETER, FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = IsExistUserIdValidator.class)
+@Constraint(validatedBy = ExistUserIdValidator.class)
 public @interface IsExistUserId {
 
   String message() default "指定用户ID在系统中不存在";

@@ -2,6 +2,7 @@ package com.sudoku.framework.security.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sudoku.project.model.entity.User;
+
 import java.util.Collection;
 import java.util.Set;
 import lombok.Data;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Data
 @NoArgsConstructor
 public class LoginUserBO implements UserDetails {
+
 
   private static final long serialVersionUID = -2436545453049796344L;
 
@@ -39,7 +41,7 @@ public class LoginUserBO implements UserDetails {
   private Set<String> permissions;
 
   /**
-   * 构造方法
+   * 登录用户业务类的构造方法
    *
    * @param user        用户对象
    * @param permissions 权限列表

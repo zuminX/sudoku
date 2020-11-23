@@ -1,5 +1,6 @@
 package com.sudoku.project.controller;
 
+import com.sudoku.common.utils.sudoku.SudokuBuilder;
 import com.sudoku.common.validator.IsSudokuMatrix;
 import com.sudoku.project.model.bo.SudokuDataBO;
 import com.sudoku.project.model.bo.SudokuGridInformationBO;
@@ -16,9 +17,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.NotNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/game")
 @Validated
 @Api(tags = "数独游戏API接口")
-public class GameController {
+public class GameController extends BaseController {
 
   private final SudokuService sudokuService;
   private final GameRecordService gameRecordService;
@@ -54,28 +55,35 @@ public class GameController {
     return sudokuLevelService.getSudokuLevels();
   }
 
+  @GetMapping("/generateSudokuFinal")
+  @PreAuthorize("@ss.hasPermission('sudoku:final:generate')")
+  @ApiOperation("生成数独终盘")
+  @ApiImplicitParam(name = "sudokuLevel", value = "难度级别", dataTypeClass = Integer.class, required = true)
+  public SudokuDataBO generateSudokuFinal(@RequestParam SudokuLevel sudokuLevel) {
+    return SudokuBuilder.generateSudokuFinal(sudokuLevel.getMinEmpty(), sudokuLevel.getMaxEmpty());
+  }
+
   @GetMapping("/generateTopic")
   @ApiOperation("生成数独题目")
   @ApiImplicitParams({
       @ApiImplicitParam(name = "level", value = "难度级别", dataTypeClass = Integer.class, required = true),
       @ApiImplicitParam(name = "isRecord", value = "是否记录", dataTypeClass = Boolean.class, required = true)})
-  public SudokuDataBO generateSudokuTopic(@RequestParam Integer level, @RequestParam @NotNull(message = "是否记录游戏不能为空") Boolean isRecord) {
-    SudokuLevel sudokuLevel = sudokuLevelService.getSudokuLevel(level);
-    SudokuDataBO sudokuDataBO = sudokuService.generateSudokuTopic(sudokuLevel, isRecord);
+  public SudokuDataBO generateSudokuTopic(@RequestParam SudokuLevel level, @RequestParam @NotNull(message = "是否记录游戏不能为空") Boolean isRecord) {
+    SudokuDataBO sudokuDataBO = sudokuService.generateSudokuTopic(level, isRecord);
     saveGameInformation();
     return sudokuDataBO;
   }
 
   @PostMapping("/help")
   @ApiOperation("获取当前数独游戏的提示信息")
-  @ApiImplicitParam(name = "userMatrix", value = "用户的数独矩阵数据", dataTypeClass = ArrayList.class, required = true)
+  @ApiImplicitParam(name = "userMatrix", value = "用户的数独矩阵数据", dataTypeClass = List.class, required = true)
   public SudokuGridInformationBO getHelp(@RequestBody @IsSudokuMatrix List<List<Integer>> userMatrix) {
     return sudokuService.getHelp(userMatrix);
   }
 
   @PostMapping("/check")
   @ApiOperation("检查用户的数独数据")
-  @ApiImplicitParam(name = "userMatrix", value = "用户的数独矩阵数据", dataTypeClass = ArrayList.class, required = true)
+  @ApiImplicitParam(name = "userMatrix", value = "用户的数独矩阵数据", dataTypeClass = List.class, required = true)
   public SubmitSudokuInformationVO checkSudokuData(@RequestBody @IsSudokuMatrix List<List<Integer>> userMatrix) {
     SubmitSudokuInformationVO submitSudokuInformationVO = sudokuService.checkSudokuData(userMatrix);
     saveGameInformation();
@@ -92,5 +100,4 @@ public class GameController {
       gameRankService.updateCurrentUserRank(userGameInformation);
     }
   }
-
 }

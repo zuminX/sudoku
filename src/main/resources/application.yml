@@ -3,21 +3,8 @@ server:
   port: 8081
 
 spring:
-  #  数据源配置
-  datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: '${SUDOKU_MYSQL_PASSWORD}'
-    url: jdbc:mysql://localhost:3306/sudoku?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-    hikari:
-      connection-timeout: 30000
-      minimum-idle: 5
-      maximum-pool-size: 20
-      idle-timeout: 600000
-      max-lifetime: 1800000
-      connection-test-query: SELECT 1
-
+  profiles:
+    active: @package.environment@
   #redis配置
   redis:
     host: 127.0.0.1

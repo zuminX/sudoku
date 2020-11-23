@@ -1,10 +1,11 @@
 package com.sudoku.framework.security;
 
+import com.sudoku.common.constant.enums.StatusCode;
 import com.sudoku.common.tools.ServletUtils;
 import com.sudoku.framework.security.filter.JwtAuthenticationTokenFilter;
 import com.sudoku.framework.security.handler.CustomizeLogoutSuccessHandler;
+import com.sudoku.project.model.vo.CommonResult;
 import javax.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -24,15 +25,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+  private final CustomizeLogoutSuccessHandler logoutSuccessHandler;
+  private final JwtAuthenticationTokenFilter authenticationTokenFilter;
   @Resource
   private UserDetailsService userDetailsService;
 
-  @Autowired
-  private CustomizeLogoutSuccessHandler logoutSuccessHandler;
-
-  @Autowired
-  private JwtAuthenticationTokenFilter authenticationTokenFilter;
-
+  public SecurityConfig(CustomizeLogoutSuccessHandler logoutSuccessHandler,
+      JwtAuthenticationTokenFilter authenticationTokenFilter) {
+    this.logoutSuccessHandler = logoutSuccessHandler;
+    this.authenticationTokenFilter = authenticationTokenFilter;
+  }
 
   /**
    * 获取密码编码器
@@ -111,7 +113,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
    * @throws Exception 异常
    */
   private void handlerLogout(HttpSecurity security) throws Exception {
-    security.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler);
+    security.logout().logoutUrl("/security/logout").logoutSuccessHandler(logoutSuccessHandler);
   }
 
   /**
@@ -121,10 +123,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
    * @throws Exception 异常
    */
   private void handlerAuthenticationException(HttpSecurity security) throws Exception {
-    security.exceptionHandling().authenticationEntryPoint((request, response, exception) -> {
-      response.setStatus(401);
-      ServletUtils.returnHome(request, response);
-    });
+    security.exceptionHandling()
+        .authenticationEntryPoint(
+            (request, response, exception) -> ServletUtils.returnJsonData(response, CommonResult.error(StatusCode.USER_NOT_AUTHORITY)));
   }
 
   /**
@@ -173,7 +174,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
    * @param security Web安全对象
    */
   private void ignoreSwagger(WebSecurity security) {
-    security.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/configuration/ui", "/swagger-resources",
-        "/swagger-resources/configuration/security", "/swagger-ui.html", "/webjars/**");
+    security.ignoring().antMatchers("/swagger-ui.html",
+        "/swagger-ui/*",
+        "/swagger-resources/**",
+        "/v2/api-docs",
+        "/v3/api-docs",
+        "/webjars/**");
   }
 }

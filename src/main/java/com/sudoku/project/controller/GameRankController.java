@@ -1,7 +1,6 @@
 package com.sudoku.project.controller;
 
 import com.sudoku.common.constant.enums.RankingType;
-import com.sudoku.common.exception.FormParameterConversionException;
 import com.sudoku.common.tools.page.Page;
 import com.sudoku.project.model.bo.RankItemDataBO;
 import com.sudoku.project.service.GameRankService;
@@ -9,13 +8,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import java.beans.PropertyEditorSupport;
 import java.util.List;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/gameRank")
 @Validated
 @Api(tags = "数独游戏排行API接口")
-public class GameRankController {
+public class GameRankController extends BaseController {
 
   private final GameRankService gameRankService;
 
@@ -59,22 +55,5 @@ public class GameRankController {
   })
   public Long getCurrentUserRank(@RequestParam RankingType rankingName, @RequestParam String sudokuLevelName) {
     return gameRankService.getCurrentUserRank(rankingName, sudokuLevelName);
-  }
-
-  /**
-   * 将前台传递过来的排行类型名的字符串，自动转化为对应的枚举类型
-   */
-  @InitBinder
-  protected void initBinder(WebDataBinder binder) {
-    binder.registerCustomEditor(RankingType.class, new PropertyEditorSupport() {
-      @Override
-      public void setAsText(String text) {
-        RankingType rankingType = RankingType.findByName(text);
-        if (rankingType == null) {
-          throw new FormParameterConversionException(text, RankingType.class);
-        }
-        setValue(rankingType);
-      }
-    });
   }
 }

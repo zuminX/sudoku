@@ -16,7 +16,7 @@ import javax.validation.Payload;
 @Target({PARAMETER, FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = IsDateTimeRangeValidator.class)
+@Constraint(validatedBy = DateTimeRangeValidator.class)
 public @interface IsDateTimeRange {
 
   String message() default "开始的日期时间必须早于结束的日期时间";
@@ -24,4 +24,18 @@ public @interface IsDateTimeRange {
   Class<?>[] groups() default {};
 
   Class<? extends Payload>[] payload() default {};
+
+  /**
+   * 若该属性为true，则对于任意一个开始日期时间为null的时间日期范围对象而言，校验都会通过
+   *
+   * @return 开始的日期时间是否能为null
+   */
+  boolean startCanNull() default true;
+
+  /**
+   * 若该属性为true，则对于任意一个结束日期时间为null的时间日期范围对象而言，校验都会通过
+   *
+   * @return 结束的日期时间是否能为null
+   */
+  boolean endTimeCanNull() default true;
 }

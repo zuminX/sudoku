@@ -5,7 +5,7 @@ import com.sudoku.common.log.Log;
 import com.sudoku.common.tools.page.Page;
 import com.sudoku.common.tools.page.PageParam;
 import com.sudoku.common.tools.page.PageUtils;
-import com.sudoku.common.utils.GameUtils;
+import com.sudoku.common.utils.sudoku.GameUtils;
 import com.sudoku.common.utils.SecurityUtils;
 import com.sudoku.project.convert.GameRecordConvert;
 import com.sudoku.project.mapper.GameRecordMapper;

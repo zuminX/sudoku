@@ -1,6 +1,8 @@
 package com.sudoku.common.constant.enums;
 
 import com.sudoku.common.tools.LocalDateOperation;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
 import java.util.Arrays;
 import lombok.AllArgsConstructor;
@@ -8,12 +10,10 @@ import lombok.Getter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * 统计日期类
- */
 @AllArgsConstructor
 @Getter
 @ToString
+@ApiModel("统计日期类")
 public enum StatisticsDate implements LocalDateOperation {
   DAILY("日") {
     /**
@@ -64,6 +64,7 @@ public enum StatisticsDate implements LocalDateOperation {
     }
   };
 
+  @ApiModelProperty("统计日期名称")
   private final String name;
 
   /**

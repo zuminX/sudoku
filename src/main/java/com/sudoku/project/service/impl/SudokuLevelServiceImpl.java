@@ -1,7 +1,5 @@
 package com.sudoku.project.service.impl;
 
-import com.sudoku.common.constant.enums.StatusCode;
-import com.sudoku.common.exception.GameException;
 import com.sudoku.project.convert.SudokuLevelConvert;
 import com.sudoku.project.mapper.SudokuLevelMapper;
 import com.sudoku.project.model.entity.SudokuLevel;
@@ -33,9 +31,7 @@ public class SudokuLevelServiceImpl implements SudokuLevelService {
    */
   @Override
   public List<SudokuLevelVO> getSudokuLevels() {
-    return sudokuLevelMapper.selectAll().stream()
-        .map(sudokuLevelConvert::convert)
-        .collect(Collectors.toList());
+    return sudokuLevelMapper.selectAll().stream().map(sudokuLevelConvert::convert).collect(Collectors.toList());
   }
 
   /**
@@ -46,10 +42,6 @@ public class SudokuLevelServiceImpl implements SudokuLevelService {
    */
   @Override
   public SudokuLevel getSudokuLevel(int level) {
-    SudokuLevel sudokuLevel = sudokuLevelMapper.selectByLevel(level);
-    if (sudokuLevel == null) {
-      throw new GameException(StatusCode.GAME_NOT_LEVEL);
-    }
-    return sudokuLevel;
+    return sudokuLevelMapper.selectByLevel(level);
   }
 }

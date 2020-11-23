@@ -40,4 +40,6 @@ public interface GameRankService {
    * @param userGameInformation 用户游戏信息对象
    */
   void updateCurrentUserRank(UserGameInformation userGameInformation);
+
+  void removeExceedNumberData();
 }

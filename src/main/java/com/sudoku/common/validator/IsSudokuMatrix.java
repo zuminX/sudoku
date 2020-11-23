@@ -16,7 +16,7 @@ import javax.validation.Payload;
 @Target({PARAMETER, FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = IsSudokuMatrixValidator.class)
+@Constraint(validatedBy = {SudokuMatrixValidator.IntegerSudokuMatrixValidator.class, SudokuMatrixValidator.BooleanSudokuMatrixValidator.class})
 public @interface IsSudokuMatrix {
 
   String message() default "该数组必须是一个数独矩阵";

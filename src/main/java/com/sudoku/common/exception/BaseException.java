@@ -12,6 +12,7 @@ import lombok.Getter;
 public class BaseException extends RuntimeException {
 
   private static final long serialVersionUID = -8105492018397966401L;
+
   /**
    * 异常编号
    */

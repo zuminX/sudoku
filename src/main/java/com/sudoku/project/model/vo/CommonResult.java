@@ -2,6 +2,8 @@ package com.sudoku.project.model.vo;
 
 import com.sudoku.common.constant.enums.StatusCode;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,31 +15,22 @@ import lombok.NoArgsConstructor;
 @ApiModel("公共结果类")
 public class CommonResult<T> implements Serializable {
 
+
   private static final long serialVersionUID = 8729965664919809866L;
 
-  /**
-   * 是否成功
-   */
+  @ApiModelProperty("是否成功")
   private boolean success;
 
-  /**
-   * 状态码
-   */
+  @ApiModelProperty("状态码")
   private Integer code;
 
-  /**
-   * http请求状态
-   */
+  @ApiModelProperty("http请求状态")
   private Integer httpStatus;
 
-  /**
-   * 消息
-   */
+  @ApiModelProperty("消息")
   private String message;
 
-  /**
-   * 数据
-   */
+  @ApiModelProperty("数据")
   private T data;
 
   /**
@@ -67,6 +60,20 @@ public class CommonResult<T> implements Serializable {
   public static <T> CommonResult<T> error(StatusCode statusCode, String message) {
     CommonResult<T> result = error(statusCode);
     result.setMessage(message);
+    return result;
+  }
+
+  /**
+   * 请求成功
+   *
+   * @param <T>  数据类型
+   * @return 经过包装的响应对象
+   */
+  public static <T> CommonResult<T> success() {
+    CommonResult<T> result = new CommonResult<>();
+    result.success = true;
+    result.httpStatus = StatusCode.OK.getStatus().value();
+    result.code = StatusCode.OK.getCode();
     return result;
   }
 

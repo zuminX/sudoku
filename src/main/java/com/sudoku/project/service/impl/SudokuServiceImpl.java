@@ -1,17 +1,12 @@
 package com.sudoku.project.service.impl;
 
-import static com.sudoku.common.constant.enums.AnswerSituation.CORRECT;
-import static com.sudoku.common.constant.enums.AnswerSituation.ERROR;
-import static com.sudoku.common.constant.enums.AnswerSituation.IDENTICAL;
 import static com.sudoku.common.utils.PublicUtils.getRandomInt;
-import static com.sudoku.common.utils.SudokuUtils.isNotHole;
 
 import com.sudoku.common.constant.enums.AnswerSituation;
-import com.sudoku.common.utils.GameUtils;
+import com.sudoku.common.utils.sudoku.GameUtils;
 import com.sudoku.common.utils.PublicUtils;
 import com.sudoku.common.utils.SecurityUtils;
-import com.sudoku.common.utils.SudokuBuilder;
-import com.sudoku.common.utils.SudokuUtils;
+import com.sudoku.common.utils.sudoku.SudokuBuilder;
 import com.sudoku.project.convert.SubmitSudokuInformationConvert;
 import com.sudoku.project.model.bo.GameRecordBO;
 import com.sudoku.project.model.bo.SubmitSudokuInformationBO;
@@ -49,9 +44,9 @@ public class SudokuServiceImpl implements SudokuService {
    */
   @Override
   public SudokuDataBO generateSudokuTopic(SudokuLevel sudokuLevel, Boolean isRecord) {
-    SudokuDataBO sudokuDataBO = SudokuBuilder.generateSudokuFinal(sudokuLevel.getMinEmpty(), sudokuLevel.getMinEmpty());
+    SudokuDataBO sudokuDataBO = SudokuBuilder.generateSudokuFinal(sudokuLevel.getMinEmpty(), sudokuLevel.getMaxEmpty());
     saveGameRecord(sudokuDataBO, sudokuLevel.getId(), isRecord);
-    return SudokuUtils.generateSudokuTopic(sudokuDataBO);
+    return sudokuDataBO.hideVacancyGrid();
   }
 
   /**
@@ -67,7 +62,6 @@ public class SudokuServiceImpl implements SudokuService {
     return randomGridInformation(errorGridInformationList);
   }
 
-
   /**
    * 检查用户的数独数据
    *
@@ -80,14 +74,13 @@ public class SudokuServiceImpl implements SudokuService {
     gameRecord.setEndTime(LocalDateTime.now());
 
     SudokuDataBO sudokuDataBO = gameRecord.getSudokuDataBO();
-    AnswerSituation situation = judgeAnswerSituation(userMatrix, sudokuDataBO);
+    AnswerSituation situation = gameUtils.judgeAnswerSituation(userMatrix, sudokuDataBO);
     gameRecord.setCorrect(situation.isRight());
 
     gameUtils.setGameRecord(gameRecord);
 
     return getUserAnswerResult(gameRecord, situation);
   }
-
 
   /**
    * 是否记录游戏信息
@@ -121,63 +114,9 @@ public class SudokuServiceImpl implements SudokuService {
     SubmitSudokuInformationBO informationBO = SubmitSudokuInformationBO.builder()
         .situation(situation)
         .matrix(gameRecord.getSudokuDataBO().getMatrix())
-        .spendTime(PublicUtils.getTwoDateAbsDiff(gameRecord.getEndTime(), gameRecord.getStartTime()))
+        .spendTime(PublicUtils.computeAbsDiff(gameRecord.getEndTime(), gameRecord.getStartTime()))
         .build();
     return submitSudokuInformationConvert.convert(informationBO);
-  }
-
-  /**
-   * 判断答题状态
-   *
-   * @param userMatrix   用户的数独矩阵数据
-   * @param sudokuDataBO 数独数据
-   * @return 用户答题状态
-   */
-  private AnswerSituation judgeAnswerSituation(List<List<Integer>> userMatrix, SudokuDataBO sudokuDataBO) {
-    AnswerSituation situation = compareByGenerateAnswer(userMatrix, sudokuDataBO);
-    if (situation.equals(CORRECT)) {
-      return compareBySudokuRule(userMatrix);
-    }
-    return situation;
-  }
-
-  /**
-   * 根据生成的数独答案进行比较
-   *
-   * @param userMatrix   用户的数独矩阵数据
-   * @param sudokuDataBO 数独数据
-   * @return 用户答题状态
-   */
-  private AnswerSituation compareByGenerateAnswer(List<List<Integer>> userMatrix, SudokuDataBO sudokuDataBO) {
-    int[][] matrix = sudokuDataBO.getMatrix();
-    boolean[][] holes = sudokuDataBO.getHoles();
-
-    AnswerSituation situation = IDENTICAL;
-    for (int i = 0; i < 9; i++) {
-      for (int j = 0; j < 9; j++) {
-        if (isNotHole(holes, i, j)) {
-          continue;
-        }
-        Integer userValue = userMatrix.get(i).get(j);
-        if (userValue == null) {
-          return ERROR;
-        }
-        if (userValue != matrix[i][j]) {
-          situation = CORRECT;
-        }
-      }
-    }
-    return situation;
-  }
-
-  /**
-   * 根据数独规则进行比较
-   *
-   * @param userMatrix 用户的数独矩阵数据
-   * @return 用户答题状态
-   */
-  private AnswerSituation compareBySudokuRule(List<List<Integer>> userMatrix) {
-    return SudokuUtils.checkSudokuValidity(PublicUtils.unwrap(userMatrix)) ? CORRECT : ERROR;
   }
 
   /**

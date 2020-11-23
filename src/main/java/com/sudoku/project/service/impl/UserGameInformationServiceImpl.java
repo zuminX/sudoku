@@ -2,7 +2,7 @@ package com.sudoku.project.service.impl;
 
 import com.sudoku.common.log.BusinessType;
 import com.sudoku.common.log.Log;
-import com.sudoku.common.utils.GameUtils;
+import com.sudoku.common.utils.sudoku.GameUtils;
 import com.sudoku.common.utils.PublicUtils;
 import com.sudoku.common.utils.SecurityUtils;
 import com.sudoku.project.convert.UserGameInformationConvert;
@@ -196,7 +196,7 @@ public class UserGameInformationServiceImpl implements UserGameInformationServic
    * @return 花费的时间
    */
   private int getThisBoardSpendTime(GameRecordBO gameRecord) {
-    return Math.toIntExact(PublicUtils.getTwoDateAbsDiff(gameRecord.getEndTime(), gameRecord.getStartTime()));
+    return Math.toIntExact(PublicUtils.computeAbsDiff(gameRecord.getEndTime(), gameRecord.getStartTime()));
   }
 
   /**

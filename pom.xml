@@ -15,8 +15,8 @@
   <description>Sudoku project for Spring Boot</description>
 
   <properties>
-    <java.version>14</java.version>
-    <jdk.version>14</jdk.version>
+    <java.version>11</java.version>
+    <jdk.version>11</jdk.version>
     <mapstruct.version>1.3.1.Final</mapstruct.version>
     <lombok.version>1.18.12</lombok.version>
     <mybatis.plus.starter.version>3.4.0</mybatis.plus.starter.version>
@@ -33,6 +33,8 @@
     <jaxb-core.version>2.3.0</jaxb-core.version>
     <activation.version>1.1.1</activation.version>
     <xxl-job-core.version>2.2.0</xxl-job-core.version>
+    <powermock.version>2.0.2</powermock.version>
+    <junit.version>4.13</junit.version>
   </properties>
 
   <dependencies>
@@ -148,19 +150,35 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
+      <!--排除Junit 5-->
+      <exclusions>
+        <exclusion>
+          <groupId>org.junit.jupiter</groupId>
+          <artifactId>junit-jupiter</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.junit.vintage</groupId>
+          <artifactId>junit-vintage-engine</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.mockito</groupId>
+          <artifactId>mockito-junit-jupiter</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!--Junit 4-->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <!-- swagger2-->
     <dependency>
       <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger2</artifactId>
-      <version>${swagger2.version}</version>
-    </dependency>
-
-    <!-- swagger2-UI-->
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger-ui</artifactId>
+      <artifactId>springfox-boot-starter</artifactId>
       <version>${swagger2.version}</version>
     </dependency>
 
@@ -199,9 +217,60 @@
       <artifactId>xxl-job-core</artifactId>
       <version>${xxl-job-core.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>3.6.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito2</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <properties>
+        <package.environment>dev</package.environment>
+      </properties>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
+
+    <profile>
+      <id>prod</id>
+      <properties>
+        <package.environment>prod</package.environment>
+      </properties>
+    </profile>
+  </profiles>
+
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>application.yml</include>
+          <include>application-${package.environment}.yml</include>
+          <include>**/*.xml</include>
+        </includes>
+      </resource>
+    </resources>
+
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
@@ -217,6 +286,7 @@
           </excludes>
         </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -225,19 +295,21 @@
           <skipTests>true</skipTests>
         </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven-compiler.version}</version>
         <configuration>
-          <source>${jdk.version}</source>
-          <target>${jdk.version}</target>
+          <source>11</source>
+          <target>11</target>
           <annotationProcessorPaths>
             <path>
               <groupId>org.mapstruct</groupId>
               <artifactId>mapstruct-processor</artifactId>
               <version>${mapstruct.version}</version>
             </path>
+
             <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>

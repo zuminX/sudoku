@@ -1,6 +1,7 @@
-package com.sudoku.common.utils;
+package com.sudoku.common.utils.sudoku;
 
-import com.sudoku.project.model.bo.SudokuDataBO;
+import com.sudoku.common.utils.PublicUtils;
+import java.util.List;
 import java.util.stream.IntStream;
 
 /**
@@ -15,27 +16,9 @@ public class SudokuUtils {
   }
 
   /**
-   * 生成数独题目
-   *
-   * @param sudokuData 终盘的数独数据
-   * @return 题目的数独数据
-   */
-  public static SudokuDataBO generateSudokuTopic(SudokuDataBO sudokuData) {
-    SudokuDataBO sudokuDataClone = sudokuData.getClone();
-    boolean[][] holes = sudokuDataClone.getHoles();
-    int[][] matrix = sudokuDataClone.getMatrix();
-    for (int i = 0; i < 9; i++) {
-      for (int j = 0; j < 9; j++) {
-        if (isHole(holes, i, j)) {
-          matrix[i][j] = 0;
-        }
-      }
-    }
-    return sudokuDataClone;
-  }
-
-  /**
-   * 检查数独数据的合法性 依次检查每个单元格的数字是否在1~9之间，及该数字在每行每列每块是否唯一
+   * 检查数独数据的合法性
+   * <p>
+   * 依次检查每个单元格的数字是否在1~9之间，及该数字在每行每列每块是否唯一
    *
    * @param matrix 数独矩阵
    * @return 合法返回true，非法返回false
@@ -44,6 +27,16 @@ public class SudokuUtils {
     return IntStream.range(0, 9)
         .noneMatch(i -> IntStream.range(0, 9)
             .anyMatch(j -> matrix[i][j] < 1 || matrix[i][j] > 9 || !isOnly(matrix, i, j)));
+  }
+
+  /**
+   * 检查数独数据的合法性
+   *
+   * @param matrix 数独矩阵
+   * @return 合法返回true，非法返回false
+   */
+  public static boolean checkSudokuValidity(List<List<Integer>> matrix) {
+    return checkSudokuValidity(PublicUtils.unwrapIntArray(matrix));
   }
 
   /**
@@ -57,7 +50,6 @@ public class SudokuUtils {
   public static boolean isOnly(int[][] matrix, int i, int j) {
     return checkRowIsOnly(matrix[i], j, 9) && checkColumnIsOnly(matrix, i, j, 9) && checkBlockIsOnly(matrix, i, j);
   }
-
 
   /**
    * 检查该行的数字是否唯一
@@ -98,6 +90,26 @@ public class SudokuUtils {
             .anyMatch(col -> row != i && col != j && matrix[row][col] == matrix[i][j]));
   }
 
+  public static int[][] unzipToMatrix(String sudokuMatrix) {
+    int[][] matrix = new int[9][9];
+    for (int i = 0, index = 0; i < 9; i++) {
+      for (int j = 0; j < 9; j++) {
+        matrix[i][j] = sudokuMatrix.charAt(index++) - '0';
+      }
+    }
+    return matrix;
+  }
+
+  public static boolean[][] unzipToHoles(String sudokuHoles) {
+    boolean[][] holes = new boolean[9][9];
+    for (int i = 0, index = 0; i < 9; i++) {
+      for (int j = 0; j < 9; j++) {
+        holes[i][j] = sudokuHoles.charAt(index++) == '1';
+      }
+    }
+    return holes;
+  }
+
   /**
    * 判断指定位置是否为空缺格子
    *
@@ -121,5 +133,4 @@ public class SudokuUtils {
   public static boolean isNotHole(boolean[][] holes, int i, int j) {
     return !isHole(holes, i, j);
   }
-
 }

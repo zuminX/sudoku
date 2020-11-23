@@ -1,10 +1,10 @@
 package com.sudoku.common.tools;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -21,15 +21,18 @@ public class ServletUtils {
   }
 
   /**
-   * 跳转到首页
+   * 将数据转换为JSON数据响应给客户端
    *
-   * @param request  请求对象
-   * @param response 响应对象
-   * @throws ServletException Servlet异常
-   * @throws IOException      I/O异常
+   * @param response HttpServlet响应对象
+   * @param data     数据
+   * @throws IOException IO异常
    */
-  public static void returnHome(ServletRequest request, ServletResponse response) throws ServletException, IOException {
-    request.getRequestDispatcher("/").forward(request, response);
+  public static void returnJsonData(HttpServletResponse response, Object data) throws IOException {
+    PrintWriter writer = response.getWriter();
+    response.setHeader("Content-Type", "application/json;charset=utf-8");
+    writer.write(new ObjectMapper().writeValueAsString(data));
+    writer.flush();
+    writer.close();
   }
 
   /**
