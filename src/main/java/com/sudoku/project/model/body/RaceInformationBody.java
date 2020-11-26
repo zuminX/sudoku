@@ -39,6 +39,6 @@ public class RaceInformationBody implements Serializable {
   private String description;
 
   @ApiModelProperty("竞赛时间范围")
-  @IsDateTimeRange(startCanNull = false, endTimeCanNull = false)
+  @IsDateTimeRange(startNotNull = true, endTimeNotNull = true)
   private DateTimeRange raceTimeRange;
 }

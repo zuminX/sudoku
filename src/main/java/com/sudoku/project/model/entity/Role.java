@@ -6,13 +6,17 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 角色表对应的实体类
  */
 @Data
 @TableName(value = "`role`")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Role implements Serializable {
 
 

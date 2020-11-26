@@ -14,21 +14,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class RankingTypeTest {
 
   /**
-   * 排行类型名为null的查询结果应是null
-   */
-  @Test
-  public void testFindByNameWithNull() {
-    RankingType type = RankingType.findByName(null);
-    assertNull(type);
-  }
-
-  /**
-   * 排行类型名为空字符串的查询结果应是null
+   * 排行类型名为空时，查询结果应是null
    */
   @Test
   public void testFindByNameWithEmpty() {
-    RankingType type = RankingType.findByName("");
-    assertNull(type);
+    assertNull(RankingType.findByName(""));
+    assertNull(RankingType.findByName(null));
   }
 
   /**

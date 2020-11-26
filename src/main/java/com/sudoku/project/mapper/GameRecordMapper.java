@@ -16,7 +16,7 @@ public interface GameRecordMapper extends BaseMapper<GameRecord> {
 
   int updateEndTimeAndCorrectById(@Param("endTime") LocalDateTime endTime, @Param("correct") Boolean correct, @Param("id") Integer id);
 
-  List<GameRecordVO> findByUidOrderByStartTimeDesc(@Param("userId") Integer userId);
+  List<GameRecordVO> findByUserIdAndCorrectNotNullOrderByStartTimeDesc(@Param("userId") Integer userId);
 
   /**
    * 获取系统中最早结束的数独游戏的时间

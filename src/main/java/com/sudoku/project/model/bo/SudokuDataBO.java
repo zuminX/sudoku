@@ -35,7 +35,7 @@ public class SudokuDataBO implements Serializable {
    * @return 隐藏后的数独数据对象
    */
   public SudokuDataBO hideVacancyGrid() {
-    int[][] cloneMatrix = PublicUtils.clone(this.matrix, int[].class);
+    int[][] cloneMatrix = PublicUtils.deepClone(this.matrix);
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
         if (SudokuUtils.isHole(this.holes, i, j)) {

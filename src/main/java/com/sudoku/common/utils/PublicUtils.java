@@ -1,13 +1,14 @@
 package com.sudoku.common.utils;
 
-import static java.lang.reflect.Array.newInstance;
-
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ArrayUtil;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 公共工具类
@@ -17,7 +18,8 @@ public class PublicUtils {
   /**
    * +8的时区
    */
-  public static final ZoneOffset ZONE = ZoneOffset.of("+8");
+  private static final ZoneOffset ZONE = ZoneOffset.of("+8");
+
   /**
    * 生成随机数的对象
    */
@@ -36,28 +38,18 @@ public class PublicUtils {
    * @return 转换后的二维数组
    */
   public static int[][] unwrapIntArray(List<List<Integer>> list) {
-    int[][] empty = new int[0][0];
-    if (list == null) {
-      return empty;
-    }
-    final int row = list.size();
-    if (row == 0) {
-      return empty;
-    }
-    final int column = list.get(0).size();
-    if (column == 0) {
-      return empty;
-    }
-    for (int i = 1; i < row; i++) {
-      if (list.get(i).size() != column) {
-        return empty;
-      }
+    if (CollUtil.isEmpty(list)) {
+      return new int[0][0];
     }
 
-    final int[][] result = new int[row][column];
+    final int row = list.size();
+    final int[][] result = new int[row][];
     for (int i = 0; i < row; i++) {
+      List<Integer> rowList = list.get(i);
+      final int column = CollUtil.isEmpty(rowList) ? 0 : rowList.size();
+      result[i] = new int[column];
       for (int j = 0; j < column; j++) {
-        Integer element = list.get(i).get(j);
+        Integer element = rowList.get(j);
         result[i][j] = element == null ? 0 : element;
       }
     }
@@ -71,28 +63,18 @@ public class PublicUtils {
    * @return 转换后的二维数组
    */
   public static boolean[][] unwrapBoolArray(List<List<Boolean>> list) {
-    boolean[][] empty = new boolean[0][0];
-    if (list == null) {
-      return empty;
-    }
-    final int row = list.size();
-    if (row == 0) {
-      return empty;
-    }
-    final int column = list.get(0).size();
-    if (column == 0) {
-      return empty;
-    }
-    for (int i = 1; i < row; i++) {
-      if (list.get(i).size() != column) {
-        return empty;
-      }
+    if (CollUtil.isEmpty(list)) {
+      return new boolean[0][0];
     }
 
-    final boolean[][] result = new boolean[row][column];
+    final int row = list.size();
+    final boolean[][] result = new boolean[row][];
     for (int i = 0; i < row; i++) {
+      List<Boolean> rowList = list.get(i);
+      final int column = CollUtil.isEmpty(rowList) ? 0 : rowList.size();
+      result[i] = new boolean[column];
       for (int j = 0; j < column; j++) {
-        Boolean element = list.get(i).get(j);
+        Boolean element = rowList.get(j);
         result[i][j] = element != null && element;
       }
     }
@@ -100,32 +82,35 @@ public class PublicUtils {
   }
 
   /**
-   * 获取[begin,end]的随机整数
+   * 获取[min,max]的随机整数
    *
-   * @param begin 最小值
-   * @param end   最大值
-   * @return [begin, end]之间的一个整数
+   * @param min 最小值
+   * @param max 最大值
+   * @return [min, max]之间的一个整数
    */
-  public static int getRandomInt(int begin, int end) {
-    return RANDOM.nextInt(end - begin + 1) + begin;
+  public static int getRandomInt(int min, int max) {
+    if (min > max) {
+      throw new IllegalArgumentException("最小值必须小于或等于最大值");
+    }
+    return RANDOM.nextInt(max - min + 1) + min;
   }
 
   /**
-   * 深拷贝一个二维数组
+   * 深拷贝二维int型数组
    *
-   * @param <T>  泛型
-   * @param src  源数据
-   * @param type 一维数组的class对象
-   * @return 深拷贝的二维数组
+   * @param source 源数据
+   * @return 深拷贝的数组
    */
-  @SuppressWarnings("unchecked")
-  public static <T> T[] clone(T[] src, Class<T> type) {
-    if (src == null) {
+  public static int[][] deepClone(int[][] source) {
+    if (source == null) {
       return null;
     }
-    T[] array = (T[]) newInstance(type, src.length);
-    System.arraycopy(src, 0, array, 0, array.length);
-    return array;
+    int[][] clone = new int[source.length][];
+    for (int i = 0; i < source.length; i++) {
+      clone[i] = new int[source[i].length];
+      System.arraycopy(source[i], 0, clone[i], 0, source[i].length);
+    }
+    return clone;
   }
 
   /**
@@ -163,7 +148,7 @@ public class PublicUtils {
    * @param dateTime2 日期时间二
    * @return 以ms为单位的差值
    */
-  public static long computeDiff(LocalDateTime dateTime1, LocalDateTime dateTime2) {
+  public static long computeDiff(@NotNull LocalDateTime dateTime1, @NotNull LocalDateTime dateTime2) {
     return toTimestamp(dateTime1) - toTimestamp(dateTime2);
   }
 
@@ -174,7 +159,7 @@ public class PublicUtils {
    * @param dateTime2 日期时间二
    * @return 以ms为单位的差值
    */
-  public static long computeAbsDiff(LocalDateTime dateTime1, LocalDateTime dateTime2) {
+  public static long computeAbsDiff(@NotNull LocalDateTime dateTime1, @NotNull LocalDateTime dateTime2) {
     return Math.abs(computeDiff(dateTime1, dateTime2));
   }
 
@@ -184,24 +169,27 @@ public class PublicUtils {
    * @param localDateTime 本地日期时间
    * @return 对应的时间戳
    */
-  public static long toTimestamp(LocalDateTime localDateTime) {
+  public static long toTimestamp(@NotNull LocalDateTime localDateTime) {
     return localDateTime.toInstant(ZONE).toEpochMilli();
   }
 
   /**
-   * 压缩int型数组为字符串
+   * 压缩二维int型数组为字符串
    *
-   * @param array int型数组
+   * @param array 二维int型数组
    * @return 对应的字符串
    */
   public static String compressionIntArray(int[][] array) {
+    if (ArrayUtil.isEmpty(array)) {
+      return "";
+    }
     return Arrays.stream(array).flatMapToInt(Arrays::stream).mapToObj(String::valueOf).collect(Collectors.joining());
   }
 
   /**
-   * 压缩int型列表为字符串
+   * 压缩二维int型列表为字符串
    *
-   * @param list int型列表
+   * @param list 二维int型列表
    * @return 对应的字符串
    */
   public static String compressionIntList(List<List<Integer>> list) {
@@ -209,12 +197,15 @@ public class PublicUtils {
   }
 
   /**
-   * 压缩boolean型数组为字符串
+   * 压缩二维boolean型数组为字符串
    *
-   * @param array boolean型数组
+   * @param array 二维boolean型数组
    * @return 对应的字符串
    */
   public static String compressionBoolArray(boolean[][] array) {
+    if (ArrayUtil.isEmpty(array)) {
+      return "";
+    }
     StringBuilder sb = new StringBuilder();
     Arrays.stream(array).forEach(booleans -> {
       for (boolean aBoolean : booleans) {
@@ -225,12 +216,13 @@ public class PublicUtils {
   }
 
   /**
-   * 压缩boolean型列表为字符串
+   * 压缩二维boolean型列表为字符串
    *
-   * @param list boolean型列表
+   * @param list 二维boolean型列表
    * @return 对应的字符串
    */
   public static String compressionBoolList(List<List<Boolean>> list) {
     return PublicUtils.compressionBoolArray(PublicUtils.unwrapBoolArray(list));
   }
+
 }

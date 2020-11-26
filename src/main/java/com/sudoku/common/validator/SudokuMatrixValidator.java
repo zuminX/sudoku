@@ -9,22 +9,25 @@ import javax.validation.ConstraintValidatorContext;
  */
 public class SudokuMatrixValidator {
 
+  private SudokuMatrixValidator() {
+  }
+
   /**
-   * 校验二维数组是否为数独矩阵
+   * 校验二维列表是否为数独矩阵
    *
-   * @param value 待校验的数组
+   * @param value 待校验的列表
    * @return 验证通过返回true，验证失败返回false
    */
-  private static <T> boolean isValid(List<List<T>> value) {
+  protected static <T> boolean isValid(List<List<T>> value) {
     return value != null && value.size() == 9 && value.stream().noneMatch(list -> list.size() != 9);
   }
 
   public static class BooleanSudokuMatrixValidator implements ConstraintValidator<IsSudokuMatrix, List<List<Boolean>>> {
 
     /**
-     * 校验二维数组是否为数独矩阵
+     * 校验二维列表是否为数独矩阵
      *
-     * @param value   待校验的数组
+     * @param value   待校验的列表
      * @param context 约束校验器上下文对象
      * @return 验证通过返回true，验证失败返回false
      */
@@ -37,9 +40,9 @@ public class SudokuMatrixValidator {
   public static class IntegerSudokuMatrixValidator implements ConstraintValidator<IsSudokuMatrix, List<List<Integer>>> {
 
     /**
-     * 校验二维数组是否为数独矩阵
+     * 校验二维列表是否为数独矩阵
      *
-     * @param value   待校验的数组
+     * @param value   待校验的列表
      * @param context 约束校验器上下文对象
      * @return 验证通过返回true，验证失败返回false
      */

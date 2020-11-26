@@ -26,16 +26,16 @@ public @interface IsDateTimeRange {
   Class<? extends Payload>[] payload() default {};
 
   /**
-   * 若该属性为true，则对于任意一个开始日期时间为null的时间日期范围对象而言，校验都会通过
+   * 若该属性为false，则对于任意一个开始日期时间为null的时间日期范围对象而言，校验都会通过
    *
-   * @return 开始的日期时间是否能为null
+   * @return 开始的日期时间是否不能为null
    */
-  boolean startCanNull() default true;
+  boolean startNotNull() default false;
 
   /**
-   * 若该属性为true，则对于任意一个结束日期时间为null的时间日期范围对象而言，校验都会通过
+   * 若该属性为false，则对于任意一个结束日期时间为null的时间日期范围对象而言，校验都会通过
    *
-   * @return 结束的日期时间是否能为null
+   * @return 结束的日期时间是否不能为null
    */
-  boolean endTimeCanNull() default true;
+  boolean endTimeNotNull() default false;
 }

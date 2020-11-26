@@ -106,7 +106,7 @@ public class GameRecordServiceImpl implements GameRecordService {
    */
   private Page<GameRecordVO> getHistoryGameRecord(Integer id, Integer page, Integer pageSize) {
     return PageUtils.getPage(PageParam.<GameRecordVO>builder()
-        .queryFunc(() -> gameRecordMapper.findByUidOrderByStartTimeDesc(id))
+        .queryFunc(() -> gameRecordMapper.findByUserIdAndCorrectNotNullOrderByStartTimeDesc(id))
         .page(page)
         .pageSize(pageSize)
         .build());

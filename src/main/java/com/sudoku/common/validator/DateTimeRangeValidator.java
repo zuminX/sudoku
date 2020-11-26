@@ -10,13 +10,25 @@ import javax.validation.ConstraintValidatorContext;
  */
 public class DateTimeRangeValidator implements ConstraintValidator<IsDateTimeRange, DateTimeRange> {
 
+  /**
+   * 开始时间不能为空
+   */
   private boolean startTimeNotNull;
+
+  /**
+   * 结束时间不能为空
+   */
   private boolean endTimeNotNull;
 
+  /**
+   * 初始化校验器
+   *
+   * @param isDateTimeRange 验证时间日期范围类的注解
+   */
   @Override
-  public void initialize(IsDateTimeRange constraintAnnotation) {
-    this.startTimeNotNull = !constraintAnnotation.startCanNull();
-    this.endTimeNotNull = !constraintAnnotation.endTimeCanNull();
+  public void initialize(IsDateTimeRange isDateTimeRange) {
+    this.startTimeNotNull = isDateTimeRange.startNotNull();
+    this.endTimeNotNull = isDateTimeRange.endTimeNotNull();
   }
 
   /**

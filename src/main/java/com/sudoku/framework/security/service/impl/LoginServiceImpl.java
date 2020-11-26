@@ -24,7 +24,9 @@ import org.springframework.stereotype.Service;
 public class LoginServiceImpl implements LoginService {
 
   private final UserTokenService tokenService;
+
   private final UserConvert userConvert;
+
   @Resource
   private AuthenticationManager authenticationManager;
 

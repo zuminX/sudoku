@@ -1,12 +1,13 @@
 package com.sudoku.common.utils.sudoku;
 
+import static org.junit.Assert.assertEquals;
+
 import com.sudoku.common.constant.enums.AnswerSituation;
 import com.sudoku.common.tools.RedisUtils;
 import com.sudoku.project.model.bo.SudokuDataBO;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -76,7 +77,7 @@ public class GameUtilsTest {
     userMatrix.add(List.of(5, 8, 7, 6, 4, 1, 9, 3, 2));
 
     AnswerSituation situation = gameUtils.judgeAnswerSituation(userMatrix, sudokuData);
-    Assert.assertEquals(AnswerSituation.IDENTICAL, situation);
+    assertEquals(AnswerSituation.IDENTICAL, situation);
   }
 
   /**
@@ -96,7 +97,7 @@ public class GameUtilsTest {
     userMatrix.add(List.of(5, 9, 1, 8, 6, 4, 7, 3, 2));
 
     AnswerSituation situation = gameUtils.judgeAnswerSituation(userMatrix, sudokuData);
-    Assert.assertEquals(AnswerSituation.CORRECT, situation);
+    assertEquals(AnswerSituation.CORRECT, situation);
   }
 
   /**
@@ -116,7 +117,7 @@ public class GameUtilsTest {
     userMatrix.add(List.of(5, 8, 7, 6, 4, 1, 9, 3, 2));
 
     AnswerSituation situation = gameUtils.judgeAnswerSituation(userMatrix, sudokuData);
-    Assert.assertEquals(AnswerSituation.ERROR, situation);
+    assertEquals(AnswerSituation.ERROR, situation);
   }
 
   /**
@@ -136,6 +137,6 @@ public class GameUtilsTest {
     userMatrix.add(Arrays.asList(5, 8, 7, 6, 4, 1, 9, 3, null));
 
     AnswerSituation situation = gameUtils.judgeAnswerSituation(userMatrix, sudokuData);
-    Assert.assertEquals(AnswerSituation.ERROR, situation);
+    assertEquals(AnswerSituation.ERROR, situation);
   }
 }

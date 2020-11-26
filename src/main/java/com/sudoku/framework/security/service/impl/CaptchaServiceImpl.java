@@ -25,22 +25,27 @@ import org.springframework.stereotype.Service;
 public class CaptchaServiceImpl implements CaptchaService {
 
   private final RedisUtils redisUtils;
+
   /**
    * 验证码的宽度
    */
   private int width = 112;
+
   /**
    * 验证码的高度
    */
   private int height = 36;
+
   /**
    * 验证码字符的个数
    */
   private int codeNumber = 4;
+
   /**
    * 验证码干扰线的个数
    */
   private int lineCount = 100;
+
   /**
    * 验证码有效期(分钟)
    */
@@ -87,7 +92,7 @@ public class CaptchaServiceImpl implements CaptchaService {
    *
    * @return 验证码在redis中的key值
    */
-  private String getCaptchaKey(String uuid) {
+  protected String getCaptchaKey(String uuid) {
     return RedisKeys.CAPTCHA_PREFIX + uuid;
   }
 }

@@ -127,7 +127,8 @@ public class SudokuServiceImpl implements SudokuService {
    * @param isRecord      是否记录
    */
   private void saveGameRecord(SudokuDataBO sudokuDataBO, Integer sudokuLevelId, Boolean isRecord) {
-    gameUtils.setGameRecord(GameRecordBO.initBuilder()
+    gameUtils.setGameRecord(GameRecordBO.builder()
+        .startTime(LocalDateTime.now())
         .sudokuDataBO(sudokuDataBO)
         .sudokuLevelId(sudokuLevelId)
         .userId(SecurityUtils.getCurrentUserId())

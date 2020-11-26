@@ -59,16 +59,4 @@ public class GameRecordBO implements Serializable {
    */
   @Transient
   private boolean isRecord;
-
-  /**
-   * 初始化构造器
-   *
-   * @return 游戏记录业务对象构造器
-   */
-  public static GameRecordBOBuilder initBuilder() {
-    return GameRecordBO.builder()
-        .startTime(LocalDateTime.now())
-        .correct(false);
-  }
-
 }

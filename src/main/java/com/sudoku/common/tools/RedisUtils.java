@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 @SuppressWarnings(value = {"unchecked", "rawtypes"})
 public class RedisUtils {
 
-  public final RedisTemplate redisTemplate;
+  private final RedisTemplate redisTemplate;
 
   public RedisUtils(RedisTemplate redisTemplate) {
     this.redisTemplate = redisTemplate;

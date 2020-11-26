@@ -2,7 +2,7 @@ package com.sudoku.common.utils;
 
 import static java.util.stream.Collectors.toList;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.sudoku.common.constant.consist.PermissionConstants;
 import com.sudoku.framework.security.model.LoginUserBO;
@@ -76,16 +76,6 @@ public class SecurityUtils {
   }
 
   /**
-   * 判断该用户的角色是否为空
-   *
-   * @param user 用户对象
-   * @return 角色为空返回true，否则返回false
-   */
-  public static boolean isUserRolesEmpty(User user) {
-    return user == null || CollectionUtil.isEmpty(user.getRoles());
-  }
-
-  /**
    * 判断该登录用户的角色是否为空
    *
    * @param loginUserBO 登录用户对象
@@ -102,7 +92,7 @@ public class SecurityUtils {
    * @return 权限为空返回true，否则返回false
    */
   public static boolean isLoginUserPermissionsEmpty(LoginUserBO loginUserBO) {
-    return loginUserBO == null || CollectionUtil.isEmpty(loginUserBO.getPermissions());
+    return loginUserBO == null || CollUtil.isEmpty(loginUserBO.getPermissions());
   }
 
   /**
@@ -113,5 +103,15 @@ public class SecurityUtils {
    */
   public static String encodePassword(String password) {
     return SpringUtil.getBean(PasswordEncoder.class).encode(password);
+  }
+
+  /**
+   * 判断该用户的角色是否为空
+   *
+   * @param user 用户对象
+   * @return 角色为空返回true，否则返回false
+   */
+  private static boolean isUserRolesEmpty(User user) {
+    return user == null || CollUtil.isEmpty(user.getRoles());
   }
 }

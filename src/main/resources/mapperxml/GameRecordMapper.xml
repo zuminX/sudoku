@@ -84,7 +84,7 @@
     </trim>
   </insert>
 
-  <select id="findByUidOrderByStartTimeDesc" resultMap="GameRecordVOMap">
+  <select id="findByUserIdAndCorrectNotNullOrderByStartTimeDesc" resultMap="GameRecordVOMap">
     select gr.sudoku_matrix,
            gr.sudoku_holes,
            gr.start_time,
@@ -93,7 +93,7 @@
            sl.name
     from game_record gr
            inner join sudoku_level sl on gr.sudoku_level_id = sl.id
-    where user_id = #{userId,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER} and correct is not null
     order by start_time desc
   </select>
 

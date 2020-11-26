@@ -2,11 +2,6 @@ package com.sudoku.common.utils.sudoku;
 
 import static com.sudoku.common.utils.PublicUtils.getRandomInt;
 import static com.sudoku.common.utils.PublicUtils.randomizedArray;
-import static com.sudoku.common.utils.sudoku.SudokuBuilder.GenerateStatus.EMPTY_ALL;
-import static com.sudoku.common.utils.sudoku.SudokuBuilder.GenerateStatus.EMPTY_ROW;
-import static com.sudoku.common.utils.sudoku.SudokuBuilder.GenerateStatus.FILL_GRID;
-import static com.sudoku.common.utils.sudoku.SudokuBuilder.GenerateStatus.FILL_ROW;
-import static com.sudoku.common.utils.sudoku.SudokuBuilder.GenerateStatus.INIT_FIRST_ROW;
 import static com.sudoku.common.utils.sudoku.SudokuUtils.checkBlockIsOnly;
 import static com.sudoku.common.utils.sudoku.SudokuUtils.checkColumnIsOnly;
 import static com.sudoku.common.utils.sudoku.SudokuUtils.checkRowIsOnly;
@@ -53,44 +48,44 @@ public class SudokuBuilder {
   private static void generateMatrix(int[][] matrix) {
     //记录buildRandomArray()调用次数
     int currentTimes = 0;
-    GenerateStatus status = INIT_FIRST_ROW;
+    GenerateStatus status = GenerateStatus.INIT_FIRST_ROW;
     int row = 0, col = 0;
     int[] tempRandomArray = null;
     while (row != 9) {
       switch (status) {
         case FILL_GRID:
           if (currentTimes >= MAX_CALL_RANDOM_ARRAY_TIMES) {
-            status = EMPTY_ALL;
+            status = GenerateStatus.EMPTY_ALL;
             break;
           }
           if (!isCandidateNmbFound(matrix, tempRandomArray, row, col)) {
-            status = EMPTY_ROW;
+            status = GenerateStatus.EMPTY_ROW;
             break;
           }
           if (++col == 9) {
             row++;
-            status = FILL_ROW;
+            status = GenerateStatus.FILL_ROW;
           }
           break;
         case EMPTY_ROW:
           clearMatrixRow(matrix, row);
-          status = FILL_ROW;
+          status = GenerateStatus.FILL_ROW;
           break;
         case FILL_ROW:
           tempRandomArray = buildRandomArray();
           currentTimes++;
           col = 0;
-          status = FILL_GRID;
+          status = GenerateStatus.FILL_GRID;
           break;
         case INIT_FIRST_ROW:
           matrix[0] = buildRandomArray();
           currentTimes = 1;
           row = 0;
-          status = FILL_ROW;
+          status = GenerateStatus.FILL_ROW;
           break;
         case EMPTY_ALL:
           clearMatrix(matrix);
-          status = INIT_FIRST_ROW;
+          status = GenerateStatus.INIT_FIRST_ROW;
           break;
       }
     }
@@ -179,7 +174,7 @@ public class SudokuBuilder {
   /**
    * 生成数独矩阵算法的状态
    */
-  public enum GenerateStatus {
+  private enum GenerateStatus {
     /**
      * 清空矩阵的所有数据
      */

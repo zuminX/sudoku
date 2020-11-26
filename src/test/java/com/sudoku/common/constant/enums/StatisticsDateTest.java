@@ -19,17 +19,15 @@ public class StatisticsDateTest {
    */
   @Test
   void testFindByNameWithNull() {
-    StatisticsDate statisticsDate = StatisticsDate.findByName(null);
-    assertNull(statisticsDate);
   }
 
   /**
-   * 统计日期名为空字符串的查询结果应是null
+   * 统计日期名为空时，查询结果应是null
    */
   @Test
   void testFindByNameWithEmpty() {
-    StatisticsDate statisticsDate = StatisticsDate.findByName("");
-    assertNull(statisticsDate);
+    assertNull(StatisticsDate.findByName(""));
+    assertNull(StatisticsDate.findByName(null));
   }
 
   /**
