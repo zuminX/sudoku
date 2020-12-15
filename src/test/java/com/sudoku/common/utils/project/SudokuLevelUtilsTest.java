@@ -34,16 +34,15 @@ public class SudokuLevelUtilsTest {
    */
   @Before
   public void setUp() {
-    sudokuLevelIdList = new ArrayList<>();
-    IntStream.range(0, 10).forEach(i -> sudokuLevelIdList.add(i));
-
     sudokuLevelUtils = new SudokuLevelUtils(sudokuLevelMapper);
 
+    sudokuLevelIdList = new ArrayList<>();
+    IntStream.range(0, 10).forEach(i -> sudokuLevelIdList.add(i));
     when(sudokuLevelMapper.selectId()).thenReturn(sudokuLevelIdList);
   }
 
   /**
-   * 测试除给定的ID列表外缺少的数独等级ID列表
+   * 测试查找缺少的数独等级ID列表
    */
   @Test
   public void testFindLackId() {
@@ -55,7 +54,7 @@ public class SudokuLevelUtilsTest {
   }
 
   /**
-   * 测试给定空的ID列表时缺少的数独等级ID列表
+   * 测试查找空ID列表的缺少的数独等级ID列表
    */
   @Test
   public void testFindLackIdWithEmpty() {

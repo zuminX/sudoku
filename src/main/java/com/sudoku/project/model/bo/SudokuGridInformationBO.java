@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @ApiModel("数独格子信息业务类")
 public class SudokuGridInformationBO implements Serializable {
 
-
   private static final long serialVersionUID = -4914426979421357329L;
 
   @ApiModelProperty("行数")

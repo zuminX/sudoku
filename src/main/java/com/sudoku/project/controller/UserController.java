@@ -1,8 +1,10 @@
 package com.sudoku.project.controller;
 
+import com.sudoku.common.constant.enums.StatusCode;
+import com.sudoku.common.exception.UserException;
 import com.sudoku.common.tools.page.Page;
 import com.sudoku.common.validator.IsExistUserId;
-import com.sudoku.framework.security.service.CaptchaService;
+import com.sudoku.framework.security.service.impl.CaptchaService;
 import com.sudoku.project.model.body.AddUserBody;
 import com.sudoku.project.model.body.ModifyUserBody;
 import com.sudoku.project.model.body.RegisterUserBody;
@@ -54,6 +56,7 @@ public class UserController extends BaseController {
   @ApiImplicitParam(name = "registerUser", value = "注册用户信息", dataTypeClass = RegisterUserBody.class, required = true)
   public UserVO registerUser(@RequestBody @Valid RegisterUserBody registerUser) {
     captchaService.checkCaptcha(registerUser.getUuid(), registerUser.getCode());
+    checkRepeatPassword(registerUser);
     UserVO userVO = userService.registerUser(registerUser);
     userGameInformationService.initUserGameInformation(userVO.getId());
     return userVO;
@@ -146,5 +149,16 @@ public class UserController extends BaseController {
   public Page<UserDetailVO> searchUserByName(@RequestParam String name, @RequestParam Integer page,
       @RequestParam @Range(min = 1, max = 20, message = "每页显示的用户数在1-20个之间") Integer pageSize) {
     return userService.searchUserByName(name, page, pageSize);
+  }
+
+  /**
+   * 检查注册用户的密码和重复密码是否一致
+   *
+   * @param registerUserBody 注册用户对象
+   */
+  private void checkRepeatPassword(RegisterUserBody registerUserBody) {
+    if (!registerUserBody.getPassword().equals(registerUserBody.getRepeatPassword())) {
+      throw new UserException(StatusCode.USER_REPEAT_PASSWORD_ERROR);
+    }
   }
 }

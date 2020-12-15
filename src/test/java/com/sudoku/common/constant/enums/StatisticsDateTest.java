@@ -15,17 +15,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class StatisticsDateTest {
 
   /**
-   * 统计日期名为null的查询结果应是null
-   */
-  @Test
-  void testFindByNameWithNull() {
-  }
-
-  /**
    * 统计日期名为空时，查询结果应是null
    */
   @Test
-  void testFindByNameWithEmpty() {
+  public void testFindByNameWithEmpty() {
     assertNull(StatisticsDate.findByName(""));
     assertNull(StatisticsDate.findByName(null));
   }
@@ -34,47 +27,47 @@ public class StatisticsDateTest {
    * 测试根据名字查找对应的统计日期对象
    */
   @Test
-  void testFindByName() {
+  public void testFindByName() {
     StatisticsDate eachMonthStatisticsDate = StatisticsDate.EACH_MONTH;
     StatisticsDate findStatisticsDate = StatisticsDate.findByName(eachMonthStatisticsDate.getName());
     assertEquals(eachMonthStatisticsDate, findStatisticsDate);
   }
 
   /**
-   * 测试统计日期为日的增加天数的方法
+   * 测试统计日期为日的增加方法
    */
   @Test
-  void testPlusByDaily() {
+  public void testPlusByDaily() {
     LocalDate standardLocalDate = LocalDate.of(2000, 1, 1);
     LocalDate expectedLocalDate = LocalDate.of(2000, 1, 2);
     assertEquals(expectedLocalDate, StatisticsDate.DAILY.plus(standardLocalDate, 1L));
   }
 
   /**
-   * 测试统计日期为月的增加月数的方法
+   * 测试统计日期为月的增加方法
    */
   @Test
-  void testPlusByEachMonth() {
+  public void testPlusByEachMonth() {
     LocalDate standardLocalDate = LocalDate.of(2000, 1, 1);
     LocalDate expectedLocalDate = LocalDate.of(2000, 2, 1);
     assertEquals(expectedLocalDate, StatisticsDate.EACH_MONTH.plus(standardLocalDate, 1L));
   }
 
   /**
-   * 测试统计日期为季度的增加季度数的方法
+   * 测试统计日期为季度的增加方法
    */
   @Test
-  void testPlusByEachQuarter() {
+  public void testPlusByEachQuarter() {
     LocalDate standardLocalDate = LocalDate.of(2000, 1, 1);
     LocalDate expectedLocalDate = LocalDate.of(2000, 5, 1);
     assertEquals(expectedLocalDate, StatisticsDate.EACH_QUARTER.plus(standardLocalDate, 1L));
   }
 
   /**
-   * 测试统计日期为年的增加年数的方法
+   * 测试统计日期为年的增加方法
    */
   @Test
-  void testPlusByEachYear() {
+  public void testPlusByEachYear() {
     LocalDate standardLocalDate = LocalDate.of(2000, 1, 1);
     LocalDate expectedLocalDate = LocalDate.of(2001, 1, 1);
     assertEquals(expectedLocalDate, StatisticsDate.EACH_YEAR.plus(standardLocalDate, 1L));

@@ -26,7 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   }
 
   /**
-   * 根据用户名查询用户对象
+   * 根据用户名加载用户对象
    *
    * @param username 用户名
    * @return 用户详情对象

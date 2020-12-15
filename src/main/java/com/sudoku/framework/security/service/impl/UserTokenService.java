@@ -8,7 +8,6 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
 import com.sudoku.common.tools.RedisUtils;
 import com.sudoku.framework.security.model.LoginUserBO;
-import com.sudoku.framework.security.service.UserTokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -19,32 +18,36 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 /**
- * 用户令牌业务层实现类
+ * 用户令牌业务层类
  */
 @Setter
 @Service
 @ConfigurationProperties("token")
-public class UserTokenServiceImpl implements UserTokenService {
+public class UserTokenService {
 
   private final RedisUtils redisUtils;
+
   /**
    * 令牌标识
    */
   private String header;
+
   /**
    * 令牌秘钥
    */
   private String secret;
+
   /**
    * 令牌有效期
    */
   private int expireTime;
+
   /**
    * 令牌刷新最大时间
    */
   private int refreshTime;
 
-  public UserTokenServiceImpl(RedisUtils redisUtils) {
+  public UserTokenService(RedisUtils redisUtils) {
     this.redisUtils = redisUtils;
   }
 
@@ -54,16 +57,15 @@ public class UserTokenServiceImpl implements UserTokenService {
    * @param request 请求对象
    * @return 登录用户对象
    */
-  @Override
   public LoginUserBO getLoginUser(HttpServletRequest request) {
     String token = getToken(request);
-    if (StrUtil.isNotBlank(token)) {
-      Claims claims = paresToken(token);
-      String uuid = (String) claims.get(LOGIN_USER_PREFIX);
-      String userKey = getLoginTokenKey(uuid);
-      return redisUtils.getObject(userKey);
+    if (StrUtil.isBlank(token)) {
+      return null;
     }
-    return null;
+    Claims claims = paresToken(token);
+    String uuid = (String) claims.get(LOGIN_USER_PREFIX);
+    String userKey = getLoginTokenKey(uuid);
+    return redisUtils.getObject(userKey);
   }
 
   /**
@@ -72,7 +74,6 @@ public class UserTokenServiceImpl implements UserTokenService {
    * @param loginUserBO 登录用户对象
    * @return 令牌
    */
-  @Override
   public String createToken(LoginUserBO loginUserBO) {
     String uuid = UUID.fastUUID().toString();
     loginUserBO.setUuid(uuid);
@@ -85,7 +86,6 @@ public class UserTokenServiceImpl implements UserTokenService {
    *
    * @param loginUserBO 登录用户对象
    */
-  @Override
   public void verifyToken(LoginUserBO loginUserBO) {
     long tokenExpireTime = loginUserBO.getExpireTime();
     if (tokenExpireTime - System.currentTimeMillis() <= refreshTime * MINUTE.getMillis()) {
@@ -98,7 +98,6 @@ public class UserTokenServiceImpl implements UserTokenService {
    *
    * @param uuid 唯一标识
    */
-  @Override
   public void deleteLoginUser(String uuid) {
     if (StrUtil.isNotBlank(uuid)) {
       redisUtils.deleteObject(getLoginTokenKey(uuid));

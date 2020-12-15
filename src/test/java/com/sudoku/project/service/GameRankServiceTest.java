@@ -1,4 +1,4 @@
-package com.sudoku.project.service.impl;
+package com.sudoku.project.service;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -6,7 +6,7 @@ import org.junit.Test;
 /**
  * 游戏排行业务层实现类的测试类
  */
-public class GameRankServiceImplTest {
+public class GameRankServiceTest {
 
   /**
    * 初始化测试数据

@@ -33,7 +33,7 @@ public class RankingTypeTest {
   }
 
   /**
-   * 所有排行类型名的个数应与类型个数相同
+   * 排行类型名的个数应与类型个数相同
    */
   @Test
   public void testGetAllRankingTypeName() {

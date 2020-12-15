@@ -1,101 +1,74 @@
 package com.sudoku.common.validator;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.powermock.reflect.Whitebox.setInternalState;
 
 import com.sudoku.common.tools.DateTimeRange;
 import java.time.LocalDateTime;
-import org.junit.Before;
+import java.util.Arrays;
+import java.util.Collection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 /**
  * 时间日期范围类的验证器类的测试类
  */
-@RunWith(PowerMockRunner.class)
+@RunWith(Parameterized.class)
 public class DateTimeRangeValidatorTest {
 
-  private DateTimeRangeValidator dateTimeRangeValidator;
+  private final DateTimeRange range;
+
+  private final boolean startTimeNotNull;
+
+  private final boolean endTimeNotNull;
+
+  private final boolean expected;
 
   /**
-   * 初始化测试数据
+   * 用于参数化的构造方法
+   *
+   * @param range            日期时间范围
+   * @param startTimeNotNull 开始时间不能为空
+   * @param endTimeNotNull   结束时间不能为空
+   * @param expected         预期结果
    */
-  @Before
-  public void setUp() {
-    dateTimeRangeValidator = new DateTimeRangeValidator();
+  public DateTimeRangeValidatorTest(DateTimeRange range, boolean startTimeNotNull, boolean endTimeNotNull, boolean expected) {
+    this.range = range;
+    this.startTimeNotNull = startTimeNotNull;
+    this.endTimeNotNull = endTimeNotNull;
+    this.expected = expected;
   }
 
   /**
-   * 测试日期时间范围为null时的校验结果
+   * 参数化数据
+   *
+   * @return 数据
    */
-  @Test
-  public void testIsValidWithNull() {
-    assertFalse(dateTimeRangeValidator.isValid(null, null));
+  @Parameters
+  public static Collection<Object[]> boundaryValueData() {
+    LocalDateTime early = LocalDateTime.of(2020, 1, 1, 0, 0), late = LocalDateTime.of(2020, 1, 2, 0, 0);
+    return Arrays.asList(new Object[][]{
+        {null, false, false, true},
+        {new DateTimeRange(null, null), true, false, false},
+        {new DateTimeRange(null, null), false, true, false},
+        {new DateTimeRange(null, null), false, false, true},
+        {new DateTimeRange(early, null), false, false, true},
+        {new DateTimeRange(early, late), false, false, true},
+        {new DateTimeRange(late, early), false, false, false},
+    });
   }
 
   /**
-   * 测试开始时间和结束时间都能为null时的校验结果
-   */
-  @Test
-  public void testIsValidIfStartAndEndCanNull() {
-    DateTimeRange nullStartTimeRange = new DateTimeRange(null, LocalDateTime.MAX);
-    DateTimeRange nullEndTimeRange = new DateTimeRange(LocalDateTime.MIN, null);
-    DateTimeRange nullStartAndEndTimeRange = new DateTimeRange(null, null);
-
-    assertTrue(dateTimeRangeValidator.isValid(nullStartTimeRange, null));
-    assertTrue(dateTimeRangeValidator.isValid(nullEndTimeRange, null));
-    assertTrue(dateTimeRangeValidator.isValid(nullStartAndEndTimeRange, null));
-  }
-
-  /**
-   * 测试开始时间不能为null、结束时间能为null时的校验结果
-   */
-  @Test
-  public void testIsValidIfStartNotNull() {
-    Whitebox.setInternalState(dateTimeRangeValidator, "startTimeNotNull", true);
-
-    DateTimeRange nullStartTimeRange = new DateTimeRange(null, LocalDateTime.MAX);
-    DateTimeRange nullEndTimeRange = new DateTimeRange(LocalDateTime.MIN, null);
-
-    assertFalse(dateTimeRangeValidator.isValid(nullStartTimeRange, null));
-    assertTrue(dateTimeRangeValidator.isValid(nullEndTimeRange, null));
-  }
-
-  /**
-   * 测试开始时间能为null、结束时间不能为null时的校验结果
+   * 测试校验指定范围的开始的日期时间是否早于结束的日期时间
    */
   @Test
-  public void testIsValidIfEndNotNull() {
-    Whitebox.setInternalState(dateTimeRangeValidator, "endTimeNotNull", true);
+  public void testIsValid() {
+    DateTimeRangeValidator dateTimeRangeValidator = new DateTimeRangeValidator();
+    setInternalState(dateTimeRangeValidator, "startTimeNotNull", startTimeNotNull);
+    setInternalState(dateTimeRangeValidator, "endTimeNotNull", endTimeNotNull);
 
-    DateTimeRange nullStartTimeRange = new DateTimeRange(null, LocalDateTime.MAX);
-    DateTimeRange nullEndTimeRange = new DateTimeRange(LocalDateTime.MIN, null);
-
-    assertTrue(dateTimeRangeValidator.isValid(nullStartTimeRange, null));
-    assertFalse(dateTimeRangeValidator.isValid(nullEndTimeRange, null));
+    assertEquals(expected, dateTimeRangeValidator.isValid(range, null));
   }
-
-  /**
-   * 测试开始时间和结束时间都不能为null时的校验结果
-   */
-  @Test
-  public void testIsValidIfStartAndEndNotNull() {
-    Whitebox.setInternalState(dateTimeRangeValidator, "startTimeNotNull", true);
-    Whitebox.setInternalState(dateTimeRangeValidator, "endTimeNotNull", true);
-
-    DateTimeRange nullStartTimeRange = new DateTimeRange(null, LocalDateTime.MAX);
-    DateTimeRange nullEndTimeRange = new DateTimeRange(LocalDateTime.MIN, null);
-    DateTimeRange startTimeLessEndTimeRange = new DateTimeRange(LocalDateTime.MIN, LocalDateTime.MAX);
-    DateTimeRange startTimeGreaterEndTimeRange = new DateTimeRange(LocalDateTime.MAX, LocalDateTime.MIN);
-    DateTimeRange startTimeEqualsEndTimeRange = new DateTimeRange(LocalDateTime.MIN, LocalDateTime.MIN);
-
-    assertFalse(dateTimeRangeValidator.isValid(nullStartTimeRange, null));
-    assertFalse(dateTimeRangeValidator.isValid(nullEndTimeRange, null));
-    assertTrue(dateTimeRangeValidator.isValid(startTimeLessEndTimeRange, null));
-    assertFalse(dateTimeRangeValidator.isValid(startTimeGreaterEndTimeRange, null));
-    assertTrue(dateTimeRangeValidator.isValid(startTimeEqualsEndTimeRange, null));
-  }
-
 }

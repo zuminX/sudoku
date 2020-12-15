@@ -93,16 +93,10 @@
            sl.name
     from game_record gr
            inner join sudoku_level sl on gr.sudoku_level_id = sl.id
-    where user_id = #{userId,jdbcType=INTEGER} and correct is not null
+    where user_id = #{userId,jdbcType=INTEGER}
+      and correct is not null
     order by start_time desc
   </select>
-
-  <update id="updateEndTimeAndCorrectById">
-    update game_record
-    set end_time = #{endTime,jdbcType=TIMESTAMP},
-        correct  = #{correct,jdbcType=BOOLEAN}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
 
   <select id="findFirstEndTimeOrderByEndTime" resultType="java.time.LocalDateTime">
     select end_time
@@ -113,8 +107,8 @@
 
   <select id="countCorrectTotalAndErrorTotalSudokuLevelIdByEndTimeBetween"
     resultType="com.sudoku.project.model.bo.StatisticsGameDataBO">
-    select SUM(CASE correct WHEN 1 THEN 1 ELSE 0 END) as correct_total,
-           SUM(CASE correct WHEN 0 THEN 1 ELSE 0 END) as error_total,
+    select SUM(IF(correct = 1, 1, 0)) as correct_total,
+           SUM(IF(correct = 0, 1, 0)) as error_total,
            sudoku_level_id
     from game_record
     where DATE(`end_time`) <![CDATA[>=]]> DATE(#{startDate,jdbcType=DATE})

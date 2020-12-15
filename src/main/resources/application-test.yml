@@ -6,5 +6,5 @@ spring:
     url: jdbc:mysql://rm-bp18y14er10ug8pk93o.mysql.rds.aliyuncs.com:3306/sudoku?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
 
 captcha:
-  #开启验证码
-  enabled: true
+  #关闭验证码
+  enabled: false

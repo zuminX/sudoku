@@ -8,8 +8,6 @@ import cn.hutool.core.util.StrUtil;
 import com.sudoku.common.constant.consist.PermissionConstants;
 import com.sudoku.common.tools.ServletUtils;
 import com.sudoku.framework.security.model.LoginUserBO;
-import com.sudoku.framework.security.service.PermissionAuthenticateService;
-import com.sudoku.framework.security.service.UserTokenService;
 import java.util.Set;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +15,11 @@ import org.springframework.stereotype.Service;
  * 权限验证业务层实现类
  */
 @Service("ss")
-public class PermissionAuthenticateServiceImpl implements PermissionAuthenticateService {
+public class PermissionAuthenticateService {
 
   private final UserTokenService tokenService;
 
-  public PermissionAuthenticateServiceImpl(UserTokenService tokenService) {
+  public PermissionAuthenticateService(UserTokenService tokenService) {
     this.tokenService = tokenService;
   }
 
@@ -31,7 +29,6 @@ public class PermissionAuthenticateServiceImpl implements PermissionAuthenticate
    * @param permission 权限
    * @return 具有该权限返回true，否则返回false
    */
-  @Override
   public boolean hasPermission(String permission) {
     if (StrUtil.isBlank(permission)) {
       return false;
@@ -50,7 +47,6 @@ public class PermissionAuthenticateServiceImpl implements PermissionAuthenticate
    * @param role 角色名
    * @return 具有该角色返回true，否则返回false
    */
-  @Override
   public boolean hasRole(String role) {
     if (StrUtil.isBlank(role)) {
       return false;

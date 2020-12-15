@@ -2,7 +2,7 @@ package com.sudoku.framework.security.filter;
 
 import com.sudoku.common.utils.SecurityUtils;
 import com.sudoku.framework.security.model.LoginUserBO;
-import com.sudoku.framework.security.service.UserTokenService;
+import com.sudoku.framework.security.service.impl.UserTokenService;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

@@ -35,7 +35,7 @@ public class SudokuUtilsTest {
   }
 
   /**
-   * 使用合法的数独矩阵测试检查数独数据的合法性的方法
+   * 使用合法的数独矩阵测试检查数独数据的合法性
    */
   @Test
   public void testCheckSudokuValidityWithLegalMatrix() {
@@ -43,7 +43,7 @@ public class SudokuUtilsTest {
   }
 
   /**
-   * 使用非法的数独矩阵测试检查数独数据的合法性的方法
+   * 使用非法的数独矩阵测试检查数独数据的合法性
    */
   @Test
   public void testCheckSudokuValidityWithIllegalMatrix() {
@@ -52,7 +52,7 @@ public class SudokuUtilsTest {
   }
 
   /**
-   * 使用唯一的数据测试检查数字在数独中的行、列、块是否唯一的方法
+   * 使用唯一的数据测试检查数字在数独中的行、列、块是否唯一
    */
   @Test
   public void testIsOnlyWithOnlyData() {
@@ -60,7 +60,7 @@ public class SudokuUtilsTest {
   }
 
   /**
-   * 使用不唯一的数据测试检查数字在数独中的行、列、块是否唯一的方法
+   * 使用不唯一的数据测试检查数字在数独中的行、列、块是否唯一
    */
   @Test
   public void testIsOnlyWithNotOnlyData() {
@@ -69,7 +69,7 @@ public class SudokuUtilsTest {
   }
 
   /**
-   * 使用唯一的数据测试检查指定数在指定行中是否是唯一的
+   * 使用唯一的数据测试检查指定数在指定行中是否唯一
    */
   @Test
   public void testCheckRowIsOnlyWithOnlyData() {
@@ -77,7 +77,7 @@ public class SudokuUtilsTest {
   }
 
   /**
-   * 使用不唯一的数据测试检查指定数在指定行中是否是唯一的
+   * 使用不唯一的数据测试检查指定数在指定行中是否唯一
    */
   @Test
   public void testCheckRowIsOnlyWithNotOnlyData() {
@@ -86,7 +86,7 @@ public class SudokuUtilsTest {
   }
 
   /**
-   * 使用唯一的数据测试检查指定数在指定列中是否是唯一的
+   * 使用唯一的数据测试检查指定数在指定列中是否唯一
    */
   @Test
   public void testCheckColumnIsOnlyWithOnlyData() {
@@ -94,7 +94,7 @@ public class SudokuUtilsTest {
   }
 
   /**
-   * 使用不唯一的数据测试检查指定数在指定列中是否是唯一的
+   * 使用不唯一的数据测试检查指定数在指定列中是否唯一
    */
   @Test
   public void testCheckColumnIsOnlyWithNotOnlyData() {
@@ -103,7 +103,7 @@ public class SudokuUtilsTest {
   }
 
   /**
-   * 使用唯一的数据测试检查指定数在指定区块中是否是唯一的
+   * 使用唯一的数据测试检查指定数在指定区块中是否唯一
    */
   @Test
   public void testCheckBlockIsOnlyWithOnlyData() {
@@ -111,7 +111,7 @@ public class SudokuUtilsTest {
   }
 
   /**
-   * 使用不唯一的数据测试检查指定数在指定区块中是否是唯一的
+   * 使用不唯一的数据测试检查指定数在指定区块中是否唯一
    */
   @Test
   public void testCheckBlockIsOnlyWithNotOnlyData() {

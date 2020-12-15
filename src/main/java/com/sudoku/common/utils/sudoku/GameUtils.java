@@ -13,7 +13,6 @@ import com.sudoku.project.model.bo.GameRecordBO;
 import com.sudoku.project.model.bo.SudokuDataBO;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,26 +30,6 @@ public class GameUtils {
 
   public GameUtils(RedisUtils redisUtils) {
     this.redisUtils = redisUtils;
-  }
-
-  /**
-   * 判断游戏是否结束
-   *
-   * @param gameRecord 游戏记录传输层对象
-   * @return 游戏结束返回true，否则返回false
-   */
-  public static boolean isGameEnd(@NotNull GameRecordBO gameRecord) {
-    return gameRecord.getEndTime() != null;
-  }
-
-  /**
-   * 判断游戏是否开始
-   *
-   * @param gameRecord 游戏记录传输层对象
-   * @return 游戏开始返回true，否则返回false
-   */
-  public static boolean isGameStart(@NotNull GameRecordBO gameRecord) {
-    return !isGameEnd(gameRecord);
   }
 
   /**
@@ -72,13 +51,20 @@ public class GameUtils {
   }
 
   /**
+   * 移除数独游戏记录
+   */
+  public void removeGameRecord() {
+    redisUtils.deleteObject(getGameRecordKey());
+  }
+
+  /**
    * 判断答题状态
    *
    * @param userMatrix   用户的数独矩阵数据
    * @param sudokuDataBO 数独数据
    * @return 用户答题状态
    */
-  public AnswerSituation judgeAnswerSituation(List<List<Integer>> userMatrix, SudokuDataBO sudokuDataBO) {
+  public static AnswerSituation judgeAnswerSituation(List<List<Integer>> userMatrix, SudokuDataBO sudokuDataBO) {
     AnswerSituation situation = compareByGenerateAnswer(userMatrix, sudokuDataBO);
     return situation.equals(CORRECT) ? compareBySudokuRule(userMatrix) : situation;
   }
@@ -90,7 +76,7 @@ public class GameUtils {
    * @param sudokuDataBO 数独数据
    * @return 用户答题状态
    */
-  private AnswerSituation compareByGenerateAnswer(List<List<Integer>> userMatrix, SudokuDataBO sudokuDataBO) {
+  private static AnswerSituation compareByGenerateAnswer(List<List<Integer>> userMatrix, SudokuDataBO sudokuDataBO) {
     int[][] matrix = sudokuDataBO.getMatrix();
     boolean[][] holes = sudokuDataBO.getHoles();
 
@@ -118,7 +104,7 @@ public class GameUtils {
    * @param userMatrix 用户的数独矩阵数据
    * @return 用户答题状态
    */
-  private AnswerSituation compareBySudokuRule(List<List<Integer>> userMatrix) {
+  private static AnswerSituation compareBySudokuRule(List<List<Integer>> userMatrix) {
     return SudokuUtils.checkSudokuValidity(userMatrix) ? CORRECT : ERROR;
   }
 

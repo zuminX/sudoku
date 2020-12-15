@@ -6,7 +6,7 @@ import org.junit.Test;
 /**
  * 登录业务层实现类的测试类
  */
-public class LoginServiceImplTest {
+public class LoginServiceTest {
 
   /**
    * 初始化测试数据

@@ -16,7 +16,6 @@
 
   <properties>
     <java.version>11</java.version>
-    <jdk.version>11</jdk.version>
     <mapstruct.version>1.3.1.Final</mapstruct.version>
     <lombok.version>1.18.12</lombok.version>
     <mybatis.plus.starter.version>3.4.0</mybatis.plus.starter.version>
@@ -35,6 +34,8 @@
     <xxl-job-core.version>2.2.0</xxl-job-core.version>
     <powermock.version>2.0.2</powermock.version>
     <junit.version>4.13</junit.version>
+    <mockito-core.version>3.6.0</mockito-core.version>
+    <spring-boot-maven-plugin.version>2.3.3.RELEASE</spring-boot-maven-plugin.version>
   </properties>
 
   <dependencies>
@@ -71,36 +72,45 @@
       <version>${jwt.version}</version>
     </dependency>
 
-    <!-- SpringBoot Web容器 -->
+    <!-- SpringBoot Web 容器 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+      <exclusions>
+        <!-- 排除 tomcat 依赖 -->
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-tomcat</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!-- undertow 容器 -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-undertow</artifactId>
     </dependency>
 
     <!-- redis 缓存操作 -->
-    <dependency>
-      <groupId>org.springframework.session</groupId>
-      <artifactId>spring-session-data-redis</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-redis</artifactId>
     </dependency>
 
-    <!-- ehcache缓存 -->
+    <!-- SpringBoot 缓存 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-cache</artifactId>
     </dependency>
 
-    <!-- 类型转换 -->
+    <!-- 类型转换工具 -->
     <dependency>
       <groupId>org.mapstruct</groupId>
       <artifactId>mapstruct</artifactId>
       <version>${mapstruct.version}</version>
     </dependency>
 
-    <!-- MySQL驱动包 -->
+    <!-- MySQL 驱动包 -->
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
@@ -150,7 +160,7 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
-      <!--排除Junit 5-->
+      <!-- 排除Junit 5相关的依赖 -->
       <exclusions>
         <exclusion>
           <groupId>org.junit.jupiter</groupId>
@@ -167,7 +177,7 @@
       </exclusions>
     </dependency>
 
-    <!--Junit 4-->
+    <!-- Junit 4 -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -218,13 +228,15 @@
       <version>${xxl-job-core.version}</version>
     </dependency>
 
+    <!-- Mockito 核心 -->
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>3.6.0</version>
+      <version>${mockito-core.version}</version>
       <scope>test</scope>
     </dependency>
 
+    <!-- PowerMockito -->
     <dependency>
       <groupId>org.powermock</groupId>
       <artifactId>powermock-module-junit4</artifactId>
@@ -240,6 +252,7 @@
   </dependencies>
 
   <profiles>
+    <!-- 开发环境配置 -->
     <profile>
       <id>dev</id>
       <properties>
@@ -250,15 +263,25 @@
       </activation>
     </profile>
 
+    <!-- 生产环境配置 -->
     <profile>
       <id>prod</id>
       <properties>
         <package.environment>prod</package.environment>
       </properties>
     </profile>
+
+    <!-- 测试环境配置 -->
+    <profile>
+      <id>test</id>
+      <properties>
+        <package.environment>test</package.environment>
+      </properties>
+    </profile>
   </profiles>
 
   <build>
+    <!-- 设置配置文件路径 -->
     <resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -275,7 +298,7 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>2.3.3.RELEASE</version>
+        <version>${spring-boot-maven-plugin.version}</version>
         <configuration>
           <fork>true</fork>
           <excludes>
@@ -291,9 +314,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire.version}</version>
-        <configuration>
-          <skipTests>true</skipTests>
-        </configuration>
       </plugin>
 
       <plugin>
@@ -301,8 +321,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven-compiler.version}</version>
         <configuration>
-          <source>11</source>
-          <target>11</target>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
           <annotationProcessorPaths>
             <path>
               <groupId>org.mapstruct</groupId>

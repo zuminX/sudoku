@@ -52,7 +52,7 @@ public class SudokuUtils {
   }
 
   /**
-   * 检查matrix[j]在该行中是否是唯一的
+   * 检查matrix[j]在该行中是否唯一
    *
    * @param matrix 该行的数独矩阵
    * @param j      列
@@ -64,7 +64,7 @@ public class SudokuUtils {
   }
 
   /**
-   * 检查matrix[i][j]在该列中是否是唯一的
+   * 检查matrix[i][j]在该列中是否唯一
    *
    * @param matrix 数独矩阵
    * @param i      行
@@ -77,7 +77,7 @@ public class SudokuUtils {
   }
 
   /**
-   * 检查matrix[i][j]在该区块中是否是唯一的
+   * 检查matrix[i][j]在该区块中是否唯一
    *
    * @param matrix 数独矩阵
    * @param i      行

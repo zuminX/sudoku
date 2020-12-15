@@ -1,8 +1,19 @@
 package com.sudoku.project.service;
 
+import com.sudoku.project.mapper.RaceRecordMapper;
+import org.springframework.stereotype.Service;
+
 /**
- * 竞赛记录业务层接口
+ * 竞赛记录业务层类
  */
-public interface RaceRecordService {
+@Service
+public class RaceRecordService {
+
+  private final RaceRecordMapper raceRecordMapper;
+
+  public RaceRecordService(RaceRecordMapper raceRecordMapper) {
+    this.raceRecordMapper = raceRecordMapper;
+  }
+
 
 }

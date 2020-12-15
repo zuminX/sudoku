@@ -18,19 +18,20 @@ public class UserUtils {
   }
 
   /**
-   * 检查指定ID的用户是否存在
+   * 断言指定ID的用户存在
+   * <p/>
    * 若不存在，则抛出UserException异常
    *
    * @param id 用户ID
    */
-  public void checkUserIdExist(Integer id) {
+  public void assertExistUserId(Integer id) {
     if (!existUserId(id)) {
       throw new UserException(StatusCode.USER_NOT_FOUND);
     }
   }
 
   /**
-   * 检查指定ID的用户是否存在
+   * 判断指定ID的用户是否存在
    *
    * @param id 用户ID
    * @return 存在返回true，不存在返回false

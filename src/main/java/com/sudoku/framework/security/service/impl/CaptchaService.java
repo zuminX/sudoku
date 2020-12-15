@@ -10,19 +10,18 @@ import com.sudoku.common.constant.consist.RedisKeys;
 import com.sudoku.common.exception.CaptchaException;
 import com.sudoku.common.tools.RedisUtils;
 import com.sudoku.framework.security.model.CaptchaVO;
-import com.sudoku.framework.security.service.CaptchaService;
 import java.util.concurrent.TimeUnit;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 /**
- * 验证码业务层实现类
+ * 验证码业务层类
  */
 @Setter
 @Service
 @ConfigurationProperties("captcha")
-public class CaptchaServiceImpl implements CaptchaService {
+public class CaptchaService {
 
   private final RedisUtils redisUtils;
 
@@ -51,7 +50,7 @@ public class CaptchaServiceImpl implements CaptchaService {
    */
   private int expireTime;
 
-  public CaptchaServiceImpl(RedisUtils redisUtils) {
+  public CaptchaService(RedisUtils redisUtils) {
     this.redisUtils = redisUtils;
   }
 
@@ -60,7 +59,6 @@ public class CaptchaServiceImpl implements CaptchaService {
    *
    * @return 验证码对象
    */
-  @Override
   public CaptchaVO generateCaptcha() {
     LineCaptcha captcha = CaptchaUtil.createLineCaptcha(width, height, codeNumber, lineCount);
     String uuid = UUID.fastUUID().toString();
@@ -74,7 +72,6 @@ public class CaptchaServiceImpl implements CaptchaService {
    * @param uuid 唯一标识
    * @param code 待验证的码
    */
-  @Override
   public void checkCaptcha(String uuid, String code) {
     String key = getCaptchaKey(uuid);
     String captcha = redisUtils.getObject(key);

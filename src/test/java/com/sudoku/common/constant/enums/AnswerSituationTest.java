@@ -14,7 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class AnswerSituationTest {
 
   /**
-   * 与答案不一致但正确的状态的回答情况应是正确的
+   * 当结果为CORRECT时，回答应为正确
    */
   @Test
   public void testIsRightWithCorrect() {
@@ -22,7 +22,7 @@ public class AnswerSituationTest {
   }
 
   /**
-   * 与答案一致的状态的回答情况应是正确的
+   * 当结果为IDENTICAL时，回答应为正确
    */
   @Test
   public void testIsRightWithIdentical() {
@@ -30,7 +30,7 @@ public class AnswerSituationTest {
   }
 
   /**
-   * 错误的状态的回答情况应是错误的
+   * 当结果为ERROR时，回答应为错误
    */
   @Test
   public void testIsRightWithError() {

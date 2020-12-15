@@ -1,5 +1,6 @@
 package com.sudoku.common.tools.page;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -7,6 +8,7 @@ import static org.powermock.api.mockito.PowerMockito.doAnswer;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.reflect.Whitebox.setInternalState;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -15,14 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 /**
  * 分页工具类的参数类
@@ -37,18 +37,22 @@ public class PageUtilsTest {
    * 待分页数据
    */
   private List<Integer> pageData;
+
   /**
    * 总页数
    */
   private int totalPage;
+
   /**
    * 当前页数
    */
   private int currentPage;
+
   /**
    * 每页条数
    */
   private int pageSize;
+
   /**
    * 分页信息
    */
@@ -76,17 +80,17 @@ public class PageUtilsTest {
   }
 
   /**
-   * 测试不带类型转换的获取分页数据方法
+   * 测试不带类型转换的获取分页数据
    */
   @Test
   public void testGetPageWithoutConverter() {
     Page<Integer> page = PageUtils.getPage(buildPageParam());
-    assertPageInformation(page.getPageInformation());
-    assertPageList(page.getList());
+    verifyPageInformation(page.getPageInformation());
+    verifyPageList(page.getList());
   }
 
   /**
-   * 测试带类型转换的获取分页数据方法
+   * 测试带类型转换的获取分页数据
    *
    * @throws Exception when()方法可能抛出的异常
    */
@@ -96,14 +100,14 @@ public class PageUtilsTest {
     doAnswer(answer -> {
       List<String> argumentList = answer.getArgument(0);
       List<String> pageList = argumentList.subList((currentPage - 1) * pageSize, currentPage * pageSize);
-      Whitebox.setInternalState(pageInfo, "list", pageList);
+      setInternalState(pageInfo, "list", pageList);
       return pageList;
     }).when(pageInfo, "setList", anyList());
 
     Function<Integer, String> converter = String::valueOf;
     Page<String> page = PageUtils.getPage(buildPageParam(), converter);
-    assertPageInformation(page.getPageInformation());
-    assertPageList(page.getList(), converter);
+    verifyPageInformation(page.getPageInformation());
+    verifyPageList(page.getList(), converter);
   }
 
   /**
@@ -111,8 +115,8 @@ public class PageUtilsTest {
    *
    * @param list 数据列表
    */
-  private void assertPageList(List<Integer> list) {
-    assertPageList(list, Function.identity());
+  private void verifyPageList(List<Integer> list) {
+    verifyPageList(list, Function.identity());
   }
 
   /**
@@ -122,7 +126,7 @@ public class PageUtilsTest {
    * @param converter 类型转换器
    * @param <T>       目标类型
    */
-  private <T> void assertPageList(List<T> list, Function<Integer, T> converter) {
+  private <T> void verifyPageList(List<T> list, Function<Integer, T> converter) {
     assertNotNull(list);
     assertEquals(pageSize, list.size());
     for (int i = (currentPage - 1) * pageSize, index = 0; i < currentPage * pageSize; i++, index++) {
@@ -135,7 +139,7 @@ public class PageUtilsTest {
    *
    * @param pageInformation 分页信息对象
    */
-  private void assertPageInformation(PageInformation pageInformation) {
+  private void verifyPageInformation(PageInformation pageInformation) {
     assertNotNull(pageInformation);
     assertEquals(totalPage, pageInformation.getTotalPage().intValue());
     assertEquals(currentPage, pageInformation.getCurrentPage().intValue());
@@ -164,7 +168,7 @@ public class PageUtilsTest {
     pageInfo.setPages(totalPage);
     List<Integer> list = IntStream.range((currentPage - 1) * pageSize, currentPage * pageSize)
         .mapToObj(i -> pageData.get(i))
-        .collect(Collectors.toList());
+        .collect(toList());
     pageInfo.setList(list);
     return pageInfo;
   }

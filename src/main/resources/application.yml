@@ -2,6 +2,12 @@
 server:
   port: 8081
 
+  undertow:
+    direct-buffers: true
+    threads:
+      io: 1
+      worker: 8
+
 spring:
   profiles:
     active: @package.environment@
@@ -11,6 +17,18 @@ spring:
     database: 0
     port: 6379
     password:
+
+  #数据库配置
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 30000
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
 
   #缓存配置
   cache:
@@ -32,7 +50,6 @@ logging:
   level:
     com.sudoku: warn
     org.springframework: warn
-#    com.sudoku.project.mapper : debug
 
 #token配置
 token:

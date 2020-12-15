@@ -40,7 +40,7 @@ public class DateTimeRangeValidator implements ConstraintValidator<IsDateTimeRan
    */
   public boolean isValid(DateTimeRange range, ConstraintValidatorContext context) {
     if (range == null) {
-      return false;
+      return !startTimeNotNull && !endTimeNotNull;
     }
     LocalDateTime start = range.getStart(), end = range.getEnd();
     if (startTimeNotNull && start == null || endTimeNotNull && end == null) {

@@ -1,6 +1,8 @@
 package com.sudoku.project.controller;
 
 import com.sudoku.common.constant.enums.StatisticsDate;
+import com.sudoku.common.constant.enums.StatusCode;
+import com.sudoku.common.exception.StatisticsException;
 import com.sudoku.project.model.bo.StatisticsUserDataBO;
 import com.sudoku.project.service.StatisticsGameService;
 import com.sudoku.project.service.StatisticsUserService;
@@ -81,6 +83,9 @@ public class StatisticsController extends BaseController {
       @RequestParam @NotNull(message = "开始日期不能为空") @Past(message = "开始日期必须是过去的时间") LocalDate startDate,
       @RequestParam @NotNull(message = "结束日期不能为空") LocalDate endDate,
       @RequestParam StatisticsDate date) {
+    if (startDate.compareTo(endDate) > 0) {
+      throw new StatisticsException(StatusCode.STATISTICS_INQUIRY_DATE_INVALID);
+    }
     return statisticsGameService.getGameTotal(startDate, endDate, date);
   }
 

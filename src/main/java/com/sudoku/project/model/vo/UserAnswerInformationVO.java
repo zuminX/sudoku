@@ -12,8 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @ApiModel("用户答题情况显示类")
-public class SubmitSudokuInformationVO implements Serializable {
-
+public class UserAnswerInformationVO implements Serializable {
 
   private static final long serialVersionUID = 7015015635447903859L;
 

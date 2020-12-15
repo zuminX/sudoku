@@ -18,11 +18,11 @@ import org.mockito.junit.MockitoJUnitRunner;
  * 验证码业务层实现类的测试类
  */
 @RunWith(MockitoJUnitRunner.class)
-public class CaptchaServiceImplTest {
+public class CaptchaServiceTest {
 
   private RedisUtils redisUtils;
 
-  private CaptchaServiceImpl captchaService;
+  private CaptchaService captchaService;
 
   private String uuid;
 
@@ -39,7 +39,7 @@ public class CaptchaServiceImplTest {
     redisUtils = new RedisUtilsMock();
     redisUtils.setObject(uuid, code);
 
-    captchaService = spy(new CaptchaServiceImpl(redisUtils));
+    captchaService = spy(new CaptchaService(redisUtils));
     when(captchaService.getCaptchaKey(anyString())).thenAnswer(answer -> answer.getArgument(0));
   }
 
@@ -49,29 +49,29 @@ public class CaptchaServiceImplTest {
   @Test
   public void testCheckCaptcha() {
     captchaService.checkCaptcha(uuid, code);
-    assertDeleteCaptchaInRedis();
+    verifyDeleteCaptchaInRedis();
   }
 
   /**
-   * 测试检查小写的验证码是否正确
+   * 使用小写字母测试检查验证码是否正确
    */
   @Test
   public void testCheckCaptchaWithLowerCaseCode() {
     captchaService.checkCaptcha(uuid, code.toLowerCase());
-    assertDeleteCaptchaInRedis();
+    verifyDeleteCaptchaInRedis();
   }
 
   /**
-   * 测试检查大写的验证码是否正确
+   * 使用大写字母测试检查验证码是否正确
    */
   @Test
   public void testCheckCaptchaWithUpperCaseCode() {
     captchaService.checkCaptcha(uuid, code.toUpperCase());
-    assertDeleteCaptchaInRedis();
+    verifyDeleteCaptchaInRedis();
   }
 
   /**
-   * 测试使用不存在验证码的UUID来检查验证码是否正确
+   * 使用不存在验证码的UUID测试检查验证码是否正确
    */
   @Test(expected = CaptchaException.class)
   public void testCheckCaptchaWithErrorUUID() {
@@ -79,7 +79,7 @@ public class CaptchaServiceImplTest {
   }
 
   /**
-   * 测试使用错误的验证码来检查验证码是否正确
+   * 使用错误的验证码测试检查验证码是否正确
    */
   @Test(expected = CaptchaException.class)
   public void testCheckCaptchaWithErrorCode() {
@@ -87,9 +87,9 @@ public class CaptchaServiceImplTest {
   }
 
   /**
-   * 断言在Redis中移除该验证码的数据
+   * 验证在Redis中移除该验证码的数据
    */
-  private void assertDeleteCaptchaInRedis() {
+  private void verifyDeleteCaptchaInRedis() {
     assertNull(redisUtils.getObject(uuid));
   }
 }

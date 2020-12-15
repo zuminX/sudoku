@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 public enum AnswerSituation {
   /**
-   * 与答案不一致，但正确
+   * 正确，但与答案不一致
    */
   CORRECT(1),
   /**

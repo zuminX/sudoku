@@ -1,12 +1,12 @@
-package com.sudoku.project.service.impl;
+package com.sudoku.project.service;
 
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * 统计用户信息的业务层实现类的测试类
+ * 统计游戏信息的业务层实现类的测试类
  */
-public class StatisticsUserServiceImplTest {
+public class StatisticsGameServiceTest {
 
   /**
    * 初始化测试数据
@@ -16,11 +16,7 @@ public class StatisticsUserServiceImplTest {
   }
 
   @Test
-  public void getStatisticsUserData() {
-  }
-
-  @Test
-  public void getUserTotal() {
+  public void testGetGameTotal() {
   }
 
   @Test

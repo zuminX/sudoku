@@ -5,15 +5,10 @@ import static org.junit.Assert.assertTrue;
 
 import com.sudoku.common.constant.consist.PermissionConstants;
 import com.sudoku.framework.security.model.LoginUserBO;
-import com.sudoku.project.model.entity.Role;
-import com.sudoku.project.model.entity.User;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+import utils.UserMockUtils;
 
 /**
  * 安全服务工具类的测试类
@@ -26,15 +21,9 @@ public class SecurityUtilsTest {
    */
   @Test
   public void testIsAdmin() {
-    User adminUser = new User();
-    adminUser.setRoles(generateRoleList(PermissionConstants.ADMIN_ROLE_NAME));
-    User normalUser = new User();
-    normalUser.setRoles(generateRoleList(PermissionConstants.USER_ROLE_NAME));
-
-    assertTrue(SecurityUtils.isAdmin(adminUser));
-    assertFalse(SecurityUtils.isAdmin(normalUser));
+    assertTrue(SecurityUtils.isAdmin(UserMockUtils.getAdminUser()));
+    assertFalse(SecurityUtils.isAdmin(UserMockUtils.getNormalUser()));
   }
-
 
   /**
    * 测试判断角色名列表是否包含管理员
@@ -50,12 +39,7 @@ public class SecurityUtilsTest {
    */
   @Test
   public void testIsLoginUserRolesEmpty() {
-    User user = new User();
-    user.setRoles(generateRoleList(PermissionConstants.USER_ROLE_NAME));
-    LoginUserBO hasRolesLoginUser = new LoginUserBO();
-    hasRolesLoginUser.setUser(user);
-
-    assertFalse(SecurityUtils.isLoginUserRolesEmpty(hasRolesLoginUser));
+    assertFalse(SecurityUtils.isLoginUserRolesEmpty(UserMockUtils.getAdminLoginUser()));
     assertTrue(SecurityUtils.isLoginUserRolesEmpty(null));
     assertTrue(SecurityUtils.isLoginUserRolesEmpty(new LoginUserBO()));
   }
@@ -65,23 +49,8 @@ public class SecurityUtilsTest {
    */
   @Test
   public void testIsLoginUserPermissionsEmpty() {
-    LoginUserBO hasPermissionsLoginUser = new LoginUserBO();
-    hasPermissionsLoginUser.setPermissions(Collections.singleton(PermissionConstants.ADMIN_PERMISSION));
-
-    assertFalse(SecurityUtils.isLoginUserPermissionsEmpty(hasPermissionsLoginUser));
+    assertFalse(SecurityUtils.isLoginUserPermissionsEmpty(UserMockUtils.getAdminLoginUser()));
     assertTrue(SecurityUtils.isLoginUserPermissionsEmpty(null));
     assertTrue(SecurityUtils.isLoginUserPermissionsEmpty(new LoginUserBO()));
-  }
-
-  /**
-   * 根据角色名列表模拟生成角色列表
-   *
-   * @param roleNameList 角色名列表
-   * @return 角色列表
-   */
-  private List<Role> generateRoleList(@NotNull List<String> roleNameList) {
-    return roleNameList.stream()
-        .map(roleName -> new Role(1, roleName, roleName))
-        .collect(Collectors.toList());
   }
 }

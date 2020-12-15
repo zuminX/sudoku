@@ -7,8 +7,6 @@ import com.sudoku.common.exception.LoginException;
 import com.sudoku.framework.security.model.LoginBody;
 import com.sudoku.framework.security.model.LoginSuccessVO;
 import com.sudoku.framework.security.model.LoginUserBO;
-import com.sudoku.framework.security.service.LoginService;
-import com.sudoku.framework.security.service.UserTokenService;
 import com.sudoku.project.convert.UserConvert;
 import javax.annotation.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,10 +16,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 /**
- * 登录业务层实现类
+ * 登录业务层类
  */
 @Service
-public class LoginServiceImpl implements LoginService {
+public class LoginService {
 
   private final UserTokenService tokenService;
 
@@ -30,7 +28,7 @@ public class LoginServiceImpl implements LoginService {
   @Resource
   private AuthenticationManager authenticationManager;
 
-  public LoginServiceImpl(UserTokenService tokenService, UserConvert userConvert) {
+  public LoginService(UserTokenService tokenService, UserConvert userConvert) {
     this.tokenService = tokenService;
     this.userConvert = userConvert;
   }
@@ -41,7 +39,6 @@ public class LoginServiceImpl implements LoginService {
    * @param loginBody 用户登录信息对象
    * @return 登录生成显示对象
    */
-  @Override
   public LoginSuccessVO login(LoginBody loginBody) {
     LoginUserBO loginUserBO = checkPassword(loginBody);
     String token = tokenService.createToken(loginUserBO);

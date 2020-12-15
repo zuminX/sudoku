@@ -14,8 +14,6 @@ public interface GameRecordMapper extends BaseMapper<GameRecord> {
 
   int insertSelective(GameRecord record);
 
-  int updateEndTimeAndCorrectById(@Param("endTime") LocalDateTime endTime, @Param("correct") Boolean correct, @Param("id") Integer id);
-
   List<GameRecordVO> findByUserIdAndCorrectNotNullOrderByStartTimeDesc(@Param("userId") Integer userId);
 
   /**

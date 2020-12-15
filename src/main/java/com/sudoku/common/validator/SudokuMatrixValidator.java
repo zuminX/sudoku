@@ -9,6 +9,9 @@ import javax.validation.ConstraintValidatorContext;
  */
 public class SudokuMatrixValidator {
 
+  /**
+   * 私有构造方法，防止实例化
+   */
   private SudokuMatrixValidator() {
   }
 

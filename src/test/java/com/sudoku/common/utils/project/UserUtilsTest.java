@@ -1,17 +1,20 @@
 package com.sudoku.common.utils.project;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
+
 import com.sudoku.common.exception.UserException;
 import com.sudoku.project.mapper.UserMapper;
 import com.sudoku.project.model.entity.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 /**
@@ -40,54 +43,49 @@ public class UserUtilsTest {
 
     userUtils = new UserUtils(userMapper);
 
-    Mockito.when(userMapper.selectById(Mockito.anyInt())).thenAnswer(answer -> {
+    when(userMapper.selectById(anyInt())).thenAnswer(answer -> {
       Integer id = answer.getArgument(0);
-      if (!idList.contains(id)) {
-        return null;
-      }
-      User user = new User();
-      user.setId(id);
-      return user;
+      return idList.contains(id) ? User.builder().id(id).build() : null;
     });
   }
 
   /**
-   * 若指定ID的用户存在，应返回true
+   * 使用存在用户的ID测试判断该ID对应的用户是否存在
    */
   @Test
   public void testExistUserIdIfExist() {
-    Assert.assertTrue(userUtils.existUserId(1));
+    assertTrue(userUtils.existUserId(1));
   }
 
   /**
-   * 若查找ID为null的用户，应返回false
+   * 使用null的ID测试判断该ID对应的用户是否存在
    */
   @Test
   public void testExistUserIdWithNull() {
-    Assert.assertFalse(userUtils.existUserId(null));
+    assertFalse(userUtils.existUserId(null));
   }
 
   /**
-   * 若指定ID的用户不存在，应返回false
+   * 使用不存在用户的ID测试判断该ID对应的用户是否存在
    */
   @Test
   public void testExistUserIdIfNotExist() {
-    Assert.assertFalse(userUtils.existUserId(-1));
+    assertFalse(userUtils.existUserId(-1));
   }
 
   /**
-   * 若指定ID的用户存在，不应抛出异常
+   * 使用存在用户的ID测试断言该ID对应的用户存在
    */
   @Test
   public void testCheckUserIdIsExistIfExist() {
-    userUtils.checkUserIdExist(2);
+    userUtils.assertExistUserId(2);
   }
 
   /**
-   * 若指定ID的用户不存在，应抛出UserException异常
+   * 使用不存在用户的ID测试断言该ID对应的用户存在
    */
   @Test(expected = UserException.class)
   public void testCheckUserIdIsExistIfNotExist() {
-    userUtils.checkUserIdExist(100);
+    userUtils.assertExistUserId(100);
   }
 }

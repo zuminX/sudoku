@@ -2,14 +2,15 @@ package com.sudoku.framework.security.controller;
 
 import com.sudoku.framework.security.model.LoginBody;
 import com.sudoku.framework.security.model.LoginSuccessVO;
-import com.sudoku.framework.security.service.CaptchaService;
-import com.sudoku.framework.security.service.LoginService;
+import com.sudoku.framework.security.service.impl.CaptchaService;
+import com.sudoku.framework.security.service.impl.LoginService;
 import com.sudoku.project.model.vo.CommonResult;
 import com.sudoku.project.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +27,9 @@ public class LoginController {
   private final CaptchaService captchaService;
   private final UserService userService;
 
+  @Value("${captcha.enabled}")
+  private boolean enabled;
+
   public LoginController(LoginService loginService, CaptchaService captchaService, UserService userService) {
     this.loginService = loginService;
     this.captchaService = captchaService;
@@ -36,7 +40,9 @@ public class LoginController {
   @ApiOperation("登录")
   @ApiImplicitParam(name = "loginBody", value = "loginBody", dataTypeClass = LoginBody.class, required = true)
   public CommonResult<LoginSuccessVO> login(@RequestBody @Valid LoginBody loginBody) {
-    captchaService.checkCaptcha(loginBody.getUuid(), loginBody.getCode());
+    if (enabled) {
+      captchaService.checkCaptcha(loginBody.getUuid(), loginBody.getCode());
+    }
     LoginSuccessVO login = loginService.login(loginBody);
     userService.updateRecentLoginTime(login.getUser().getId());
     //必须手动包装，否则会产生bug

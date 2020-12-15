@@ -47,7 +47,8 @@ public class SudokuBuilderTest {
   }
 
   /**
-   * 计算题目空缺数组中的空缺个数
+   * 统计题目空缺数组中的空缺个数
+   *
    * @param holes 题目空缺数组
    * @return 空缺个数
    */

@@ -1,13 +1,15 @@
 package com.sudoku.project.controller;
 
+import com.sudoku.common.utils.sudoku.GameUtils;
 import com.sudoku.common.utils.sudoku.SudokuBuilder;
 import com.sudoku.common.validator.IsSudokuMatrix;
+import com.sudoku.project.model.bo.GameRecordBO;
 import com.sudoku.project.model.bo.SudokuDataBO;
 import com.sudoku.project.model.bo.SudokuGridInformationBO;
 import com.sudoku.project.model.entity.SudokuLevel;
 import com.sudoku.project.model.entity.UserGameInformation;
-import com.sudoku.project.model.vo.SubmitSudokuInformationVO;
 import com.sudoku.project.model.vo.SudokuLevelVO;
+import com.sudoku.project.model.vo.UserAnswerInformationVO;
 import com.sudoku.project.service.GameRankService;
 import com.sudoku.project.service.GameRecordService;
 import com.sudoku.project.service.SudokuLevelService;
@@ -35,18 +37,26 @@ import org.springframework.web.bind.annotation.RestController;
 public class GameController extends BaseController {
 
   private final SudokuService sudokuService;
+
   private final GameRecordService gameRecordService;
+
   private final UserGameInformationService userGameInformationService;
+
   private final SudokuLevelService sudokuLevelService;
+
   private final GameRankService gameRankService;
 
+  private final GameUtils gameUtils;
+
   public GameController(SudokuService sudokuService, GameRecordService gameRecordService,
-      UserGameInformationService userGameInformationService, SudokuLevelService sudokuLevelService, GameRankService gameRankService) {
+      UserGameInformationService userGameInformationService, SudokuLevelService sudokuLevelService, GameRankService gameRankService,
+      GameUtils gameUtils) {
     this.sudokuService = sudokuService;
     this.gameRecordService = gameRecordService;
     this.userGameInformationService = userGameInformationService;
     this.sudokuLevelService = sudokuLevelService;
     this.gameRankService = gameRankService;
+    this.gameUtils = gameUtils;
   }
 
   @GetMapping("/sudokuLevels")
@@ -68,10 +78,10 @@ public class GameController extends BaseController {
   @ApiImplicitParams({
       @ApiImplicitParam(name = "level", value = "难度级别", dataTypeClass = Integer.class, required = true),
       @ApiImplicitParam(name = "isRecord", value = "是否记录", dataTypeClass = Boolean.class, required = true)})
-  public SudokuDataBO generateSudokuTopic(@RequestParam SudokuLevel level, @RequestParam @NotNull(message = "是否记录游戏不能为空") Boolean isRecord) {
-    SudokuDataBO sudokuDataBO = sudokuService.generateSudokuTopic(level, isRecord);
-    saveGameInformation();
-    return sudokuDataBO;
+  public SudokuDataBO generateSudokuTopic(@RequestParam SudokuLevel level,
+      @RequestParam @NotNull(message = "是否记录游戏不能为空") Boolean isRecord) {
+    cleanGameRecord();
+    return sudokuService.generateSudokuTopic(level, isRecord);
   }
 
   @PostMapping("/help")
@@ -81,23 +91,27 @@ public class GameController extends BaseController {
     return sudokuService.getHelp(userMatrix);
   }
 
+  @GetMapping("/clean")
+  @ApiOperation("清理数独游戏记录，确保状态的正确性")
+  public void cleanGameRecord() {
+    GameRecordBO gameRecordBO = gameUtils.getGameRecord();
+    if (gameRecordBO != null) {
+      gameRecordService.cleanRedisGameRecord(gameRecordBO);
+    }
+  }
+
   @PostMapping("/check")
   @ApiOperation("检查用户的数独数据")
   @ApiImplicitParam(name = "userMatrix", value = "用户的数独矩阵数据", dataTypeClass = List.class, required = true)
-  public SubmitSudokuInformationVO checkSudokuData(@RequestBody @IsSudokuMatrix List<List<Integer>> userMatrix) {
-    SubmitSudokuInformationVO submitSudokuInformationVO = sudokuService.checkSudokuData(userMatrix);
-    saveGameInformation();
-    return submitSudokuInformationVO;
-  }
-
-  /**
-   * 保存游戏信息
-   */
-  private void saveGameInformation() {
+  public UserAnswerInformationVO checkSudokuData(@RequestBody @IsSudokuMatrix List<List<Integer>> userMatrix) {
+    UserAnswerInformationVO userAnswerInformationVO = sudokuService.checkSudokuData(userMatrix);
     if (sudokuService.isRecordGameInformation()) {
-      gameRecordService.saveGameRecord();
-      UserGameInformation userGameInformation = userGameInformationService.updateUserGameInformation();
+      GameRecordBO gameRecordBO = gameUtils.getGameRecord();
+      gameRecordService.insertGameRecord(gameRecordBO);
+      UserGameInformation userGameInformation = userGameInformationService.updateUserGameInformation(gameRecordBO);
       gameRankService.updateCurrentUserRank(userGameInformation);
     }
+    gameUtils.removeGameRecord();
+    return userAnswerInformationVO;
   }
 }
