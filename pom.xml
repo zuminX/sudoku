@@ -281,6 +281,8 @@
   </profiles>
 
   <build>
+    <finalName>${project.artifactId}</finalName>
+
     <!-- 设置配置文件路径 -->
     <resources>
       <resource>

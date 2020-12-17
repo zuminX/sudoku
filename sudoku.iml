@@ -39,8 +39,8 @@
       <excludeFolder url="file://$MODULE_DIR$/.idea/sonarlint/issuestore/9/e" />
       <excludeFolder url="file://$MODULE_DIR$/.idea/sonarlint/issuestore/a/0" />
       <excludeFolder url="file://$MODULE_DIR$/.idea/sonarlint/issuestore/d/5" />
-      <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/logs" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
