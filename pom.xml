@@ -16,7 +16,7 @@
 
   <properties>
     <java.version>11</java.version>
-    <mapstruct.version>1.3.1.Final</mapstruct.version>
+    <mapstruct.version>1.4.1.Final</mapstruct.version>
     <lombok.version>1.18.12</lombok.version>
     <mybatis.plus.starter.version>3.4.0</mybatis.plus.starter.version>
     <pagehelper.starter.version>1.3.0</pagehelper.starter.version>
