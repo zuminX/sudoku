@@ -58,7 +58,7 @@ public class PublicUtilsTest {
   @Test
   public void testUnwrapIntArrayWithEmpty() {
     int[][] empty = new int[0][0];
-
+    System.out.println("ClassUnderTest: " + PublicUtilsTest.class.getClassLoader());
     assertArrayEquals(empty, PublicUtils.unwrapIntArray(null));
     assertArrayEquals(empty, PublicUtils.unwrapIntArray(new ArrayList<>()));
   }

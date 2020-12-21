@@ -25,7 +25,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
- * 分页工具类的参数类
+ * 分页工具类的测试类
  * <p/>
  * <b color='red'>必须使用JUnit4的方法，PowerMock与JUnit5不兼容</b>
  */
@@ -172,4 +172,5 @@ public class PageUtilsTest {
     pageInfo.setList(list);
     return pageInfo;
   }
+
 }
