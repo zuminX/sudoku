@@ -45,7 +45,9 @@ public class GameRecordService {
    * @param gameRecordBO 游戏记录
    */
   public void cleanRedisGameRecord(GameRecordBO gameRecordBO) {
-    insertGameRecord(gameRecordBO);
+    if (gameRecordBO.isRecord()) {
+      insertGameRecord(gameRecordBO);
+    }
     gameUtils.removeGameRecord();
   }
 
