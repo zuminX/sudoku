@@ -96,7 +96,11 @@ public class GameController extends BaseController {
   public void cleanGameRecord() {
     GameRecordBO gameRecordBO = gameUtils.getGameRecord();
     if (gameRecordBO != null) {
-      gameRecordService.cleanRedisGameRecord(gameRecordBO);
+      if (gameRecordBO.isRecord()) {
+        gameRecordService.insertGameRecord(gameRecordBO);
+        userGameInformationService.updateUserGameInformation(gameRecordBO);
+      }
+      gameUtils.removeGameRecord();
     }
   }
 

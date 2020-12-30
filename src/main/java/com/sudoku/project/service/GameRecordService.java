@@ -22,14 +22,10 @@ public class GameRecordService {
 
   private final GameRecordMapper gameRecordMapper;
 
-  private final GameUtils gameUtils;
-
   private final GameRecordConvert gameRecordConvert;
 
-  public GameRecordService(GameRecordMapper gameRecordMapper, GameUtils gameUtils,
-      GameRecordConvert gameRecordConvert) {
+  public GameRecordService(GameRecordMapper gameRecordMapper, GameRecordConvert gameRecordConvert) {
     this.gameRecordMapper = gameRecordMapper;
-    this.gameUtils = gameUtils;
     this.gameRecordConvert = gameRecordConvert;
   }
 
@@ -37,18 +33,6 @@ public class GameRecordService {
   @Log(value = "插入游戏记录", businessType = BusinessType.INSERT)
   public void insertGameRecord(GameRecordBO gameRecordBO) {
     gameRecordMapper.insert(gameRecordConvert.convert(gameRecordBO));
-  }
-
-  /**
-   * 清理数独游戏记录，确保状态的正确性
-   *
-   * @param gameRecordBO 游戏记录
-   */
-  public void cleanRedisGameRecord(GameRecordBO gameRecordBO) {
-    if (gameRecordBO.isRecord()) {
-      insertGameRecord(gameRecordBO);
-    }
-    gameUtils.removeGameRecord();
   }
 
   /**

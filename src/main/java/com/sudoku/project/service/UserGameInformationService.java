@@ -117,13 +117,15 @@ public class UserGameInformationService {
    * @param information 用户游戏信息
    */
   private void updateInformation(GameRecordBO gameRecord, UserGameInformation information) {
-    int spendTime = getThisBoardSpendTime(gameRecord);
-
     information.setTotal(information.getTotal() + 1);
-    information.setAverageSpendTime(computeAverageSpendTime(spendTime, information));
-    information.setMinSpendTime(computeMinSpendTime(spendTime, information.getMinSpendTime()));
-    information.setMaxSpendTime(computeMaxSpendTime(spendTime, information.getMaxSpendTime()));
-    information.setCorrectNumber(information.getCorrectNumber() + 1);
+    Boolean correct = gameRecord.getCorrect();
+    if (correct != null && correct) {
+    int spendTime = getThisBoardSpendTime(gameRecord);
+      information.setAverageSpendTime(computeAverageSpendTime(spendTime, information));
+      information.setMinSpendTime(computeMinSpendTime(spendTime, information.getMinSpendTime()));
+      information.setMaxSpendTime(computeMaxSpendTime(spendTime, information.getMaxSpendTime()));
+      information.setCorrectNumber(information.getCorrectNumber() + 1);
+    }
 
     userGameInformationMapper.updateByUserIdAndSudokuLevelId(information, gameRecord.getUserId(), gameRecord.getSudokuLevelId());
   }
