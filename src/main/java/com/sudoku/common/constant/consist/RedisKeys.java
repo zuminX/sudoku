@@ -41,16 +41,6 @@ public class RedisKeys {
   public static final String CORRECT_NUMBER_RANKING_PREFIX = "correct_number_ranking:";
 
   /**
-   * 用户总数的key值
-   */
-  public static final String USER_TOTAL = "user_total";
-
-  /**
-   * 游戏总局数的key值
-   */
-  public static final String GAME_TOTAL = "game_total";
-
-  /**
    * 公开游戏竞赛的key值
    */
   public static final String PUBLIC_RACE = "public_race";

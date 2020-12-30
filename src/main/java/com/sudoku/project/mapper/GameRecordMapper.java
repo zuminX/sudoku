@@ -1,7 +1,6 @@
 package com.sudoku.project.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.sudoku.project.model.bo.StatisticsGameDataBO;
 import com.sudoku.project.model.entity.GameRecord;
 import com.sudoku.project.model.vo.GameRecordVO;
 import java.time.LocalDate;
@@ -24,12 +23,18 @@ public interface GameRecordMapper extends BaseMapper<GameRecord> {
   Optional<LocalDateTime> findFirstEndTimeOrderByEndTime();
 
   /**
-   * 统计在[startDate,endDate)中游戏统计数据列表
+   * 获取系统的游戏总数
+   *
+   * @return 游戏总数
+   */
+  Integer count();
+
+  /**
+   * 统计在[startDate,endDate)中游戏总数
    *
    * @param startDate 开始时间
    * @param endDate   结束时间
-   * @return 游戏统计数据列表
+   * @return 游戏总数
    */
-  List<StatisticsGameDataBO> countCorrectTotalAndErrorTotalSudokuLevelIdByEndTimeBetween(@Param("startDate") LocalDate startDate,
-      @Param("endDate") LocalDate endDate);
+  Integer countByDateBetween(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }

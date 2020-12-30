@@ -49,6 +49,9 @@ public class StatisticsController extends BaseController {
       @RequestParam @NotNull(message = "开始日期不能为空") @Past(message = "开始日期必须是过去的时间") LocalDate startDate,
       @RequestParam @NotNull(message = "结束日期不能为空") LocalDate endDate,
       @RequestParam StatisticsDate date) {
+    if (startDate.compareTo(endDate) > 0) {
+      throw new StatisticsException(StatusCode.STATISTICS_INQUIRY_DATE_INVALID);
+    }
     return statisticsUserService.getStatisticsUserData(startDate, endDate, date);
   }
 

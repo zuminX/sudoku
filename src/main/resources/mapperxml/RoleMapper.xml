@@ -14,14 +14,6 @@
     name_zh
   </sql>
 
-  <select id="selectByUserId" resultMap="BaseResultMap">
-    select r.*
-    from role r,
-         merge_user_role ur
-    where ur.role_id = r.`id`
-      and ur.user_id = #{id,jdbcType=INTEGER};
-  </select>
-
   <select id="selectIdsByNames" parameterType="list" resultType="java.lang.Integer">
     select `id`
     from role

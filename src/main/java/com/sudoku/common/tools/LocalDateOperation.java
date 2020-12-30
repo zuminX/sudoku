@@ -18,6 +18,32 @@ public interface LocalDateOperation {
   LocalDate plus(@NotNull LocalDate date, long amountToAdd);
 
   /**
+   * 获取该日期的第一天
+   *
+   * @param date 日期
+   * @return 该日期的第一天
+   */
+  LocalDate getFirst(@NotNull LocalDate date);
+
+  /**
+   * 获取该日期的最后一天
+   *
+   * @param date 日期
+   * @return 该日期的最后一天
+   */
+  LocalDate getLast(@NotNull LocalDate date);
+
+  /**
+   * 获取该日期的下一个日期
+   *
+   * @param date 日期
+   * @return 给定日期的下一个日期
+   */
+  default LocalDate next(@NotNull LocalDate date) {
+    return plus(date, 1L);
+  }
+
+  /**
    * 返回日期减去减少量的副本
    *
    * @param date             日期
@@ -27,4 +53,5 @@ public interface LocalDateOperation {
   default LocalDate minus(@NotNull LocalDate date, long amountToSubtract) {
     return plus(date, -amountToSubtract);
   }
+
 }

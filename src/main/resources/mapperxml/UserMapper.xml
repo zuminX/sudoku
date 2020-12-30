@@ -47,35 +47,6 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="countByCreateTimeBetween" resultType="java.lang.Integer">
-    select count(1)
-    from `user`
-    where DATE(create_time) <![CDATA[>=]]> DATE(#{startCreateTime,jdbcType=DATE})
-      and DATE(create_time) <![CDATA[<]]>
-          DATE(#{endCreateTime,jdbcType=DATE})
-  </select>
-
-  <select id="countByRecentLoginTimeBetween" resultType="java.lang.Integer">
-    select count(1)
-    from `user`
-    where DATE(recent_login_time) <![CDATA[>=]]> DATE(#{startLoginTime,jdbcType=DATE})
-      and DATE(recent_login_time) <![CDATA[<]]>
-          DATE(#{endLoginTime,jdbcType=DATE})
-  </select>
-
-  <select id="findFirstCreateTimeOrderByCreateTime" resultType="java.time.LocalDateTime">
-    select create_time
-    from `user`
-    order by create_time
-    limit 1
-  </select>
-
-  <select id="selectAll" resultMap="UserWithRole">
-    select
-    <include refid="Base_Column_List"/>
-    from `user`
-  </select>
-
   <update id="updateModifyById">
     update `user`
     <set>
@@ -161,5 +132,24 @@
           or nickname like concat('%', #{name,jdbcType=VARCHAR}, '%')
       </if>
     </where>
+  </select>
+
+  <select id="countNewUserByDateBetween" resultType="java.lang.Integer">
+    select count(1)
+    from user
+    where DATE(`create_time`) <![CDATA[>=]]> DATE(#{startDate,jdbcType=DATE})
+      and DATE(`create_time`) <![CDATA[<]]> DATE(#{endDate,jdbcType=DATE})
+  </select>
+
+  <select id="countRecentLoginUserByDateBetween" resultType="java.lang.Integer">
+    select count(1)
+    from user
+    where DATE(`recent_login_time`) <![CDATA[>=]]> DATE(#{startDate,jdbcType=DATE})
+      and DATE(`recent_login_time`) <![CDATA[<]]> DATE(#{endDate,jdbcType=DATE})
+  </select>
+
+  <select id="count" resultType="java.lang.Integer">
+    select count(1)
+    from user
   </select>
 </mapper>

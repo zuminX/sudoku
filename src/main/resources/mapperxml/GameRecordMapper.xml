@@ -105,14 +105,15 @@
     limit 1
   </select>
 
-  <select id="countCorrectTotalAndErrorTotalSudokuLevelIdByEndTimeBetween"
-    resultType="com.sudoku.project.model.bo.StatisticsGameDataBO">
-    select SUM(IF(correct = 1, 1, 0)) as correct_total,
-           SUM(IF(correct = 0, 1, 0)) as error_total,
-           sudoku_level_id
+  <select id="countByDateBetween" resultType="java.lang.Integer">
+    select count(1)
     from game_record
-    where DATE(`end_time`) <![CDATA[>=]]> DATE(#{startDate,jdbcType=DATE})
-      and DATE(`end_time`) <![CDATA[<]]> DATE(#{endDate,jdbcType=DATE})
-    group by sudoku_level_id
+    where DATE(`start_time`) <![CDATA[>=]]> DATE(#{startDate,jdbcType=DATE})
+      and DATE(`start_time`) <![CDATA[<]]> DATE(#{endDate,jdbcType=DATE})
+  </select>
+
+  <select id="count" resultType="java.lang.Integer">
+    select count(1)
+    from game_record
   </select>
 </mapper>

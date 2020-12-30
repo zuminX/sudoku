@@ -41,12 +41,13 @@ public class RedisConfig {
    * @return 缓存配置对象
    */
   private Map<String, RedisCacheConfiguration> getRedisCacheConfigurationMap() {
+    //设置指定Key值的过期时间
     Map<String, RedisCacheConfiguration> redisCacheConfigurationMap = new HashMap<>();
-    //设置rankList的过期时间为一小时
     redisCacheConfigurationMap.put("rankList", getRedisCacheConfigurationWithTtl(ofHours(1L)));
-    //设置statisticsUserData的过期时间为一天
     redisCacheConfigurationMap.put("statisticsUserData", getRedisCacheConfigurationWithTtl(ofDays(1L)));
-
+    redisCacheConfigurationMap.put("statisticsGameData", getRedisCacheConfigurationWithTtl(ofDays(1L)));
+    redisCacheConfigurationMap.put("userTotal", getRedisCacheConfigurationWithTtl(ofDays(1L)));
+    redisCacheConfigurationMap.put("gameTotal", getRedisCacheConfigurationWithTtl(ofDays(1L)));
     return redisCacheConfigurationMap;
   }
 
