@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Transient;
 
 @Data
 @Builder
@@ -67,8 +66,7 @@ public class User implements Serializable {
   /**
    * 拥有的角色
    */
-  @Transient
-  private List<Role> roles;
+  private transient List<Role> roles;
 
   public User(String username, String password, String nickname, Boolean enabled) {
     this.username = username;

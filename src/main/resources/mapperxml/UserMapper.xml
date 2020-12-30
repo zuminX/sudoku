@@ -87,17 +87,17 @@
         and recent_login_time <![CDATA[>=]]> #{user.recentLoginTimeRange.start,jdbcType=TIMESTAMP}
         and recent_login_time <![CDATA[<=]]> #{user.recentLoginTimeRange.end,jdbcType=TIMESTAMP}
       </if>
-      <if test="user.username != null">
+      <if test="user.username != null and user.username.trim() != ''">
         and username like concat('%', #{user.username,jdbcType=VARCHAR}, '%')
       </if>
-      <if test="user.nickname != null">
+      <if test="user.nickname != null and user.nickname.trim() != ''">
         and nickname like concat('%', #{user.username,jdbcType=VARCHAR}, '%')
       </if>
       <if test="user.enabled != null">
         and enabled = #{user.enabled,jdbcType=BOOLEAN}
       </if>
       <if test="user.roleNameList != null and user.roleNameList.size() > 0">
-        role_name_zh in
+        role_name in
         <foreach close=")" collection="user.roleNameList" item="name" open="(" separator=",">
           #{name,jdbcType=VARCHAR}
         </foreach>
