@@ -1,7 +1,7 @@
 package com.sudoku.framework.security.controller;
 
 import com.sudoku.framework.security.model.CaptchaVO;
-import com.sudoku.framework.security.service.impl.CaptchaService;
+import com.sudoku.framework.security.service.CaptchaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +16,9 @@ public class CaptchaController {
 
   private final CaptchaService captchaService;
 
+  /**
+   * 是否开启校验验证码
+   */
   @Value("${captcha.enabled}")
   private boolean enabled;
 

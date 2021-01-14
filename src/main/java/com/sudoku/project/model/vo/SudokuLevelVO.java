@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @ApiModel("数独等级显示类")
 public class SudokuLevelVO implements Serializable {
 
-
   private static final long serialVersionUID = 6094658649761954674L;
 
   @ApiModelProperty("难度级别")

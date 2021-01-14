@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.BoundZSetOperations;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -304,12 +303,32 @@ public class RedisUtils {
    * @param key     缓存键值
    * @param dataMap 缓存的数据
    */
-  public <T> void setMap(String key, Map<String, T> dataMap) {
+  public <T, V> void setMap(String key, Map<T, V> dataMap) {
     if (isKeyNull(key) || dataMap == null) {
       return;
     }
-    HashOperations hashOperations = redisTemplate.opsForHash();
-    dataMap.forEach((k, v) -> hashOperations.put(key, k, v));
+    redisTemplate.opsForHash().putAll(key, dataMap);
+  }
+
+  /**
+   * 向缓存Map中增加一条数据
+   *
+   * @param redisKey 缓存键值
+   * @param mapKey   缓存的数据的键
+   * @param mapValue 缓存的数据的值
+   */
+  public <T, V> void addMap(String redisKey, T mapKey, V mapValue) {
+    if (isKeyNull(redisKey) || mapKey == null || mapValue == null) {
+      return;
+    }
+    redisTemplate.opsForHash().put(redisKey, mapKey, mapValue);
+  }
+
+  public <T, V> void removeMap(String redisKey, Object... mapKeys) {
+    if (isKeyNull(redisKey) || mapKeys == null) {
+      return;
+    }
+    redisTemplate.opsForHash().delete(redisKey, mapKeys);
   }
 
   /**

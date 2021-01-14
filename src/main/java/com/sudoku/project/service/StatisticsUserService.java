@@ -1,10 +1,10 @@
 package com.sudoku.project.service;
 
 import com.sudoku.common.constant.enums.StatisticsDate;
+import com.sudoku.project.core.GetStatisticsDataTemplate;
 import com.sudoku.project.mapper.UserMapper;
 import com.sudoku.project.model.bo.StatisticsUserDataBO;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -31,16 +31,11 @@ public class StatisticsUserService {
    */
   @Cacheable(value = "statisticsUserData", keyGenerator = "simpleKG")
   public List<StatisticsUserDataBO> getStatisticsUserData(LocalDate startDate, LocalDate endDate, StatisticsDate date) {
-    LocalDate nowDate = date.getFirst(startDate), lastDate = date.getFirst(endDate);
-    List<StatisticsUserDataBO> statisticsUserDataList = new ArrayList<>();
-    while (nowDate.compareTo(lastDate) < 0) {
-      LocalDate nextDate = date.next(nowDate);
-      Integer newUserTotal = userMapper.countNewUserByDateBetween(nowDate, nextDate);
-      Integer recentLoginUserTotal = userMapper.countRecentLoginUserByDateBetween(nowDate, nextDate);
-      statisticsUserDataList.add(new StatisticsUserDataBO(newUserTotal, recentLoginUserTotal));
-      nowDate = nextDate;
-    }
-    return statisticsUserDataList;
+    return new GetStatisticsDataTemplate<StatisticsUserDataBO>(startDate, endDate, date).getData((firstDate, lastDate) -> {
+      Integer newUserTotal = userMapper.countNewUserByDateBetween(firstDate, lastDate);
+      Integer recentLoginUserTotal = userMapper.countRecentLoginUserByDateBetween(firstDate, lastDate);
+      return new StatisticsUserDataBO(newUserTotal, recentLoginUserTotal);
+    });
   }
 
   /**

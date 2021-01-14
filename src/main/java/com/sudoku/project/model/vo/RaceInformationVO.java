@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @ApiModel("竞赛信息显示层类")
 public class RaceInformationVO implements Serializable {
 
-
   private static final long serialVersionUID = 7526373506092340922L;
 
   @ApiModelProperty("竞赛信息的ID")

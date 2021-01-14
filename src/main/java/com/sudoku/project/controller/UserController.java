@@ -4,7 +4,7 @@ import com.sudoku.common.constant.enums.StatusCode;
 import com.sudoku.common.exception.UserException;
 import com.sudoku.common.tools.page.Page;
 import com.sudoku.common.validator.IsExistUserId;
-import com.sudoku.framework.security.service.impl.CaptchaService;
+import com.sudoku.framework.security.service.CaptchaService;
 import com.sudoku.project.model.body.AddUserBody;
 import com.sudoku.project.model.body.ModifyUserBody;
 import com.sudoku.project.model.body.RegisterUserBody;

@@ -80,7 +80,7 @@ public class GameController extends BaseController {
       @ApiImplicitParam(name = "isRecord", value = "是否记录", dataTypeClass = Boolean.class, required = true)})
   public SudokuDataBO generateSudokuTopic(@RequestParam SudokuLevel level,
       @RequestParam @NotNull(message = "是否记录游戏不能为空") Boolean isRecord) {
-    cleanGameRecord();
+    submitGameRecord();
     return sudokuService.generateSudokuTopic(level, isRecord);
   }
 
@@ -91,31 +91,32 @@ public class GameController extends BaseController {
     return sudokuService.getHelp(userMatrix);
   }
 
-  @GetMapping("/clean")
-  @ApiOperation("清理数独游戏记录，确保状态的正确性")
-  public void cleanGameRecord() {
-    GameRecordBO gameRecordBO = gameUtils.getGameRecord();
-    if (gameRecordBO != null) {
-      if (gameRecordBO.isRecord()) {
-        gameRecordService.insertGameRecord(gameRecordBO);
-        userGameInformationService.updateUserGameInformation(gameRecordBO);
-      }
-      gameUtils.removeGameRecord();
-    }
-  }
-
   @PostMapping("/check")
   @ApiOperation("检查用户的数独数据")
   @ApiImplicitParam(name = "userMatrix", value = "用户的数独矩阵数据", dataTypeClass = List.class, required = true)
   public UserAnswerInformationVO checkSudokuData(@RequestBody @IsSudokuMatrix List<List<Integer>> userMatrix) {
     UserAnswerInformationVO userAnswerInformationVO = sudokuService.checkSudokuData(userMatrix);
-    if (sudokuService.isRecordGameInformation()) {
-      GameRecordBO gameRecordBO = gameUtils.getGameRecord();
-      gameRecordService.insertGameRecord(gameRecordBO);
-      UserGameInformation userGameInformation = userGameInformationService.updateUserGameInformation(gameRecordBO);
+    UserGameInformation userGameInformation = submitGameRecord();
+    if (userGameInformation != null) {
       gameRankService.updateCurrentUserRank(userGameInformation);
     }
-    gameUtils.removeGameRecord();
     return userAnswerInformationVO;
+  }
+
+  /**
+   * 提交数独游戏记录
+   *
+   * @return 若记录本局游戏则为用户最新的游戏信息，否则返回null
+   */
+  private UserGameInformation submitGameRecord() {
+    GameRecordBO gameRecordBO = gameUtils.getGameRecord();
+    if (gameRecordBO != null) {
+      if (gameRecordBO.isRecord()) {
+        gameRecordService.insertGameRecord(gameRecordBO);
+        return userGameInformationService.updateUserGameInformation(gameRecordBO);
+      }
+      gameUtils.removeGameRecord();
+    }
+    return null;
   }
 }

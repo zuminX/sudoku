@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @ApiModel("角色显示层类")
 public class RoleVO implements Serializable {
 
-
   private static final long serialVersionUID = 4031992534685852432L;
 
   @ApiModelProperty("角色名")

@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
+/**
+ * 用户持久层类
+ */
 public interface UserMapper extends BaseMapper<User> {
 
   /**

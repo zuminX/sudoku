@@ -18,7 +18,6 @@ import org.hibernate.validator.constraints.Range;
 @ApiModel("搜索用户信息体类")
 public class SearchUserBody implements Serializable {
 
-
   private static final long serialVersionUID = -231977380846579412L;
 
   @ApiModelProperty("用户名")

@@ -9,6 +9,9 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 
+/**
+ * 模拟Redis工具类
+ */
 public class RedisUtilsMock extends RedisUtils {
 
   private final HashMap<String, Object> data;
@@ -114,7 +117,12 @@ public class RedisUtilsMock extends RedisUtils {
   }
 
   @Override
-  public <T> void setMap(String key, Map<String, T> dataMap) {
+  public <T, V> void setMap(String key, Map<T, V> dataMap) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public <T, V> void addMap(String redisKey, T mapKey, V mapValue) {
     throw new UnsupportedOperationException();
   }
 

@@ -1,9 +1,9 @@
 package com.sudoku.project.service;
 
 import com.sudoku.common.constant.enums.StatisticsDate;
+import com.sudoku.project.core.GetStatisticsDataTemplate;
 import com.sudoku.project.mapper.GameRecordMapper;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -30,14 +30,7 @@ public class StatisticsGameService {
    */
   @Cacheable(value = "statisticsGameData", keyGenerator = "simpleKG")
   public List<Integer> getGameTotal(LocalDate startDate, LocalDate endDate, StatisticsDate date) {
-    LocalDate nowDate = date.getFirst(startDate), lastDate = date.getFirst(endDate);
-    List<Integer> gameTotalList = new ArrayList<>();
-    while (nowDate.compareTo(lastDate) < 0) {
-      LocalDate nextDate = date.next(nowDate);
-      gameTotalList.add(gameRecordMapper.countByDateBetween(nowDate, nextDate));
-      nowDate = nextDate;
-    }
-    return gameTotalList;
+    return new GetStatisticsDataTemplate<Integer>(startDate, endDate, date).getData(gameRecordMapper::countByDateBetween);
   }
 
   /**

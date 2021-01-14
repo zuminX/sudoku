@@ -2,8 +2,8 @@ package com.sudoku.framework.security.controller;
 
 import com.sudoku.framework.security.model.LoginBody;
 import com.sudoku.framework.security.model.LoginSuccessVO;
-import com.sudoku.framework.security.service.impl.CaptchaService;
-import com.sudoku.framework.security.service.impl.LoginService;
+import com.sudoku.framework.security.service.CaptchaService;
+import com.sudoku.framework.security.service.LoginService;
 import com.sudoku.project.model.vo.CommonResult;
 import com.sudoku.project.service.UserService;
 import io.swagger.annotations.Api;

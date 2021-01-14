@@ -1,4 +1,4 @@
-package com.sudoku.framework.security.service.impl;
+package com.sudoku.framework.security.service;
 
 import com.sudoku.common.constant.enums.StatusCode;
 import com.sudoku.common.exception.UserException;

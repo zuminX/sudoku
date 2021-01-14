@@ -41,9 +41,14 @@ public class RedisKeys {
   public static final String CORRECT_NUMBER_RANKING_PREFIX = "correct_number_ranking:";
 
   /**
-   * 公开游戏竞赛的key值
+   * 公开游戏竞赛列表的key值
    */
-  public static final String PUBLIC_RACE = "public_race";
+  public static final String PUBLIC_RACE_LIST = "public_race_list";
+
+  /**
+   * 公开游戏竞赛映射的key值
+   */
+  public static final String PUBLIC_RACE_MAP = "public_race_map";
 
   /**
    * 私有构造方法，防止实例化

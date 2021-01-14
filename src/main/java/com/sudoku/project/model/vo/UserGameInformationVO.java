@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @ApiModel("用户游戏信息显示类")
 public class UserGameInformationVO implements Serializable {
 
-
   private static final long serialVersionUID = -5952265855843549321L;
 
   @ApiModelProperty("提交的次数")

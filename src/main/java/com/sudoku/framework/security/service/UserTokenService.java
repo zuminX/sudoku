@@ -1,4 +1,4 @@
-package com.sudoku.framework.security.service.impl;
+package com.sudoku.framework.security.service;
 
 import static cn.hutool.core.date.DateUnit.MINUTE;
 import static com.sudoku.common.constant.consist.RedisKeys.LOGIN_USER_PREFIX;

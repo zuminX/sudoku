@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @ApiModel("游戏记录显示类")
 public class GameRecordVO implements Serializable {
 
-
   private static final long serialVersionUID = -1976268450582740297L;
 
   @ApiModelProperty("数独矩阵字符串")

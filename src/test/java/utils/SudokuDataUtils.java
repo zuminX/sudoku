@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 数独数据工具类
+ */
 public class SudokuDataUtils {
 
   private SudokuDataUtils() {

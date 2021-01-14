@@ -9,10 +9,27 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.ibatis.annotations.Param;
 
+/**
+ * 游戏记录持久层类
+ */
 public interface GameRecordMapper extends BaseMapper<GameRecord> {
 
+  /**
+   * 插入游戏记录对象
+   * <p>
+   * 若对象有字段为null，则使用表的默认值
+   *
+   * @param record 游戏记录
+   * @return 影响行数
+   */
   int insertSelective(GameRecord record);
 
+  /**
+   * 根据用户ID查找已提交的游戏记录，且结果按开始时间降序排序
+   *
+   * @param userId 用户ID
+   * @return 游戏记录列表
+   */
   List<GameRecordVO> findByUserIdAndCorrectNotNullOrderByStartTimeDesc(@Param("userId") Integer userId);
 
   /**

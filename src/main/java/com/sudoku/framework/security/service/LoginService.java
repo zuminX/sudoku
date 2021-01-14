@@ -1,4 +1,4 @@
-package com.sudoku.framework.security.service.impl;
+package com.sudoku.framework.security.service;
 
 import static com.sudoku.common.constant.enums.StatusCode.LOGIN_ERROR;
 import static com.sudoku.common.constant.enums.StatusCode.LOGIN_PASSWORD_ERROR;

@@ -17,6 +17,11 @@ public class RoleService {
     this.roleMapper = roleMapper;
   }
 
+  /**
+   * 获取系统中所有角色
+   *
+   * @return 角色列表
+   */
   public List<RoleVO> getRoleList() {
     return roleMapper.selectNameAndNameZh();
   }

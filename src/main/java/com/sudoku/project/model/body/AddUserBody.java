@@ -23,7 +23,6 @@ import org.hibernate.validator.constraints.Length;
 @ApiModel("新增用户信息体类")
 public class AddUserBody implements Serializable {
 
-
   private static final long serialVersionUID = 199895970093701271L;
 
   @ApiModelProperty("用户名")

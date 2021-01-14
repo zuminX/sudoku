@@ -1,4 +1,4 @@
-package com.sudoku.framework.security.service.impl;
+package com.sudoku.framework.security.service;
 
 import static com.sudoku.common.utils.SecurityUtils.isAdmin;
 import static com.sudoku.common.utils.SecurityUtils.isLoginUserPermissionsEmpty;

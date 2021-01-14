@@ -1,6 +1,0 @@
-# Project exclude paths
-/target/
-codeAnalysis.bat
-databaseDesign.pdman.json
-/.idea/
-/logs/

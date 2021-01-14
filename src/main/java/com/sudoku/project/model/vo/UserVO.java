@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @ApiModel("用户显示类")
 public class UserVO implements Serializable {
 
-
   private static final long serialVersionUID = -3781968958583675403L;
 
   @ApiModelProperty("用户ID")

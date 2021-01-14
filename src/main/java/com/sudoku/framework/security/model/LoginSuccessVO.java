@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @ApiModel("登录生成显示类")
 public class LoginSuccessVO implements Serializable {
 
-
   private static final long serialVersionUID = 1719529345713715975L;
 
   @ApiModelProperty("用户显示层对象")

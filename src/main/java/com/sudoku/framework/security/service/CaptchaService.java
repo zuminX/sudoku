@@ -1,4 +1,4 @@
-package com.sudoku.framework.security.service.impl;
+package com.sudoku.framework.security.service;
 
 import static com.sudoku.common.constant.enums.StatusCode.CAPTCHA_EXPIRED;
 import static com.sudoku.common.constant.enums.StatusCode.CAPTCHA_NOT_EQUALS;

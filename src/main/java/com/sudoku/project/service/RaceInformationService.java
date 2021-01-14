@@ -61,7 +61,7 @@ public class RaceInformationService {
    * @return 竞赛信息显示层对象
    */
   public List<RaceInformationVO> getPublicRaceList() {
-    return new ArrayList<>(redisUtils.getZSet(RedisKeys.PUBLIC_RACE));
+    return new ArrayList<>(redisUtils.getZSet(RedisKeys.PUBLIC_RACE_LIST));
   }
 
   /**
@@ -70,8 +70,9 @@ public class RaceInformationService {
    * @param raceInformation 竞赛信息
    */
   public void cacheRaceInformation(RaceInformation raceInformation) {
-    redisUtils.addZSet(RedisKeys.PUBLIC_RACE, raceInformationConvert.convertToVO(raceInformation),
+    redisUtils.addZSet(RedisKeys.PUBLIC_RACE_LIST, raceInformationConvert.convertToVO(raceInformation),
         PublicUtils.toTimestamp(raceInformation.getEndTime()));
+    redisUtils.addMap(RedisKeys.PUBLIC_RACE_MAP, raceInformation.getId(), raceInformation);
   }
 
   /**
@@ -81,7 +82,7 @@ public class RaceInformationService {
    */
   public void removeCacheExpiredRaceInformation() {
     long yesterdayTimestamp = PublicUtils.toTimestamp(LocalDateTime.now().minusDays(1));
-    redisUtils.removeZSetByScoreRange(RedisKeys.PUBLIC_RACE, 0, yesterdayTimestamp);
+    redisUtils.removeZSetByScoreRange(RedisKeys.PUBLIC_RACE_LIST, 0, yesterdayTimestamp);
   }
 
   /**

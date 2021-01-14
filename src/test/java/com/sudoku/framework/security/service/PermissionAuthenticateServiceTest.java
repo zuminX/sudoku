@@ -1,4 +1,4 @@
-package com.sudoku.framework.security.service.impl;
+package com.sudoku.framework.security.service;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

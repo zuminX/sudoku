@@ -19,7 +19,6 @@ import org.hibernate.validator.constraints.Length;
 @ApiModel("竞赛内容信息体类")
 public class RaceInformationBody implements Serializable {
 
-
   private static final long serialVersionUID = 9008509762495627768L;
 
   @ApiModelProperty("数独矩阵")

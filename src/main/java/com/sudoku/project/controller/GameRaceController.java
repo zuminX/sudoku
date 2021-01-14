@@ -1,6 +1,5 @@
 package com.sudoku.project.controller;
 
-
 import com.sudoku.project.model.bo.SudokuDataBO;
 import com.sudoku.project.model.body.RaceInformationBody;
 import com.sudoku.project.model.entity.RaceInformation;

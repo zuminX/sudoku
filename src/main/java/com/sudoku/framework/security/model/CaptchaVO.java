@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @ApiModel("验证码显示类")
 public class CaptchaVO implements Serializable {
 
-
   private static final long serialVersionUID = 8718519598958140442L;
 
   @ApiModelProperty("唯一标识")
