@@ -4,16 +4,26 @@
   <resultMap id="BaseResultMap" type="com.sudoku.project.model.entity.RaceInformation">
     <!--@mbg.generated-->
     <!--@Table race_information-->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="description" jdbcType="VARCHAR" property="description" />
-    <result column="sudoku_matrix" jdbcType="CHAR" property="sudokuMatrix" />
-    <result column="sudoku_holes" jdbcType="CHAR" property="sudokuHoles" />
-    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
-    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <id column="id" jdbcType="INTEGER" property="id"/>
+    <result column="title" jdbcType="VARCHAR" property="title"/>
+    <result column="description" jdbcType="VARCHAR" property="description"/>
+    <result column="sudoku_matrix" jdbcType="CHAR" property="sudokuMatrix"/>
+    <result column="sudoku_holes" jdbcType="CHAR" property="sudokuHoles"/>
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
     id, title, description, sudoku_matrix, sudoku_holes, start_time, end_time
   </sql>
+
+  <select id="selectAllByEndTimeBefore" resultType="com.sudoku.project.model.vo.RaceInformationVO">
+    select id,
+           title,
+           description,
+           start_time,
+           end_time
+    from race_information
+    where end_time <![CDATA[<]]> #{maxEndTime,jdbcType=TIMESTAMP}
+  </select>
 </mapper>

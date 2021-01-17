@@ -34,9 +34,14 @@ public class SudokuBuilder {
    * @return 数独数据
    */
   public static SudokuDataBO generateSudokuFinal(int minEmpty, int maxEmpty) {
-    SudokuDataBO sudokuData = new SudokuDataBO();
-    generateMatrix(sudokuData.getMatrix());
-    digHolesByGameDifficulty(sudokuData.getHoles(), minEmpty, maxEmpty);
+    SudokuSolver sudokuSolver;
+    SudokuDataBO sudokuData;
+    do {
+      sudokuData = new SudokuDataBO();
+      generateMatrix(sudokuData.getMatrix());
+      digHolesByGameDifficulty(sudokuData.getHoles(), minEmpty, maxEmpty);
+      sudokuSolver = new SudokuSolver(sudokuData.hideVacancyGrid().getMatrix());
+    } while (sudokuSolver.solutionCount() != 1);
     return sudokuData;
   }
 

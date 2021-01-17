@@ -28,7 +28,6 @@ public class GameRaceTask {
   @XxlJob("removeCacheExpiredRaceInformationTask")
   @Log(value = "移除过期竞赛信息缓存", businessType = BusinessType.DELETE)
   public ReturnT<String> removeCacheExpiredRaceInformationTask(String s) {
-    raceInformationService.removeCacheExpiredRaceInformation();
     return ReturnT.SUCCESS;
   }
 }

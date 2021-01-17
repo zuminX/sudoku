@@ -1,20 +1,15 @@
 package com.sudoku.project.service;
 
-import com.sudoku.common.constant.consist.RedisKeys;
 import com.sudoku.common.constant.consist.SettingParameter;
 import com.sudoku.common.constant.enums.StatusCode;
 import com.sudoku.common.exception.RaceException;
 import com.sudoku.common.tools.DateTimeRange;
-import com.sudoku.common.tools.RedisUtils;
-import com.sudoku.common.utils.PublicUtils;
 import com.sudoku.common.utils.sudoku.SudokuUtils;
 import com.sudoku.project.convert.RaceInformationConvert;
 import com.sudoku.project.mapper.RaceInformationMapper;
 import com.sudoku.project.model.body.RaceInformationBody;
-import com.sudoku.project.model.entity.RaceInformation;
 import com.sudoku.project.model.vo.RaceInformationVO;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -29,30 +24,24 @@ public class RaceInformationService {
 
   private final RaceInformationMapper raceInformationMapper;
   private final RaceInformationConvert raceInformationConvert;
-  private final RedisUtils redisUtils;
 
-  public RaceInformationService(RaceInformationMapper raceInformationMapper, RaceInformationConvert raceInformationConvert,
-      RedisUtils redisUtils) {
+  public RaceInformationService(RaceInformationMapper raceInformationMapper, RaceInformationConvert raceInformationConvert) {
     this.raceInformationMapper = raceInformationMapper;
     this.raceInformationConvert = raceInformationConvert;
-    this.redisUtils = redisUtils;
   }
 
   /**
    * 新增公开的竞赛
    *
    * @param raceInformationBody 竞赛内容信息对象
-   * @return 竞赛信息
    */
   @Transactional
-  public RaceInformation addPublicRace(RaceInformationBody raceInformationBody) {
+  public void addPublicRace(RaceInformationBody raceInformationBody) {
     checkSudokuMatrix(raceInformationBody.getMatrix());
     checkSudokuHoles(raceInformationBody.getHoles());
     checkRaceTime(raceInformationBody.getRaceTimeRange());
 
-    RaceInformation raceInformation = raceInformationConvert.convertToVO(raceInformationBody);
-    raceInformationMapper.insert(raceInformation);
-    return raceInformation;
+    raceInformationMapper.insert(raceInformationConvert.convert(raceInformationBody));
   }
 
   /**
@@ -61,28 +50,7 @@ public class RaceInformationService {
    * @return 竞赛信息显示层对象
    */
   public List<RaceInformationVO> getPublicRaceList() {
-    return new ArrayList<>(redisUtils.getZSet(RedisKeys.PUBLIC_RACE_LIST));
-  }
-
-  /**
-   * 将竞赛信息缓存至Redis中
-   *
-   * @param raceInformation 竞赛信息
-   */
-  public void cacheRaceInformation(RaceInformation raceInformation) {
-    redisUtils.addZSet(RedisKeys.PUBLIC_RACE_LIST, raceInformationConvert.convertToVO(raceInformation),
-        PublicUtils.toTimestamp(raceInformation.getEndTime()));
-    redisUtils.addMap(RedisKeys.PUBLIC_RACE_MAP, raceInformation.getId(), raceInformation);
-  }
-
-  /**
-   * 移除过期的竞赛信息缓存
-   * <p>
-   * 将结束时间超过24小时的竞赛信息移除
-   */
-  public void removeCacheExpiredRaceInformation() {
-    long yesterdayTimestamp = PublicUtils.toTimestamp(LocalDateTime.now().minusDays(1));
-    redisUtils.removeZSetByScoreRange(RedisKeys.PUBLIC_RACE_LIST, 0, yesterdayTimestamp);
+    return raceInformationMapper.selectAllByEndTimeBefore(LocalDateTime.now().plusDays(1L));
   }
 
   /**

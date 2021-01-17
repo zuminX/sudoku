@@ -2,7 +2,6 @@ package com.sudoku.project.controller;
 
 import com.sudoku.project.model.bo.SudokuDataBO;
 import com.sudoku.project.model.body.RaceInformationBody;
-import com.sudoku.project.model.entity.RaceInformation;
 import com.sudoku.project.model.vo.RaceInformationVO;
 import com.sudoku.project.service.RaceInformationService;
 import io.swagger.annotations.Api;
@@ -35,8 +34,7 @@ public class GameRaceController extends BaseController {
   @ApiOperation("发布公开数独游戏竞赛")
   @ApiImplicitParam(name = "raceInformationBody", value = "竞赛内容信息体类", dataTypeClass = RaceInformationBody.class, required = true)
   public void publishPublicRace(@RequestBody RaceInformationBody raceInformationBody) {
-    RaceInformation raceInformation = raceInformationService.addPublicRace(raceInformationBody);
-    raceInformationService.cacheRaceInformation(raceInformation);
+    raceInformationService.addPublicRace(raceInformationBody);
   }
 
   @GetMapping("/publicRaceList")

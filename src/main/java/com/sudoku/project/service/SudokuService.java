@@ -79,15 +79,6 @@ public class SudokuService {
   }
 
   /**
-   * 是否记录游戏信息
-   *
-   * @return 记录返回true，不记录返回false
-   */
-  public Boolean isRecordGameInformation() {
-    return gameUtils.getGameRecord().isRecord();
-  }
-
-  /**
    * 随机返回一个格子信息
    *
    * @param errorGridInformationList 错误的数独格子信息列表
