@@ -114,6 +114,24 @@ public class PublicUtils {
   }
 
   /**
+   * 深拷贝二维boolean型数组
+   *
+   * @param source 源数据
+   * @return 深拷贝的数组
+   */
+  public static boolean[][] deepClone(boolean[][] source) {
+    if (source == null) {
+      return null;
+    }
+    boolean[][] clone = new boolean[source.length][];
+    for (int i = 0; i < source.length; i++) {
+      clone[i] = new boolean[source[i].length];
+      System.arraycopy(source[i], 0, clone[i], 0, source[i].length);
+    }
+    return clone;
+  }
+
+  /**
    * 利用Knuth洗牌算法打乱一维数组
    *
    * @param array 待打乱的数组

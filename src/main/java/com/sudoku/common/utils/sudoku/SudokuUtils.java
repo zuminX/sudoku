@@ -40,6 +40,47 @@ public class SudokuUtils {
   }
 
   /**
+   * 判断给定的数独题目是否只有唯一解
+   *
+   * @param matrix 数独矩阵
+   * @param holes  题目空缺数组
+   * @return 若解只有一个则返回true，若存在多解或无解则返回false
+   */
+  public static boolean hasOnlyOneSolution(int[][] matrix, boolean[][] holes) {
+    return new SudokuSolver(setVacancyGridToZero(matrix, holes)).solutionCount() == 1;
+  }
+
+  /**
+   * 判断给定的数独题目是否存在多解或无解
+   *
+   * @param matrix 数独矩阵
+   * @param holes  题目空缺数组
+   * @return 若存在多解或无解则返回true，若解只有一个则返回false
+   */
+  public static boolean hasNotOnlyOneSolution(int[][] matrix, boolean[][] holes) {
+    return !hasOnlyOneSolution(matrix, holes);
+  }
+
+  /**
+   * 返回数给定独矩阵的副本，并将其空缺的格子的值设置为零
+   *
+   * @param matrix 数独矩阵
+   * @param holes  题目空缺数组
+   * @return 空缺的格子为零的数独矩阵
+   */
+  public static int[][] setVacancyGridToZero(int[][] matrix, boolean[][] holes) {
+    int[][] cloneMatrix = PublicUtils.deepClone(matrix);
+    for (int i = 0; i < 9; i++) {
+      for (int j = 0; j < 9; j++) {
+        if (SudokuUtils.isHole(holes, i, j)) {
+          cloneMatrix[i][j] = 0;
+        }
+      }
+    }
+    return cloneMatrix;
+  }
+
+  /**
    * 检查该数字在该数独中的行、列、块是否唯一
    *
    * @param matrix 数独矩阵

@@ -16,7 +16,6 @@ import lombok.Data;
 @TableName(value = "game_record")
 public class GameRecord implements Serializable {
 
-
   private static final long serialVersionUID = 9118930828203696159L;
 
   /**

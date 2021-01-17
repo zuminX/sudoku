@@ -141,7 +141,7 @@ public class PublicUtilsTest {
    */
   @Test
   public void testCloneWithNull() {
-    assertNull(PublicUtils.deepClone(null));
+    assertNull(PublicUtils.deepClone((int[][]) null));
   }
 
   /**
