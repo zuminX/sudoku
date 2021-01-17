@@ -108,12 +108,15 @@ public class SudokuServiceTest {
   }
 
   /**
-   * 当回答与答案正确但不一致时，测试检查用户的数独数据
+   * 当回答不完全时，测试检查用户的数独数据
    */
   @Test
   public void testCheckSudokuDataIfCorrect() {
     GameRecordUtils.mockGameRecord(gameUtils);
-    verifyUserAnswerInformation(sudokuService.checkSudokuData(SudokuDataUtils.getCorrectMatrixList()), AnswerSituation.CORRECT);
+    List<List<Integer>> userMatrix = SudokuDataUtils.getMatrixList();
+    userMatrix.get(8).set(8, null);
+
+    verifyUserAnswerInformation(sudokuService.checkSudokuData(userMatrix), AnswerSituation.UNFINISHED);
   }
 
   /**

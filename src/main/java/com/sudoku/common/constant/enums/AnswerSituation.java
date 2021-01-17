@@ -12,9 +12,9 @@ import lombok.ToString;
 @ToString
 public enum AnswerSituation {
   /**
-   * 正确，但与答案不一致
+   * 未完成
    */
-  CORRECT(1),
+  UNFINISHED(1),
   /**
    * 错误
    */
@@ -35,6 +35,6 @@ public enum AnswerSituation {
    * @return 正确返回true，错误返回false
    */
   public boolean isRight() {
-    return this.equals(IDENTICAL) || this.equals(CORRECT);
+    return this.equals(IDENTICAL);
   }
 }

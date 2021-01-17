@@ -1,9 +1,9 @@
 package com.sudoku.common.utils.sudoku;
 
 import static com.sudoku.common.constant.consist.RedisKeys.GAME_RECORD_PREFIX;
-import static com.sudoku.common.constant.enums.AnswerSituation.CORRECT;
 import static com.sudoku.common.constant.enums.AnswerSituation.ERROR;
 import static com.sudoku.common.constant.enums.AnswerSituation.IDENTICAL;
+import static com.sudoku.common.constant.enums.AnswerSituation.UNFINISHED;
 import static com.sudoku.common.utils.sudoku.SudokuUtils.isNotHole;
 
 import com.sudoku.common.constant.enums.AnswerSituation;
@@ -33,6 +33,35 @@ public class GameUtils {
   }
 
   /**
+   * 判断答题状态
+   *
+   * @param userMatrix   用户的数独矩阵数据
+   * @param sudokuDataBO 数独数据
+   * @return 用户答题状态
+   */
+  public static AnswerSituation judgeAnswerSituation(List<List<Integer>> userMatrix, SudokuDataBO sudokuDataBO) {
+    int[][] matrix = sudokuDataBO.getMatrix();
+    boolean[][] holes = sudokuDataBO.getHoles();
+
+    AnswerSituation situation = IDENTICAL;
+    for (int i = 0; i < 9; i++) {
+      for (int j = 0; j < 9; j++) {
+        if (isNotHole(holes, i, j)) {
+          continue;
+        }
+        Integer userValue = userMatrix.get(i).get(j);
+        if (userValue == null) {
+          return UNFINISHED;
+        }
+        if (situation == IDENTICAL && userValue != matrix[i][j]) {
+          situation = ERROR;
+        }
+      }
+    }
+    return situation;
+  }
+
+  /**
    * 从redis中获取当前游戏记录
    *
    * @return 游戏记录
@@ -55,57 +84,6 @@ public class GameUtils {
    */
   public void removeGameRecord() {
     redisUtils.deleteObject(getGameRecordKey());
-  }
-
-  /**
-   * 判断答题状态
-   *
-   * @param userMatrix   用户的数独矩阵数据
-   * @param sudokuDataBO 数独数据
-   * @return 用户答题状态
-   */
-  public static AnswerSituation judgeAnswerSituation(List<List<Integer>> userMatrix, SudokuDataBO sudokuDataBO) {
-    AnswerSituation situation = compareByGenerateAnswer(userMatrix, sudokuDataBO);
-    return situation.equals(CORRECT) ? compareBySudokuRule(userMatrix) : situation;
-  }
-
-  /**
-   * 根据生成的数独答案进行比较
-   *
-   * @param userMatrix   用户的数独矩阵数据
-   * @param sudokuDataBO 数独数据
-   * @return 用户答题状态
-   */
-  private static AnswerSituation compareByGenerateAnswer(List<List<Integer>> userMatrix, SudokuDataBO sudokuDataBO) {
-    int[][] matrix = sudokuDataBO.getMatrix();
-    boolean[][] holes = sudokuDataBO.getHoles();
-
-    AnswerSituation situation = IDENTICAL;
-    for (int i = 0; i < 9; i++) {
-      for (int j = 0; j < 9; j++) {
-        if (isNotHole(holes, i, j)) {
-          continue;
-        }
-        Integer userValue = userMatrix.get(i).get(j);
-        if (userValue == null) {
-          return ERROR;
-        }
-        if (userValue != matrix[i][j]) {
-          situation = CORRECT;
-        }
-      }
-    }
-    return situation;
-  }
-
-  /**
-   * 根据数独规则进行比较
-   *
-   * @param userMatrix 用户的数独矩阵数据
-   * @return 用户答题状态
-   */
-  private static AnswerSituation compareBySudokuRule(List<List<Integer>> userMatrix) {
-    return SudokuUtils.checkSudokuValidity(userMatrix) ? CORRECT : ERROR;
   }
 
   /**

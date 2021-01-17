@@ -40,12 +40,15 @@ public class GameUtilsTest {
   }
 
   /**
-   * 当回答与答案正确但不一致时，测试判断答题状态
+   * 当回答不完全时，测试判断答题状态
    */
   @Test
   public void testJudgeAnswerSituationIfCorrect() {
-    AnswerSituation situation = GameUtils.judgeAnswerSituation(SudokuDataUtils.getCorrectMatrixList(), sudokuData);
-    assertEquals(AnswerSituation.CORRECT, situation);
+    List<List<Integer>> userMatrix = SudokuDataUtils.getMatrixList();
+    userMatrix.get(8).set(8, null);
+
+    AnswerSituation situation = GameUtils.judgeAnswerSituation(userMatrix, sudokuData);
+    assertEquals(AnswerSituation.UNFINISHED, situation);
   }
 
   /**
@@ -69,6 +72,6 @@ public class GameUtilsTest {
     userMatrix.get(8).set(8, null);
 
     AnswerSituation situation = GameUtils.judgeAnswerSituation(userMatrix, sudokuData);
-    assertEquals(AnswerSituation.ERROR, situation);
+    assertEquals(AnswerSituation.UNFINISHED, situation);
   }
 }

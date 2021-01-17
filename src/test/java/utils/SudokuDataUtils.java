@@ -45,21 +45,6 @@ public class SudokuDataUtils {
     return matrix;
   }
 
-  public static List<List<Integer>> getCorrectMatrixList() {
-    List<List<Integer>> matrix = new ArrayList<>(9);
-    matrix.addAll(Arrays.asList(
-        Arrays.asList(1, 3, 8, 2, 4, 6, 5, 7, 9),
-        Arrays.asList(6, 5, 9, 1, 3, 7, 2, 4, 8),
-        Arrays.asList(2, 7, 4, 5, 9, 8, 1, 6, 3),
-        Arrays.asList(7, 4, 5, 6, 8, 2, 3, 9, 1),
-        Arrays.asList(8, 1, 3, 4, 5, 9, 6, 2, 7),
-        Arrays.asList(9, 2, 6, 7, 1, 3, 8, 5, 4),
-        Arrays.asList(4, 8, 7, 3, 2, 5, 9, 1, 6),
-        Arrays.asList(3, 6, 2, 9, 7, 1, 4, 8, 5),
-        Arrays.asList(5, 9, 1, 8, 6, 4, 7, 3, 2)));
-    return matrix;
-  }
-
   public static boolean[][] getHoles() {
     return new boolean[][]{
         {true, true, true, true, true, false, true, true, true},

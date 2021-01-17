@@ -14,19 +14,19 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class AnswerSituationTest {
 
   /**
-   * 当结果为CORRECT时，回答应为正确
-   */
-  @Test
-  public void testIsRightWithCorrect() {
-    assertTrue(AnswerSituation.CORRECT.isRight());
-  }
-
-  /**
    * 当结果为IDENTICAL时，回答应为正确
    */
   @Test
-  public void testIsRightWithIdentical() {
+  public void testIsRightWithCorrect() {
     assertTrue(AnswerSituation.IDENTICAL.isRight());
+  }
+
+  /**
+   * 当结果为UNFINISHED时，回答应为错误
+   */
+  @Test
+  public void testIsRightWithIdentical() {
+    assertFalse(AnswerSituation.UNFINISHED.isRight());
   }
 
   /**
