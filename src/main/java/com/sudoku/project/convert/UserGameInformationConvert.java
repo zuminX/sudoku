@@ -19,5 +19,4 @@ public interface UserGameInformationConvert {
    */
   @Mapping(target = "sudokuLevelName", ignore = true)
   UserGameInformationVO convert(UserGameInformation userGameInformation);
-
 }

@@ -14,11 +14,11 @@ import com.sudoku.common.constant.enums.AnswerSituation;
 import com.sudoku.common.utils.SecurityUtils;
 import com.sudoku.common.utils.sudoku.GameUtils;
 import com.sudoku.common.utils.sudoku.SudokuBuilder;
-import com.sudoku.project.convert.SubmitSudokuInformationConvert;
+import com.sudoku.project.convert.UserAnswerInformationConvert;
 import com.sudoku.project.model.bo.SudokuDataBO;
 import com.sudoku.project.model.bo.SudokuGridInformationBO;
+import com.sudoku.project.model.bo.UserAnswerInformationBO;
 import com.sudoku.project.model.entity.SudokuLevel;
-import com.sudoku.project.model.vo.UserAnswerInformationVO;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,7 +50,7 @@ public class SudokuServiceTest {
   @Before
   public void setUp() {
     gameUtils = spy(gameUtils);
-    sudokuService = new SudokuService(gameUtils, Mappers.getMapper(SubmitSudokuInformationConvert.class));
+    sudokuService = new SudokuService(gameUtils, Mappers.getMapper(UserAnswerInformationConvert.class));
 
     mockStatic(SudokuBuilder.class);
     mockStatic(SecurityUtils.class);
@@ -74,7 +74,7 @@ public class SudokuServiceTest {
    */
   @Test
   public void testGetHelpIfHasError() {
-    GameRecordUtils.mockGameRecord(gameUtils);
+    GameRecordUtils.mockSudokuRecord(gameUtils);
     List<List<Integer>> matrixList = SudokuDataUtils.getMatrixList();
     List<SudokuGridInformationBO> errorGridList = new ArrayList<>(
         Arrays.asList(new SudokuGridInformationBO(0, 0, 1), new SudokuGridInformationBO(1, 1, 3),
@@ -94,7 +94,7 @@ public class SudokuServiceTest {
    */
   @Test
   public void testGetHelpIfNotHasError() {
-    GameRecordUtils.mockGameRecord(gameUtils);
+    GameRecordUtils.mockSudokuRecord(gameUtils);
     assertNull(sudokuService.getHelp(SudokuDataUtils.getMatrixList()));
   }
 
@@ -103,7 +103,7 @@ public class SudokuServiceTest {
    */
   @Test
   public void testCheckSudokuDataIfIdentical() {
-    GameRecordUtils.mockGameRecord(gameUtils);
+    GameRecordUtils.mockSudokuRecord(gameUtils);
     verifyUserAnswerInformation(sudokuService.checkSudokuData(SudokuDataUtils.getMatrixList()), AnswerSituation.IDENTICAL);
   }
 
@@ -112,7 +112,7 @@ public class SudokuServiceTest {
    */
   @Test
   public void testCheckSudokuDataIfCorrect() {
-    GameRecordUtils.mockGameRecord(gameUtils);
+    GameRecordUtils.mockSudokuRecord(gameUtils);
     List<List<Integer>> userMatrix = SudokuDataUtils.getMatrixList();
     userMatrix.get(8).set(8, null);
 
@@ -124,7 +124,7 @@ public class SudokuServiceTest {
    */
   @Test
   public void testCheckSudokuDataIfError() {
-    GameRecordUtils.mockGameRecord(gameUtils);
+    GameRecordUtils.mockSudokuRecord(gameUtils);
     List<List<Integer>> userMatrix = SudokuDataUtils.getMatrixList();
     userMatrix.get(8).set(8, 1);
 
@@ -134,12 +134,12 @@ public class SudokuServiceTest {
   /**
    * 验证用户的答题情况
    *
-   * @param userAnswerInformationVO 用户答题情况
-   * @param expectSituation         预期的答题结果
+   * @param userAnswerInformation 用户答题情况
+   * @param expectSituation       预期的答题结果
    */
-  private void verifyUserAnswerInformation(UserAnswerInformationVO userAnswerInformationVO, AnswerSituation expectSituation) {
-    assertArrayEquals(SudokuDataUtils.getMatrix(), userAnswerInformationVO.getMatrix());
-    assertEquals(expectSituation.getCode(), userAnswerInformationVO.getSituation());
+  private void verifyUserAnswerInformation(UserAnswerInformationBO userAnswerInformation, AnswerSituation expectSituation) {
+    assertArrayEquals(SudokuDataUtils.getMatrix(), userAnswerInformation.getMatrix());
+    assertEquals(expectSituation, userAnswerInformation.getSituation());
   }
 
   /**

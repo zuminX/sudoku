@@ -7,9 +7,9 @@ import lombok.ToString;
 /**
  * 用户提交填写数独的结果情况类
  */
-@AllArgsConstructor
 @Getter
 @ToString
+@AllArgsConstructor
 public enum AnswerSituation {
   /**
    * 未完成

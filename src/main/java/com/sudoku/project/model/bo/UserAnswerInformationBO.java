@@ -15,8 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class SubmitSudokuInformationBO implements Serializable {
-
+public class UserAnswerInformationBO implements Serializable {
 
   private static final long serialVersionUID = 6641560930277580060L;
 

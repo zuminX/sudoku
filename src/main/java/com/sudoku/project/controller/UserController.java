@@ -9,12 +9,11 @@ import com.sudoku.project.model.body.AddUserBody;
 import com.sudoku.project.model.body.ModifyUserBody;
 import com.sudoku.project.model.body.RegisterUserBody;
 import com.sudoku.project.model.body.SearchUserBody;
-import com.sudoku.project.model.vo.GameRecordVO;
+import com.sudoku.project.model.vo.NormalGameRecordVO;
 import com.sudoku.project.model.vo.UserDetailVO;
 import com.sudoku.project.model.vo.UserGameInformationVO;
 import com.sudoku.project.model.vo.UserVO;
-import com.sudoku.project.service.GameRecordService;
-import com.sudoku.project.service.UserGameInformationService;
+import com.sudoku.project.service.NormalGameRecordService;
 import com.sudoku.project.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -39,16 +38,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController extends BaseController {
 
   private final UserService userService;
-  private final UserGameInformationService userGameInformationService;
-  private final GameRecordService gameRecordService;
+
   private final CaptchaService captchaService;
 
-  public UserController(UserService userService,
-      UserGameInformationService userGameInformationService, GameRecordService gameRecordService, CaptchaService captchaService) {
+  private final NormalGameRecordService normalGameRecordService;
+
+  public UserController(UserService userService, CaptchaService captchaService, NormalGameRecordService normalGameRecordService) {
     this.userService = userService;
-    this.userGameInformationService = userGameInformationService;
-    this.gameRecordService = gameRecordService;
     this.captchaService = captchaService;
+    this.normalGameRecordService = normalGameRecordService;
   }
 
   @PostMapping("/register")
@@ -57,15 +55,13 @@ public class UserController extends BaseController {
   public UserVO registerUser(@RequestBody @Valid RegisterUserBody registerUser) {
     captchaService.checkCaptcha(registerUser.getUuid(), registerUser.getCode());
     checkRepeatPassword(registerUser);
-    UserVO userVO = userService.registerUser(registerUser);
-    userGameInformationService.initUserGameInformation(userVO.getId());
-    return userVO;
+    return userService.registerUser(registerUser);
   }
 
   @GetMapping("/gameInformation")
   @ApiOperation("获取用户游戏信息")
   public List<UserGameInformationVO> getUserGameInformation() {
-    return userGameInformationService.getUserGameInformation();
+    return normalGameRecordService.getUserGameInformation();
   }
 
   @GetMapping("/historyGameRecord")
@@ -74,9 +70,9 @@ public class UserController extends BaseController {
       @ApiImplicitParam(name = "page", value = "当前查询页", dataTypeClass = Integer.class, required = true),
       @ApiImplicitParam(name = "pageSize", value = "每页显示的条数", dataTypeClass = Integer.class, required = true)
   })
-  public Page<GameRecordVO> getHistoryGameRecord(@RequestParam Integer page,
+  public Page<NormalGameRecordVO> getHistoryGameRecord(@RequestParam Integer page,
       @RequestParam @Range(min = 1, max = 20, message = "每页显示的记录数在1-20条之间") Integer pageSize) {
-    return gameRecordService.getHistoryGameRecord(page, pageSize);
+    return normalGameRecordService.getHistoryGameRecord(page, pageSize);
   }
 
   @GetMapping("/gameInformationById")
@@ -86,7 +82,7 @@ public class UserController extends BaseController {
       @ApiImplicitParam(name = "userId", value = "用户ID", dataTypeClass = Integer.class, required = true),
   })
   public List<UserGameInformationVO> getUserGameInformationById(@RequestParam @IsExistUserId Integer userId) {
-    return userGameInformationService.getUserGameInformationById(userId);
+    return normalGameRecordService.getUserGameInformation(userId);
   }
 
   @GetMapping("/historyGameRecordById")
@@ -97,9 +93,9 @@ public class UserController extends BaseController {
       @ApiImplicitParam(name = "page", value = "当前查询页", dataTypeClass = Integer.class, required = true),
       @ApiImplicitParam(name = "pageSize", value = "每页显示的条数", dataTypeClass = Integer.class, required = true)
   })
-  public Page<GameRecordVO> getHistoryGameRecordById(@RequestParam @IsExistUserId Integer userId, @RequestParam Integer page,
+  public Page<NormalGameRecordVO> getHistoryGameRecordById(@RequestParam @IsExistUserId Integer userId, @RequestParam Integer page,
       @RequestParam @Range(min = 1, max = 20, message = "每页显示的记录数在1-20条之间") Integer pageSize) {
-    return gameRecordService.getHistoryGameRecordById(userId, page, pageSize);
+    return normalGameRecordService.getHistoryGameRecordById(userId, page, pageSize);
   }
 
   @GetMapping("/userList")

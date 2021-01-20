@@ -3,7 +3,7 @@ package utils;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 import com.sudoku.common.utils.sudoku.GameUtils;
-import com.sudoku.project.model.bo.GameRecordBO;
+import com.sudoku.project.model.bo.SudokuRecordBO;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -19,15 +19,13 @@ public class GameRecordUtils {
   private GameRecordUtils() {
   }
 
-  public static GameRecordBO getGameRecordBO() {
-    return GameRecordBO.builder()
+  public static SudokuRecordBO getSudokuRecordBO() {
+    return SudokuRecordBO.builder()
         .id(1)
         .sudokuDataBO(SudokuDataUtils.getSudokuData())
         .startTime(START_TIME)
         .endTime(END_TIME)
-        .correct(true)
         .sudokuLevelId(1)
-        .userId(1)
         .isRecord(true)
         .build();
   }
@@ -35,7 +33,7 @@ public class GameRecordUtils {
   /**
    * 模拟当前的游戏记录
    */
-  public static void mockGameRecord(GameUtils gameUtils) {
-    when(gameUtils.getGameRecord()).thenReturn(getGameRecordBO());
+  public static void mockSudokuRecord(GameUtils gameUtils) {
+    when(gameUtils.getSudokuRecord()).thenReturn(getSudokuRecordBO());
   }
 }

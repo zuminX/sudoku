@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sudoku.project.mapper.SudokuRecordMapper">
+  <resultMap id="BaseResultMap" type="com.sudoku.project.model.entity.SudokuRecord">
+    <!--@mbg.generated-->
+    <!--@Table sudoku_record-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="sudoku_matrix" jdbcType="CHAR" property="sudokuMatrix" />
+    <result column="sudoku_holes" jdbcType="CHAR" property="sudokuHoles" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="sudoku_level_id" jdbcType="INTEGER" property="sudokuLevelId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, sudoku_matrix, sudoku_holes, start_time, end_time, sudoku_level_id
+  </sql>
+</mapper>

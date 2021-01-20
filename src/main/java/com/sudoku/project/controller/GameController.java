@@ -1,20 +1,20 @@
 package com.sudoku.project.controller;
 
+import com.sudoku.common.constant.enums.AnswerSituation;
 import com.sudoku.common.utils.sudoku.GameUtils;
 import com.sudoku.common.utils.sudoku.SudokuBuilder;
 import com.sudoku.common.validator.IsSudokuMatrix;
-import com.sudoku.project.model.bo.GameRecordBO;
+import com.sudoku.project.convert.UserAnswerInformationConvert;
+import com.sudoku.project.model.bo.SudokuRecordBO;
+import com.sudoku.project.model.bo.UserAnswerInformationBO;
 import com.sudoku.project.model.bo.SudokuDataBO;
 import com.sudoku.project.model.bo.SudokuGridInformationBO;
 import com.sudoku.project.model.entity.SudokuLevel;
-import com.sudoku.project.model.entity.UserGameInformation;
 import com.sudoku.project.model.vo.SudokuLevelVO;
 import com.sudoku.project.model.vo.UserAnswerInformationVO;
-import com.sudoku.project.service.GameRankService;
-import com.sudoku.project.service.GameRecordService;
+import com.sudoku.project.service.NormalGameRecordService;
 import com.sudoku.project.service.SudokuLevelService;
 import com.sudoku.project.service.SudokuService;
-import com.sudoku.project.service.UserGameInformationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -38,24 +38,21 @@ public class GameController extends BaseController {
 
   private final SudokuService sudokuService;
 
-  private final GameRecordService gameRecordService;
-
-  private final UserGameInformationService userGameInformationService;
-
   private final SudokuLevelService sudokuLevelService;
 
-  private final GameRankService gameRankService;
+  private final NormalGameRecordService normalGameRecordService;
+
+  private final UserAnswerInformationConvert userAnswerInformationConvert;
 
   private final GameUtils gameUtils;
 
-  public GameController(SudokuService sudokuService, GameRecordService gameRecordService,
-      UserGameInformationService userGameInformationService, SudokuLevelService sudokuLevelService, GameRankService gameRankService,
+  public GameController(SudokuService sudokuService, SudokuLevelService sudokuLevelService,
+      NormalGameRecordService normalGameRecordService, UserAnswerInformationConvert userAnswerInformationConvert,
       GameUtils gameUtils) {
     this.sudokuService = sudokuService;
-    this.gameRecordService = gameRecordService;
-    this.userGameInformationService = userGameInformationService;
+    this.normalGameRecordService = normalGameRecordService;
+    this.userAnswerInformationConvert = userAnswerInformationConvert;
     this.sudokuLevelService = sudokuLevelService;
-    this.gameRankService = gameRankService;
     this.gameUtils = gameUtils;
   }
 
@@ -80,7 +77,7 @@ public class GameController extends BaseController {
       @ApiImplicitParam(name = "isRecord", value = "是否记录", dataTypeClass = Boolean.class, required = true)})
   public SudokuDataBO generateSudokuTopic(@RequestParam SudokuLevel level,
       @RequestParam @NotNull(message = "是否记录游戏不能为空") Boolean isRecord) {
-    submitGameRecord();
+    cleanSudokuRecord();
     return sudokuService.generateSudokuTopic(level, isRecord);
   }
 
@@ -95,28 +92,28 @@ public class GameController extends BaseController {
   @ApiOperation("检查用户的数独数据")
   @ApiImplicitParam(name = "userMatrix", value = "用户的数独矩阵数据", dataTypeClass = List.class, required = true)
   public UserAnswerInformationVO checkSudokuData(@RequestBody @IsSudokuMatrix List<List<Integer>> userMatrix) {
-    UserAnswerInformationVO userAnswerInformationVO = sudokuService.checkSudokuData(userMatrix);
-    UserGameInformation userGameInformation = submitGameRecord();
-    if (userGameInformation != null) {
-      gameRankService.updateCurrentUserRank(userGameInformation);
-    }
-    return userAnswerInformationVO;
+    UserAnswerInformationBO userAnswerInformation = sudokuService.checkSudokuData(userMatrix);
+    submitGameRecord(userMatrix, userAnswerInformation.getSituation());
+    return userAnswerInformationConvert.convert(userAnswerInformation);
   }
 
   /**
    * 提交数独游戏记录
-   *
-   * @return 若记录本局游戏则为用户最新的游戏信息，否则返回null
    */
-  private UserGameInformation submitGameRecord() {
-    GameRecordBO gameRecordBO = gameUtils.getGameRecord();
-    if (gameRecordBO != null) {
-      if (gameRecordBO.isRecord()) {
-        gameRecordService.insertGameRecord(gameRecordBO);
-        return userGameInformationService.updateUserGameInformation(gameRecordBO);
-      }
-      gameUtils.removeGameRecord();
+  private void submitGameRecord(List<List<Integer>> userMatrix, AnswerSituation answerSituation) {
+    SudokuRecordBO sudokuRecord = gameUtils.getSudokuRecord();
+    if (sudokuRecord.isRecord()) {
+      normalGameRecordService.insertGameRecord(userMatrix, answerSituation, sudokuRecord);
     }
-    return null;
+    gameUtils.removeSudokuRecord();
+  }
+
+  /**
+   * 清理数独游戏记录
+   */
+  private void cleanSudokuRecord() {
+    if (gameUtils.getSudokuRecord() != null) {
+      submitGameRecord(null, AnswerSituation.UNFINISHED);
+    }
   }
 }

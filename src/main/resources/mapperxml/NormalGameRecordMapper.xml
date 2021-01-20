@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sudoku.project.mapper.NormalGameRecordMapper">
+  <resultMap id="BaseResultMap" type="com.sudoku.project.model.entity.NormalGameRecord">
+    <!--@mbg.generated-->
+    <!--@Table normal_game_record-->
+    <id column="id" jdbcType="INTEGER" property="id"/>
+    <result column="input_matrix" jdbcType="CHAR" property="inputMatrix"/>
+    <result column="answer_situation" jdbcType="TINYINT" property="answerSituation"/>
+    <result column="user_id" jdbcType="INTEGER" property="userId"/>
+    <result column="sudoku_record_id" jdbcType="INTEGER" property="sudokuRecordId"/>
+  </resultMap>
+
+  <resultMap type="com.sudoku.project.model.result.NormalGameRecordResultForHistory" id="NormalGameRecordResultForHistoryMap">
+    <result column="input_matrix" property="inputMatrix"/>
+    <result column="answer_situation" property="answerSituation"/>
+    <association property="sudokuRecordResult" javaType="com.sudoku.project.model.result.SudokuRecordResultForHistory">
+      <result column="sudoku_matrix" property="sudokuMatrix"/>
+      <result column="sudoku_holes" property="sudokuHoles"/>
+      <result column="start_time" property="startTime"/>
+      <result column="end_time" property="endTime"/>
+      <result column="name" property="sudokuLevelName"/>
+    </association>
+  </resultMap>
+
+  <resultMap id="RankItemBOMap" type="com.sudoku.project.model.bo.RankItemBO">
+    <result column="sudoku_level_id" property="sudokuLevelId"/>
+    <collection property="rankItemDataList" ofType="com.sudoku.project.model.bo.RankItemDataBO">
+      <result column="username" property="username"/>
+      <result column="data" property="data"/>
+    </collection>
+  </resultMap>
+
+  <resultMap id="UserGameInformationVOMap" type="com.sudoku.project.model.vo.UserGameInformationVO">
+    <result column="total" property="total"/>
+    <result column="correct_number" property="correctNumber"/>
+    <result column="average_spend_time" property="averageSpendTime"/>
+    <result column="min_spend_time" property="minSpendTime"/>
+    <result column="max_spend_time" property="maxSpendTime"/>
+    <result column="sudoku_level_name" property="sudokuLevelName"/>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, input_matrix, answer_situation, user_id, sudoku_record_id
+  </sql>
+
+  <sql id="RankItemDataCondition">
+    where
+    rn  <![CDATA[<=]]> ${limitNumber}
+  </sql>
+
+  <sql id="Rank_Item_Column_List">
+    `sudoku_level_id`,
+    any_value(`username`) as username,
+    any_value(`rn`)       as rn
+  </sql>
+
+  <select id="findByUserIdOrderByStartTimeDesc" resultMap="NormalGameRecordResultForHistoryMap">
+    select ngr.input_matrix,
+           ngr.answer_situation,
+           sr.sudoku_matrix,
+           sr.sudoku_holes,
+           sr.start_time,
+           sr.end_time,
+           sl.name
+    from normal_game_record ngr
+           inner join sudoku_record sr on ngr.sudoku_record_id = sr.id
+           inner join sudoku_level sl on sr.sudoku_level_id = sl.id
+    where user_id = #{userId,jdbcType=INTEGER}
+    order by start_time desc
+  </select>
+
+  <select id="selectAverageSpendTimeRanking" resultMap="RankItemBOMap">
+    WITH tmp as (
+      select user_id,
+             sudoku_level_id,
+             username,
+             avg(TIMESTAMPDIFF(SECOND, start_time, end_time))                                                           as average_spend_time,
+             row_number() over (partition by sudoku_level_id order by avg(TIMESTAMPDIFF(SECOND, start_time, end_time))) as rn
+      from normal_game_record_sudoku_record_user_v
+      where answer_situation = 0
+      group by user_id, sudoku_level_id
+      )
+      select any_value(average_spend_time) as data,
+    <include refid="Rank_Item_Column_List"/>
+    from tmp
+    <include refid="RankItemDataCondition"/>
+  </select>
+
+  <select id="selectMinSpendTimeRanking" resultMap="RankItemBOMap">
+    WITH tmp as (
+      select sudoku_level_id,
+             username,
+             TIMESTAMPDIFF(SECOND, start_time, end_time)                                                           as spend_time,
+             row_number() over (partition by sudoku_level_id order by TIMESTAMPDIFF(SECOND, start_time, end_time)) as rn
+      from normal_game_record_sudoku_record_user_v
+      where answer_situation = 0)
+      select any_value(spend_time) as data,
+    <include refid="Rank_Item_Column_List"/>
+    from tmp
+    <include refid="RankItemDataCondition"/>
+  </select>
+
+  <select id="selectCorrectNumberRanking" resultMap="RankItemBOMap">
+    WITH tmp as (
+      select user_id,
+             sudoku_level_id,
+             username,
+             count(1)                                                                as correct_number,
+             row_number() over (partition by sudoku_level_id order by count(1) desc) as rn
+      from normal_game_record_sudoku_record_user_v
+      where answer_situation = 0
+      group by user_id, sudoku_level_id
+      )
+      select any_value(correct_number) as data,
+    <include refid="Rank_Item_Column_List"/>
+    from tmp
+    <include refid="RankItemDataCondition"/>
+  </select>
+
+  <select id="selectGameInformationByUserId" resultMap="UserGameInformationVOMap">
+    select count(1)                                                                         as total,
+           count(answer_situation = 0 or null)                                              as correct_number,
+           avg(if(answer_situation = 0, TIMESTAMPDIFF(SECOND, start_time, end_time), null)) as average_spend_time,
+           min(if(answer_situation = 0, TIMESTAMPDIFF(SECOND, start_time, end_time), null)) as min_spend_time,
+           max(if(answer_situation = 0, TIMESTAMPDIFF(SECOND, start_time, end_time), null)) as max_spend_time,
+           sl.name                                                                          as sudoku_level_name
+    from normal_game_record_sudoku_record_user_v v
+           inner join sudoku_level sl on v.sudoku_level_id = sl.id
+    where user_id = #{userId,jdbcType=INTEGER}
+    group by sudoku_level_id
+  </select>
+</mapper>

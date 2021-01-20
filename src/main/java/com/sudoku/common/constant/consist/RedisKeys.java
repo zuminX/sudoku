@@ -23,7 +23,7 @@ public class RedisKeys {
   /**
    * 游戏记录key值的前缀
    */
-  public static final String GAME_RECORD_PREFIX = "game_record:";
+  public static final String SUDOKU_RECORD_PREFIX = "sudoku_record:";
 
   /**
    * 平均花费时间排行key值的前缀

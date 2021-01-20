@@ -4,14 +4,14 @@ import static com.sudoku.common.utils.PublicUtils.getRandomInt;
 
 import com.sudoku.common.constant.enums.AnswerSituation;
 import com.sudoku.common.utils.PublicUtils;
-import com.sudoku.common.utils.SecurityUtils;
 import com.sudoku.common.utils.sudoku.GameUtils;
 import com.sudoku.common.utils.sudoku.SudokuBuilder;
-import com.sudoku.project.convert.SubmitSudokuInformationConvert;
+import com.sudoku.project.convert.UserAnswerInformationConvert;
 import com.sudoku.project.model.bo.GameRecordBO;
-import com.sudoku.project.model.bo.SubmitSudokuInformationBO;
+import com.sudoku.project.model.bo.UserAnswerInformationBO;
 import com.sudoku.project.model.bo.SudokuDataBO;
 import com.sudoku.project.model.bo.SudokuGridInformationBO;
+import com.sudoku.project.model.bo.SudokuRecordBO;
 import com.sudoku.project.model.entity.SudokuLevel;
 import com.sudoku.project.model.vo.UserAnswerInformationVO;
 import java.time.LocalDateTime;
@@ -27,11 +27,11 @@ public class SudokuService {
 
   private final GameUtils gameUtils;
 
-  private final SubmitSudokuInformationConvert submitSudokuInformationConvert;
+  private final UserAnswerInformationConvert userAnswerInformationConvert;
 
-  public SudokuService(GameUtils gameUtils, SubmitSudokuInformationConvert submitSudokuInformationConvert) {
+  public SudokuService(GameUtils gameUtils, UserAnswerInformationConvert userAnswerInformationConvert) {
     this.gameUtils = gameUtils;
-    this.submitSudokuInformationConvert = submitSudokuInformationConvert;
+    this.userAnswerInformationConvert = userAnswerInformationConvert;
   }
 
   /**
@@ -54,8 +54,8 @@ public class SudokuService {
    * @return 提示信息
    */
   public SudokuGridInformationBO getHelp(List<List<Integer>> userMatrix) {
-    GameRecordBO gameRecord = gameUtils.getGameRecord();
-    ArrayList<SudokuGridInformationBO> errorGridInformationList = findErrorGridInformation(gameRecord.getSudokuDataBO(), userMatrix);
+    SudokuRecordBO sudokuRecord = gameUtils.getSudokuRecord();
+    ArrayList<SudokuGridInformationBO> errorGridInformationList = findErrorGridInformation(sudokuRecord.getSudokuDataBO(), userMatrix);
     return randomGridInformation(errorGridInformationList);
   }
 
@@ -65,17 +65,20 @@ public class SudokuService {
    * @param userMatrix 用户的数独矩阵数据
    * @return 用户答题情况
    */
-  public UserAnswerInformationVO checkSudokuData(List<List<Integer>> userMatrix) {
-    GameRecordBO gameRecord = gameUtils.getGameRecord();
-    gameRecord.setEndTime(LocalDateTime.now());
+  public UserAnswerInformationBO checkSudokuData(List<List<Integer>> userMatrix) {
+    SudokuRecordBO sudokuRecord = gameUtils.getSudokuRecord();
+    SudokuDataBO sudokuDataBO = sudokuRecord.getSudokuDataBO();
+    sudokuRecord.setEndTime(LocalDateTime.now());
 
-    SudokuDataBO sudokuDataBO = gameRecord.getSudokuDataBO();
     AnswerSituation situation = GameUtils.judgeAnswerSituation(userMatrix, sudokuDataBO);
-    gameRecord.setCorrect(situation.isRight());
 
-    gameUtils.setGameRecord(gameRecord);
+    gameUtils.setSudokuRecord(sudokuRecord);
 
-    return getUserAnswerResult(gameRecord, situation);
+    return UserAnswerInformationBO.builder()
+        .situation(situation)
+        .matrix(sudokuDataBO.getMatrix())
+        .spendTime(PublicUtils.computeAbsDiff(sudokuRecord.getEndTime(), sudokuRecord.getStartTime()))
+        .build();
   }
 
   /**
@@ -97,12 +100,12 @@ public class SudokuService {
    * @return 用户答题情况
    */
   private UserAnswerInformationVO getUserAnswerResult(GameRecordBO gameRecord, AnswerSituation situation) {
-    SubmitSudokuInformationBO informationBO = SubmitSudokuInformationBO.builder()
+    UserAnswerInformationBO informationBO = UserAnswerInformationBO.builder()
         .situation(situation)
         .matrix(gameRecord.getSudokuDataBO().getMatrix())
         .spendTime(PublicUtils.computeAbsDiff(gameRecord.getEndTime(), gameRecord.getStartTime()))
         .build();
-    return submitSudokuInformationConvert.convert(informationBO);
+    return userAnswerInformationConvert.convert(informationBO);
   }
 
   /**
@@ -113,11 +116,10 @@ public class SudokuService {
    * @param isRecord      是否记录
    */
   private void saveGameRecord(SudokuDataBO sudokuDataBO, Integer sudokuLevelId, Boolean isRecord) {
-    gameUtils.setGameRecord(GameRecordBO.builder()
-        .startTime(LocalDateTime.now())
+    gameUtils.setSudokuRecord(SudokuRecordBO.builder()
         .sudokuDataBO(sudokuDataBO)
+        .startTime(LocalDateTime.now())
         .sudokuLevelId(sudokuLevelId)
-        .userId(SecurityUtils.getCurrentUserId())
         .isRecord(isRecord)
         .build());
   }

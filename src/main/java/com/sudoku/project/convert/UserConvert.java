@@ -10,7 +10,6 @@ import com.sudoku.project.model.vo.UserVO;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 
 /**
  * 用户转换器
@@ -41,11 +40,9 @@ public interface UserConvert {
    * @param addUserBody 新增用户对象
    * @return 用户表对应的对象
    */
-  @Mappings({
-      @Mapping(target = "id", ignore = true),
-      @Mapping(target = "roles", ignore = true),
-      @Mapping(target = "password", expression = "java(SecurityUtils.encodePassword(addUserBody.getPassword()))")
-  })
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "roles", ignore = true)
+  @Mapping(target = "password", expression = "java(SecurityUtils.encodePassword(addUserBody.getPassword()))")
   User convert(AddUserBody addUserBody);
 
   /**

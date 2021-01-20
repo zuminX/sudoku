@@ -12,7 +12,7 @@ import com.sudoku.common.utils.project.SudokuLevelUtils;
 import com.sudoku.project.core.GetRankingDataCallback;
 import com.sudoku.project.core.TransformRankItemToTypedTupleCallback;
 import com.sudoku.project.core.TransformTypedTupleToRankItemCallback;
-import com.sudoku.project.mapper.UserGameInformationMapper;
+import com.sudoku.project.mapper.NormalGameRecordMapper;
 import com.sudoku.project.model.bo.RankItemBO;
 import com.sudoku.project.model.bo.RankItemDataBO;
 import com.sudoku.project.model.entity.User;
@@ -31,15 +31,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class GameRankService {
 
-  private final UserGameInformationMapper userGameInformationMapper;
+  private final NormalGameRecordMapper normalGameRecordMapper;
 
   private final RedisUtils redisUtils;
 
   private final SudokuLevelUtils sudokuLevelUtils;
 
-  public GameRankService(UserGameInformationMapper userGameInformationMapper, RedisUtils redisUtils,
+  public GameRankService(NormalGameRecordMapper normalGameRecordMapper, RedisUtils redisUtils,
       SudokuLevelUtils sudokuLevelUtils) {
-    this.userGameInformationMapper = userGameInformationMapper;
+    this.normalGameRecordMapper = normalGameRecordMapper;
     this.redisUtils = redisUtils;
     this.sudokuLevelUtils = sudokuLevelUtils;
   }
@@ -48,9 +48,9 @@ public class GameRankService {
    * 初始化排行数据
    */
   public void initRanking() {
-    initRankingData(RankingType.AVERAGE_SPEND_TIME, userGameInformationMapper::selectAverageSpendTimeRanking);
-    initRankingData(RankingType.MIN_SPEND_TIME, userGameInformationMapper::selectMinSpendTimeRanking);
-    initRankingData(RankingType.CORRECT_NUMBER, userGameInformationMapper::selectCorrectNumberRanking);
+    initRankingData(RankingType.AVERAGE_SPEND_TIME, normalGameRecordMapper::selectAverageSpendTimeRanking);
+    initRankingData(RankingType.MIN_SPEND_TIME, normalGameRecordMapper::selectMinSpendTimeRanking);
+    initRankingData(RankingType.CORRECT_NUMBER, normalGameRecordMapper::selectCorrectNumberRanking);
   }
 
   /**

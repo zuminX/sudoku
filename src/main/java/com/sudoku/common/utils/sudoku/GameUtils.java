@@ -1,6 +1,6 @@
 package com.sudoku.common.utils.sudoku;
 
-import static com.sudoku.common.constant.consist.RedisKeys.GAME_RECORD_PREFIX;
+import static com.sudoku.common.constant.consist.RedisKeys.SUDOKU_RECORD_PREFIX;
 import static com.sudoku.common.constant.enums.AnswerSituation.ERROR;
 import static com.sudoku.common.constant.enums.AnswerSituation.IDENTICAL;
 import static com.sudoku.common.constant.enums.AnswerSituation.UNFINISHED;
@@ -9,8 +9,8 @@ import static com.sudoku.common.utils.sudoku.SudokuUtils.isNotHole;
 import com.sudoku.common.constant.enums.AnswerSituation;
 import com.sudoku.common.tools.RedisUtils;
 import com.sudoku.common.utils.SecurityUtils;
-import com.sudoku.project.model.bo.GameRecordBO;
 import com.sudoku.project.model.bo.SudokuDataBO;
+import com.sudoku.project.model.bo.SudokuRecordBO;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.springframework.stereotype.Component;
@@ -62,36 +62,36 @@ public class GameUtils {
   }
 
   /**
-   * 从redis中获取当前游戏记录
+   * 从redis中获取当前数独记录
    *
-   * @return 游戏记录
+   * @return 数独记录
    */
-  public GameRecordBO getGameRecord() {
-    return redisUtils.getObject(getGameRecordKey());
+  public SudokuRecordBO getSudokuRecord() {
+    return redisUtils.getObject(getSudokuRecordKey());
   }
 
   /**
-   * 保存游戏记录至redis中
+   * 保存数独记录至redis中
    *
-   * @param gameRecord 游戏记录
+   * @param sudokuRecord 数独记录
    */
-  public void setGameRecord(GameRecordBO gameRecord) {
-    redisUtils.setObject(getGameRecordKey(), gameRecord, GAME_MAX_TIME, TimeUnit.HOURS);
+  public void setSudokuRecord(SudokuRecordBO sudokuRecord) {
+    redisUtils.setObject(getSudokuRecordKey(), sudokuRecord, GAME_MAX_TIME, TimeUnit.HOURS);
   }
 
   /**
-   * 移除数独游戏记录
+   * 移除数独记录
    */
-  public void removeGameRecord() {
-    redisUtils.deleteObject(getGameRecordKey());
+  public void removeSudokuRecord() {
+    redisUtils.deleteObject(getSudokuRecordKey());
   }
 
   /**
-   * 获取游戏记录的key值
+   * 获取数独记录的key值
    *
-   * @return 游戏记录在redis中的key值
+   * @return 数独记录在redis中的key值
    */
-  private String getGameRecordKey() {
-    return GAME_RECORD_PREFIX + SecurityUtils.getCurrentUserId();
+  private String getSudokuRecordKey() {
+    return SUDOKU_RECORD_PREFIX + SecurityUtils.getCurrentUserId();
   }
 }
