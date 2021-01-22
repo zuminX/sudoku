@@ -6,7 +6,7 @@ import com.sudoku.project.model.vo.UserAnswerInformationVO;
 import org.mapstruct.Mapper;
 
 /**
- * 用户答题情况转换器
+ * 用户答题情况对象转换器
  */
 @Mapper
 public interface UserAnswerInformationConvert {

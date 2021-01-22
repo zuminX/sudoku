@@ -12,14 +12,15 @@ import lombok.Getter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
-@AllArgsConstructor
 @Getter
 @ToString
+@AllArgsConstructor
 @ApiModel("统计日期类")
 public enum StatisticsDate implements LocalDateOperation {
   DAILY("日") {
     /**
      * 返回日期加上指定天的副本
+     *
      * @param date 日期
      * @param days 天数
      * @return 给定日期增加指定天数后的日期
@@ -29,19 +30,21 @@ public enum StatisticsDate implements LocalDateOperation {
       return date.plusDays(days);
     }
 
+    /**
+     * 获取该日的第一天
+     *
+     * @param date 日期
+     * @return 该日的第一天
+     */
     @Override
     public LocalDate getFirst(@NotNull LocalDate date) {
-      return date;
-    }
-
-    @Override
-    public LocalDate getLast(@NotNull LocalDate date) {
       return date;
     }
   },
   EACH_MONTH("月") {
     /**
      * 返回日期加上指定月的副本
+     *
      * @param date 日期
      * @param months 月数
      * @return 给定日期增加指定月数后的日期
@@ -51,19 +54,21 @@ public enum StatisticsDate implements LocalDateOperation {
       return date.plusMonths(months);
     }
 
+    /**
+     * 获取该月的第一天
+     *
+     * @param date 日期
+     * @return 该月的第一天
+     */
     @Override
     public LocalDate getFirst(@NotNull LocalDate date) {
       return date.with(TemporalAdjusters.firstDayOfMonth());
-    }
-
-    @Override
-    public LocalDate getLast(@NotNull LocalDate date) {
-      return date.with(TemporalAdjusters.lastDayOfMonth());
     }
   },
   EACH_QUARTER("季度") {
     /**
      * 返回日期加上指定季度的副本
+     *
      * @param date 日期
      * @param quarters 季度数
      * @return 给定日期增加指定季度数后的日期
@@ -73,22 +78,22 @@ public enum StatisticsDate implements LocalDateOperation {
       return date.plusMonths(4 * quarters);
     }
 
+    /**
+     * 获取该季度的第一天
+     *
+     * @param date 日期
+     * @return 该季度的第一天
+     */
     @Override
     public LocalDate getFirst(@NotNull LocalDate date) {
       Month firstMonthOfQuarter = date.getMonth().firstMonthOfQuarter();
       return LocalDate.of(date.getYear(), firstMonthOfQuarter, 1);
     }
-
-    @Override
-    public LocalDate getLast(@NotNull LocalDate date) {
-      Month firstMonthOfQuarter = date.getMonth().firstMonthOfQuarter();
-      Month endMonthOfQuarter = Month.of(firstMonthOfQuarter.getValue() + 2);
-      return LocalDate.of(date.getYear(), endMonthOfQuarter, endMonthOfQuarter.length(date.isLeapYear()));
-    }
   },
   EACH_YEAR("年") {
     /**
      * 返回日期加上指定年的副本
+     *
      * @param date 日期
      * @param years 年数
      * @return 给定日期增加指定年数后的日期
@@ -98,20 +103,15 @@ public enum StatisticsDate implements LocalDateOperation {
       return date.plusYears(years);
     }
 
+    /**
+     * 获取该年的第一天
+     *
+     * @param date 日期
+     * @return 该年的第一天
+     */
     @Override
     public LocalDate getFirst(@NotNull LocalDate date) {
       return date.with(TemporalAdjusters.firstDayOfYear());
-    }
-
-    /**
-     * 获取该日期的最后一天
-     *
-     * @param date 日期
-     * @return 该日期的最后一天
-     */
-    @Override
-    public LocalDate getLast(@NotNull LocalDate date) {
-      return date.with(TemporalAdjusters.lastDayOfYear());
     }
   };
 

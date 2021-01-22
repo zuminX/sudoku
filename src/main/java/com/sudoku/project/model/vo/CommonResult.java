@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @ApiModel("公共结果类")
 public class CommonResult<T> implements Serializable {
 
-
   private static final long serialVersionUID = 8729965664919809866L;
 
   @ApiModelProperty("是否成功")

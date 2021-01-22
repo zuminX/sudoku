@@ -2,18 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sudoku.project.mapper.RaceGameRecordMapper">
   <resultMap id="BaseResultMap" type="com.sudoku.project.model.entity.RaceGameRecord">
-    <!--@mbg.generated-->
     <!--@Table race_game_record-->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="input_matrix" jdbcType="CHAR" property="inputMatrix" />
-    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
-    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
-    <result column="answer_situation" jdbcType="TINYINT" property="answerSituation" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="race_information_id" jdbcType="INTEGER" property="raceInformationId" />
+    <id column="id" jdbcType="INTEGER" property="id"/>
+    <result column="input_matrix" jdbcType="CHAR" property="inputMatrix"/>
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+    <result column="answer_situation" jdbcType="TINYINT" property="answerSituation"/>
+    <result column="user_id" jdbcType="INTEGER" property="userId"/>
+    <result column="race_information_id" jdbcType="INTEGER" property="raceInformationId"/>
   </resultMap>
+
   <sql id="Base_Column_List">
-    <!--@mbg.generated-->
-    id, input_matrix, start_time, end_time, answer_situation, user_id, race_information_id
+    id,
+    input_matrix,
+    start_time,
+    end_time,
+    answer_situation,
+    user_id,
+    race_information_id
   </sql>
 </mapper>

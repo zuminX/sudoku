@@ -15,7 +15,6 @@ import lombok.Data;
 @TableName(value = "`resource`")
 public class Resource implements Serializable {
 
-
   private static final long serialVersionUID = -7035970422635900016L;
 
   /**

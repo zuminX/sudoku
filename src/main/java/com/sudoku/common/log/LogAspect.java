@@ -21,9 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * 处理日志切面类
  */
+@Slf4j
 @Aspect
 @Component
-@Slf4j
 public class LogAspect {
 
   /**
@@ -78,7 +78,6 @@ public class LogAspect {
     String logContent = buildSuccessLogContent(log, joinPoint.getArgs(), spendTime);
     recordSuccessLog(logContent, spendTime);
   }
-
 
   /**
    * 处理执行失败的日志
@@ -170,11 +169,8 @@ public class LogAspect {
    * 拼接参数数据
    */
   private String paramDataToLogString(Object[] paramsData) {
-    String result = "";
-    if (ArrayUtil.isNotEmpty(paramsData)) {
-      result = Arrays.stream(paramsData).filter(this::notFilterObject).map(this::toLogString).collect(Collectors.joining());
-    }
-    return result;
+    return ArrayUtil.isNotEmpty(paramsData) ?
+        Arrays.stream(paramsData).filter(this::notFilterObject).map(this::toLogString).collect(Collectors.joining()) : "";
   }
 
   /**

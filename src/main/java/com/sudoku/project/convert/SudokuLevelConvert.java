@@ -5,16 +5,16 @@ import com.sudoku.project.model.vo.SudokuLevelVO;
 import org.mapstruct.Mapper;
 
 /**
- * 数独等级转换器
+ * 数独等级镀锡转换器
  */
 @Mapper
 public interface SudokuLevelConvert {
 
   /**
-   * 将数独等级传输层对象转换为显示层对象
+   * 将数独等级对象转换为显示对象
    *
-   * @param sudokuLevel 数独等级的传输层对象
-   * @return 数独等级的显示层对象
+   * @param sudokuLevel 数独等级对象
+   * @return 数独等级显示对象
    */
   SudokuLevelVO convert(SudokuLevel sudokuLevel);
 }

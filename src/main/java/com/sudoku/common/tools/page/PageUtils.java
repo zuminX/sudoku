@@ -19,6 +19,7 @@ public class PageUtils {
    * 默认查询的页数
    */
   private static final Integer DEFAULT_PAGE = 1;
+
   /**
    * 默认每页个数
    */
@@ -52,7 +53,7 @@ public class PageUtils {
    * @return 分页数据
    */
   @SuppressWarnings("all")
-  public static <T, V> Page<V> getPage(@NotNull PageParam<T> pageParam,@NotNull Function<T, V> converter) {
+  public static <T, V> Page<V> getPage(@NotNull PageParam<T> pageParam, @NotNull Function<T, V> converter) {
     PageTemplateMethod<T> pageTemplateMethod = new PageTemplateMethod<>(pageParam);
     return (Page<V>) pageTemplateMethod.getPage(queryList -> {
       List<V> targetList = queryList.stream().map(converter).collect(toList());
@@ -63,17 +64,17 @@ public class PageUtils {
   }
 
   /**
-   * 获取分页信息对象的回调方法
+   * 获取分页详情对象的回调方法
    *
    * @param <T> 分页数据的类型
    */
   private interface GetPageInfoCallBack<T> {
 
     /**
-     * 获取分页信息对象
+     * 获取分页详情对象
      *
      * @param queryList 查询数据列表
-     * @return 分页信息对象
+     * @return 分页详情对象
      */
     PageInfo<T> getPageInfo(List<T> queryList);
   }
@@ -94,7 +95,7 @@ public class PageUtils {
     /**
      * 获取分页数据
      *
-     * @param callBack 获取分页信息对象的回调方法
+     * @param callBack 获取分页详情对象的回调方法
      * @return 分页数据
      */
     @SuppressWarnings("all")

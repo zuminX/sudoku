@@ -8,10 +8,12 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import lombok.Data;
 
+/**
+ * 资源-角色中间表对应的实体类
+ */
 @Data
 @TableName(value = "merge_resource_role")
 public class MergeResourceRole implements Serializable {
-
 
   private static final long serialVersionUID = -1138514723502720806L;
 

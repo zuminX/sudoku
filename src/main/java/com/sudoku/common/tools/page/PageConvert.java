@@ -10,13 +10,22 @@ import org.mapstruct.factory.Mappers;
 /**
  * 分页对象转换器
  */
-@Mapper(imports = PageInformationConvert.class)
-@SuppressWarnings("all")
+@Mapper(uses = PageInformationConvert.class)
+@SuppressWarnings("rawtypes")
 public interface PageConvert {
 
+  /**
+   * 分页对象转换器的实例
+   */
   PageConvert INSTANCE = Mappers.getMapper(PageConvert.class);
 
-  @Mapping(target = "pageInformation", expression = "java(PageInformationConvert.INSTANCE.convert(info))")
+  /**
+   * 将分页详情对象转换为分页数据对象
+   *
+   * @param info 分页详情对象
+   * @return 分页数据对象
+   */
+  @Mapping(target = "pageInformation", source = "info")
   @Mapping(target = "list", source = "info.list")
   Page convert(PageInfo info);
 
@@ -26,8 +35,12 @@ public interface PageConvert {
   @Mapper
   interface PageInformationConvert {
 
-    PageInformationConvert INSTANCE = Mappers.getMapper(PageInformationConvert.class);
-
+    /**
+     * 将分页详情对象转换为分页信息对象
+     *
+     * @param info 分页详情对象
+     * @return 分页信息对象
+     */
     @Mapping(target = "totalPage", source = "pages")
     @Mapping(target = "currentPage", source = "pageNum")
     PageInformation convert(PageInfo info);

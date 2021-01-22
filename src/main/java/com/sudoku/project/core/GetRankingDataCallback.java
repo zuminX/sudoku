@@ -11,7 +11,7 @@ public interface GetRankingDataCallback {
   /**
    * 获取排行项数据
    *
-   * @param limit 限制数
+   * @param limit 限制的数量
    * @return 排行项数据列表
    */
   List<RankItemBO> getData(Integer limit);

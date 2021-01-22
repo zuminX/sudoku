@@ -8,6 +8,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.Data;
 
+/**
+ * 数独记录表对应的实体类
+ */
 @Data
 @TableName(value = "sudoku_record")
 public class SudokuRecord implements Serializable {

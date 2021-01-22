@@ -12,6 +12,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 用户表对应的实体类
+ */
 @Data
 @Builder
 @NoArgsConstructor

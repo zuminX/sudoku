@@ -2,10 +2,10 @@ package com.sudoku.project.model.body;
 
 import com.sudoku.common.tools.DateTimeRange;
 import com.sudoku.common.validator.IsDateTimeRange;
+import com.sudoku.common.validator.IsExistSudokuLevelId;
 import com.sudoku.common.validator.IsSudokuMatrix;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -13,9 +13,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @ApiModel("竞赛内容信息体类")
 public class RaceInformationBody implements Serializable {
 
@@ -40,4 +40,8 @@ public class RaceInformationBody implements Serializable {
   @ApiModelProperty("竞赛时间范围")
   @IsDateTimeRange(startNotNull = true, endTimeNotNull = true)
   private DateTimeRange raceTimeRange;
+
+  @ApiModelProperty("数独难度ID")
+  @IsExistSudokuLevelId
+  private Integer sudokuLevelId;
 }

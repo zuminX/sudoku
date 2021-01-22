@@ -16,12 +16,10 @@ public interface RaceInformationConvert {
    * 将竞赛内容信息对象转换为竞赛信息表对应的实体类对象
    *
    * @param raceInformation 竞赛内容信息对象
+   * @param sudokuRecordId  数独记录ID
+   * @param creatorUserId   创建者ID
    * @return 竞赛信息表对应的实体类对象
    */
   @Mapping(target = "id", ignore = true)
-  @Mapping(target = "sudokuMatrix", expression = "java(PublicUtils.compressionIntList(raceInformation.getMatrix()))")
-  @Mapping(target = "sudokuHoles", expression = "java(PublicUtils.compressionBoolList(raceInformation.getHoles()))")
-  @Mapping(target = "startTime", source = "raceInformation.raceTimeRange.start")
-  @Mapping(target = "endTime", source = "raceInformation.raceTimeRange.end")
-  RaceInformation convert(RaceInformationBody raceInformation);
+  RaceInformation convert(RaceInformationBody raceInformation, Integer sudokuRecordId, Integer creatorUserId);
 }

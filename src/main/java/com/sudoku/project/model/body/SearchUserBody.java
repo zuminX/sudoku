@@ -12,9 +12,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @ApiModel("搜索用户信息体类")
 public class SearchUserBody implements Serializable {
 

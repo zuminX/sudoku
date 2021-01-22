@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sudoku.project.mapper.NormalGameRecordMapper">
   <resultMap id="BaseResultMap" type="com.sudoku.project.model.entity.NormalGameRecord">
-    <!--@mbg.generated-->
     <!--@Table normal_game_record-->
     <id column="id" jdbcType="INTEGER" property="id"/>
     <result column="input_matrix" jdbcType="CHAR" property="inputMatrix"/>
@@ -41,19 +40,18 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    <!--@mbg.generated-->
-    id, input_matrix, answer_situation, user_id, sudoku_record_id
+    id,
+    input_matrix,
+    answer_situation,
+    user_id,
+    sudoku_record_id
   </sql>
 
-  <sql id="RankItemDataCondition">
+  <sql id="SelectRanking">
+    select any_value(`data`) as data, `sudoku_level_id`, any_value(`username`) as username, any_value(`rn`) as rn
+    from tmp
     where
     rn  <![CDATA[<=]]> ${limitNumber}
-  </sql>
-
-  <sql id="Rank_Item_Column_List">
-    `sudoku_level_id`,
-    any_value(`username`) as username,
-    any_value(`rn`)       as rn
   </sql>
 
   <select id="findByUserIdOrderByStartTimeDesc" resultMap="NormalGameRecordResultForHistoryMap">
@@ -76,30 +74,24 @@
       select user_id,
              sudoku_level_id,
              username,
-             avg(TIMESTAMPDIFF(SECOND, start_time, end_time))                                                           as average_spend_time,
+             avg(TIMESTAMPDIFF(SECOND, start_time, end_time))                                                           as data,
              row_number() over (partition by sudoku_level_id order by avg(TIMESTAMPDIFF(SECOND, start_time, end_time))) as rn
       from normal_game_record_sudoku_record_user_v
       where answer_situation = 0
       group by user_id, sudoku_level_id
       )
-      select any_value(average_spend_time) as data,
-    <include refid="Rank_Item_Column_List"/>
-    from tmp
-    <include refid="RankItemDataCondition"/>
+    <include refid="SelectRanking"/>
   </select>
 
   <select id="selectMinSpendTimeRanking" resultMap="RankItemBOMap">
     WITH tmp as (
       select sudoku_level_id,
              username,
-             TIMESTAMPDIFF(SECOND, start_time, end_time)                                                           as spend_time,
+             TIMESTAMPDIFF(SECOND, start_time, end_time)                                                           as data,
              row_number() over (partition by sudoku_level_id order by TIMESTAMPDIFF(SECOND, start_time, end_time)) as rn
       from normal_game_record_sudoku_record_user_v
       where answer_situation = 0)
-      select any_value(spend_time) as data,
-    <include refid="Rank_Item_Column_List"/>
-    from tmp
-    <include refid="RankItemDataCondition"/>
+    <include refid="SelectRanking"/>
   </select>
 
   <select id="selectCorrectNumberRanking" resultMap="RankItemBOMap">
@@ -107,16 +99,13 @@
       select user_id,
              sudoku_level_id,
              username,
-             count(1)                                                                as correct_number,
+             count(1)                                                                as data,
              row_number() over (partition by sudoku_level_id order by count(1) desc) as rn
       from normal_game_record_sudoku_record_user_v
       where answer_situation = 0
       group by user_id, sudoku_level_id
       )
-      select any_value(correct_number) as data,
-    <include refid="Rank_Item_Column_List"/>
-    from tmp
-    <include refid="RankItemDataCondition"/>
+    <include refid="SelectRanking"/>
   </select>
 
   <select id="selectGameInformationByUserId" resultMap="UserGameInformationVOMap">

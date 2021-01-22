@@ -1,6 +1,5 @@
 package com.sudoku.project.model.bo;
 
-
 import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -10,9 +9,9 @@ import lombok.NoArgsConstructor;
 /**
  * 排行项业务类
  */
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 public class RankItemBO implements Serializable {
 
 

@@ -8,9 +8,9 @@ import org.springframework.http.HttpStatus;
 /**
  * 响应状态编码
  */
-@AllArgsConstructor
 @Getter
 @ToString
+@AllArgsConstructor
 public enum StatusCode {
   OK(0, HttpStatus.OK, "成功请求"),
   ERROR(1, HttpStatus.BAD_REQUEST, "服务端发生了未知错误"),
@@ -67,10 +67,12 @@ public enum StatusCode {
    * 编号
    */
   private final int code;
+
   /**
    * HTTP状态
    */
   private final HttpStatus status;
+
   /**
    * 错误信息
    */

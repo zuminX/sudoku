@@ -1,6 +1,6 @@
 package com.sudoku.project.service;
 
-import com.sudoku.project.mapper.RaceRecordMapper;
+import com.sudoku.project.mapper.RaceGameRecordMapper;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class RaceRecordService {
 
-  private final RaceRecordMapper raceRecordMapper;
+  private final RaceGameRecordMapper raceGameRecordMapper;
 
-  public RaceRecordService(RaceRecordMapper raceRecordMapper) {
-    this.raceRecordMapper = raceRecordMapper;
+  public RaceRecordService(RaceGameRecordMapper raceGameRecordMapper) {
+    this.raceGameRecordMapper = raceGameRecordMapper;
   }
 
 

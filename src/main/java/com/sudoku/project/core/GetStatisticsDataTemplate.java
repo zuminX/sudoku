@@ -13,7 +13,9 @@ import java.util.List;
 public class GetStatisticsDataTemplate<T> {
 
   private final StatisticsDate statisticsDate;
+
   private final LocalDate startDate;
+
   private final LocalDate endDate;
 
   /**

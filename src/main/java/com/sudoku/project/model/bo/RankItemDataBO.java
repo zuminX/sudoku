@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 /**
  * 排行项数据业务类
  */
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 public class RankItemDataBO implements Serializable {
 
   private static final long serialVersionUID = -1532258014558412367L;

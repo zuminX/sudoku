@@ -17,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor
 public class LoginUserBO implements UserDetails {
 
-
   private static final long serialVersionUID = -2436545453049796344L;
 
   /**

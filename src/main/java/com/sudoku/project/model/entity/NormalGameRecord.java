@@ -10,6 +10,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 普通游戏记录表对应的实体类
+ */
 @Data
 @Builder
 @NoArgsConstructor

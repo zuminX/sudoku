@@ -38,6 +38,11 @@ public class SudokuSolver {
     init(topic, 2);
   }
 
+  /**
+   * 获取数独题解个数
+   *
+   * @return 数独题解个数
+   */
   public int solutionCount() {
     return solutions.size();
   }
@@ -55,6 +60,9 @@ public class SudokuSolver {
     solve(0);
   }
 
+  /**
+   * 初始化DLX节点
+   */
   private void initDLX() {
     int r = 730, c = 324;
     head = new DLXNode(r, c);
@@ -77,6 +85,12 @@ public class SudokuSolver {
     }
   }
 
+  /**
+   * 添加DLX节点
+   *
+   * @param r 行
+   * @param c 列
+   */
   private void addNode(int r, int c) {
     DLXNode p = new DLXNode(r, c);
     p.R = row[r];

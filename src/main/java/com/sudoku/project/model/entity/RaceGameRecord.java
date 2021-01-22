@@ -8,16 +8,19 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.Data;
 
+/**
+ * 竞赛游戏记录表对应的实体类
+ */
 @Data
 @TableName(value = "race_game_record")
 public class RaceGameRecord implements Serializable {
 
-  private static final long serialVersionUID = -9114435733322512025L;
+  private static final long serialVersionUID = -6619214645050138798L;
 
   /**
    * 竞赛记录的ID
    */
-  @TableId(value = "id", type = IdType.AUTO)
+  @TableId(value = "id", type = IdType.INPUT)
   private Integer id;
 
   /**
@@ -42,7 +45,7 @@ public class RaceGameRecord implements Serializable {
    * 回答情况
    */
   @TableField(value = "answer_situation")
-  private Byte answerSituation;
+  private Integer answerSituation;
 
   /**
    * 用户ID

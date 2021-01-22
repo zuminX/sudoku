@@ -8,6 +8,9 @@ import com.sudoku.project.model.vo.UserGameInformationVO;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
+/**
+ * 普通游戏记录持久层类
+ */
 public interface NormalGameRecordMapper extends BaseMapper<NormalGameRecord> {
 
   /**

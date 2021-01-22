@@ -4,16 +4,17 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import lombok.Data;
 
+/**
+ * 竞赛信息表对应的实体类
+ */
 @Data
 @TableName(value = "race_information")
 public class RaceInformation implements Serializable {
 
-  private static final long serialVersionUID = 8663649210686937610L;
+  private static final long serialVersionUID = 321607305176124761L;
 
   /**
    * 竞赛信息的ID
@@ -34,26 +35,14 @@ public class RaceInformation implements Serializable {
   private String description;
 
   /**
-   * 数独矩阵
+   * 创建用户的ID
    */
-  @TableField(value = "sudoku_matrix")
-  private String sudokuMatrix;
+  @TableField(value = "creator_user_id")
+  private Integer creatorUserId;
 
   /**
-   * 空缺的数独
+   * 数独记录ID
    */
-  @TableField(value = "sudoku_holes")
-  private String sudokuHoles;
-
-  /**
-   * 开始时间
-   */
-  @TableField(value = "start_time")
-  private LocalDateTime startTime;
-
-  /**
-   * 结束时间
-   */
-  @TableField(value = "end_time")
-  private LocalDateTime endTime;
+  @TableField(value = "sudoku_record_id")
+  private Integer sudokuRecordId;
 }

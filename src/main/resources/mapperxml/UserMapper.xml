@@ -11,6 +11,7 @@
     <result column="recent_login_time" jdbcType="TIMESTAMP" property="recentLoginTime"/>
     <result column="enabled" jdbcType="TINYINT" property="enabled"/>
   </resultMap>
+
   <sql id="Base_Column_List">
     id,
     username,

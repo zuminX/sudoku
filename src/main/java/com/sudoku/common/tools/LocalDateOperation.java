@@ -26,14 +26,6 @@ public interface LocalDateOperation {
   LocalDate getFirst(@NotNull LocalDate date);
 
   /**
-   * 获取该日期的最后一天
-   *
-   * @param date 日期
-   * @return 该日期的最后一天
-   */
-  LocalDate getLast(@NotNull LocalDate date);
-
-  /**
    * 获取该日期的下一个日期
    *
    * @param date 日期

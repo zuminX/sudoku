@@ -4,10 +4,14 @@ import com.sudoku.common.constant.consist.SettingParameter;
 import com.sudoku.common.constant.enums.StatusCode;
 import com.sudoku.common.exception.RaceException;
 import com.sudoku.common.tools.DateTimeRange;
+import com.sudoku.common.utils.SecurityUtils;
 import com.sudoku.common.utils.sudoku.SudokuUtils;
 import com.sudoku.project.convert.RaceInformationConvert;
+import com.sudoku.project.convert.SudokuRecordConvert;
 import com.sudoku.project.mapper.RaceInformationMapper;
+import com.sudoku.project.mapper.SudokuRecordMapper;
 import com.sudoku.project.model.body.RaceInformationBody;
+import com.sudoku.project.model.entity.SudokuRecord;
 import com.sudoku.project.model.vo.RaceInformationVO;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -23,11 +27,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class RaceInformationService {
 
   private final RaceInformationMapper raceInformationMapper;
+
+  private final SudokuRecordMapper sudokuRecordMapper;
+
   private final RaceInformationConvert raceInformationConvert;
 
-  public RaceInformationService(RaceInformationMapper raceInformationMapper, RaceInformationConvert raceInformationConvert) {
+  private final SudokuRecordConvert sudokuRecordConvert;
+
+  public RaceInformationService(RaceInformationMapper raceInformationMapper, RaceInformationConvert raceInformationConvert,
+      SudokuRecordMapper sudokuRecordMapper, SudokuRecordConvert sudokuRecordConvert) {
     this.raceInformationMapper = raceInformationMapper;
     this.raceInformationConvert = raceInformationConvert;
+    this.sudokuRecordMapper = sudokuRecordMapper;
+    this.sudokuRecordConvert = sudokuRecordConvert;
   }
 
   /**
@@ -41,7 +53,11 @@ public class RaceInformationService {
     checkSudokuHoles(raceInformationBody.getHoles());
     checkRaceTime(raceInformationBody.getRaceTimeRange());
 
-    raceInformationMapper.insert(raceInformationConvert.convert(raceInformationBody));
+    SudokuRecord sudokuRecord = sudokuRecordConvert.convert(raceInformationBody);
+    sudokuRecordMapper.insert(sudokuRecord);
+
+    raceInformationMapper.insert(
+        raceInformationConvert.convert(raceInformationBody, sudokuRecord.getId(), SecurityUtils.getCurrentUserId()));
   }
 
   /**

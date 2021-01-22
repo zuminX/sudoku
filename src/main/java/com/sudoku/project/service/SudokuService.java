@@ -6,14 +6,11 @@ import com.sudoku.common.constant.enums.AnswerSituation;
 import com.sudoku.common.utils.PublicUtils;
 import com.sudoku.common.utils.sudoku.GameUtils;
 import com.sudoku.common.utils.sudoku.SudokuBuilder;
-import com.sudoku.project.convert.UserAnswerInformationConvert;
-import com.sudoku.project.model.bo.GameRecordBO;
-import com.sudoku.project.model.bo.UserAnswerInformationBO;
 import com.sudoku.project.model.bo.SudokuDataBO;
 import com.sudoku.project.model.bo.SudokuGridInformationBO;
 import com.sudoku.project.model.bo.SudokuRecordBO;
+import com.sudoku.project.model.bo.UserAnswerInformationBO;
 import com.sudoku.project.model.entity.SudokuLevel;
-import com.sudoku.project.model.vo.UserAnswerInformationVO;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +24,8 @@ public class SudokuService {
 
   private final GameUtils gameUtils;
 
-  private final UserAnswerInformationConvert userAnswerInformationConvert;
-
-  public SudokuService(GameUtils gameUtils, UserAnswerInformationConvert userAnswerInformationConvert) {
+  public SudokuService(GameUtils gameUtils) {
     this.gameUtils = gameUtils;
-    this.userAnswerInformationConvert = userAnswerInformationConvert;
   }
 
   /**
@@ -90,22 +84,6 @@ public class SudokuService {
   private SudokuGridInformationBO randomGridInformation(ArrayList<SudokuGridInformationBO> errorGridInformationList) {
     int size = errorGridInformationList.size();
     return size > 0 ? errorGridInformationList.get(getRandomInt(0, size - 1)) : null;
-  }
-
-  /**
-   * 获取用户的答题结果
-   *
-   * @param gameRecord 游戏记录
-   * @param situation  答题情况
-   * @return 用户答题情况
-   */
-  private UserAnswerInformationVO getUserAnswerResult(GameRecordBO gameRecord, AnswerSituation situation) {
-    UserAnswerInformationBO informationBO = UserAnswerInformationBO.builder()
-        .situation(situation)
-        .matrix(gameRecord.getSudokuDataBO().getMatrix())
-        .spendTime(PublicUtils.computeAbsDiff(gameRecord.getEndTime(), gameRecord.getStartTime()))
-        .build();
-    return userAnswerInformationConvert.convert(informationBO);
   }
 
   /**

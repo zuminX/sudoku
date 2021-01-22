@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
  *
  * @param <T> 源数据类型
  */
-@Builder
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class PageParam<T> {
@@ -23,10 +23,12 @@ public class PageParam<T> {
    * 分页查询方法
    */
   private Supplier<List<T>> queryFunc;
+
   /**
    * 查询的页数
    */
   private Integer page;
+
   /**
    * 每页个数
    */

@@ -3,6 +3,7 @@ package com.sudoku.project.convert;
 import com.sudoku.common.utils.PublicUtils;
 import com.sudoku.common.utils.sudoku.SudokuUtils;
 import com.sudoku.project.model.bo.SudokuRecordBO;
+import com.sudoku.project.model.body.RaceInformationBody;
 import com.sudoku.project.model.entity.SudokuRecord;
 import com.sudoku.project.model.result.SudokuRecordResultForHistory;
 import com.sudoku.project.model.vo.SudokuRecordVO;
@@ -28,7 +29,27 @@ public interface SudokuRecordConvert {
   @Mapping(target = "sudokuHoles", expression = "java(PublicUtils.compressionBoolArray(sudokuRecord.getSudokuDataBO().getHoles()))")
   SudokuRecord convert(SudokuRecordBO sudokuRecord);
 
+  /**
+   * 将竞赛信息对象转换为数独记录对象
+   *
+   * @param raceInformation 竞赛信息对象
+   * @return 数独记录对象
+   */
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "sudokuMatrix", expression = "java(PublicUtils.compressionIntList(raceInformation.getMatrix()))")
+  @Mapping(target = "sudokuHoles", expression = "java(PublicUtils.compressionBoolList(raceInformation.getHoles()))")
+  @Mapping(target = "startTime", source = "raceInformation.raceTimeRange.start")
+  @Mapping(target = "endTime", source = "raceInformation.raceTimeRange.end")
+  SudokuRecord convert(RaceInformationBody raceInformation);
+
+  /**
+   * 将查询历史数独记录的结果对象转换为数独记录显示对象
+   *
+   * @param sudokuRecordResult 查询历史数独记录的结果对象
+   * @return 数独记录显示对象
+   */
   @Mapping(target = "sudokuMatrix", expression = "java(SudokuUtils.unzipToMatrix(sudokuRecordResult.getSudokuMatrix()))")
   @Mapping(target = "sudokuHoles", expression = "java(SudokuUtils.unzipToHoles(sudokuRecordResult.getSudokuHoles()))")
   SudokuRecordVO convert(SudokuRecordResultForHistory sudokuRecordResult);
+
 }

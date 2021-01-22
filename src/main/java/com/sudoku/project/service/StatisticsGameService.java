@@ -2,7 +2,7 @@ package com.sudoku.project.service;
 
 import com.sudoku.common.constant.enums.StatisticsDate;
 import com.sudoku.project.core.GetStatisticsDataTemplate;
-import com.sudoku.project.mapper.GameRecordMapper;
+import com.sudoku.project.mapper.SudokuRecordMapper;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.cache.annotation.Cacheable;
@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class StatisticsGameService {
 
-  private final GameRecordMapper gameRecordMapper;
+  private final SudokuRecordMapper sudokuRecordMapper;
 
-  public StatisticsGameService(GameRecordMapper gameRecordMapper) {
-    this.gameRecordMapper = gameRecordMapper;
+  public StatisticsGameService(SudokuRecordMapper sudokuRecordMapper) {
+    this.sudokuRecordMapper = sudokuRecordMapper;
   }
 
   /**
@@ -30,7 +30,7 @@ public class StatisticsGameService {
    */
   @Cacheable(value = "statisticsGameData", keyGenerator = "simpleKG")
   public List<Integer> getGameTotal(LocalDate startDate, LocalDate endDate, StatisticsDate date) {
-    return new GetStatisticsDataTemplate<Integer>(startDate, endDate, date).getData(gameRecordMapper::countByDateBetween);
+    return new GetStatisticsDataTemplate<Integer>(startDate, endDate, date).getData(sudokuRecordMapper::countByDateBetween);
   }
 
   /**
@@ -40,6 +40,6 @@ public class StatisticsGameService {
    */
   @Cacheable(value = "gameTotal", keyGenerator = "simpleKG")
   public Integer getGameTotal() {
-    return gameRecordMapper.count();
+    return sudokuRecordMapper.count();
   }
 }

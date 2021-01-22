@@ -10,7 +10,15 @@ import lombok.Getter;
 public class FormParameterConversionException extends BaseException {
 
   private static final long serialVersionUID = 1166533932002631826L;
+
+  /**
+   * 转化字符串
+   */
   private String convertString;
+
+  /**
+   * 目标Class对象
+   */
   private Class<?> targetClass;
 
   /**

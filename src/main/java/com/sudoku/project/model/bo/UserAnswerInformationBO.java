@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 /**
  * 用户答题情况业务类
  */
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserAnswerInformationBO implements Serializable {
 
   private static final long serialVersionUID = 6641560930277580060L;

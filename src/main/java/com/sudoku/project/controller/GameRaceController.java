@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +34,7 @@ public class GameRaceController extends BaseController {
   @PreAuthorize("@ss.hasPermission('sudoku:race:add')")
   @ApiOperation("发布公开数独游戏竞赛")
   @ApiImplicitParam(name = "raceInformationBody", value = "竞赛内容信息体类", dataTypeClass = RaceInformationBody.class, required = true)
-  public void publishPublicRace(@RequestBody RaceInformationBody raceInformationBody) {
+  public void publishPublicRace(@Valid @RequestBody RaceInformationBody raceInformationBody) {
     raceInformationService.addPublicRace(raceInformationBody);
   }
 

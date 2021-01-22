@@ -8,10 +8,12 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import lombok.Data;
 
+/**
+ * 用户-角色中间表对应的实体类
+ */
 @Data
 @TableName(value = "merge_user_role")
 public class MergeUserRole implements Serializable {
-
 
   private static final long serialVersionUID = 6802935173945726932L;
 

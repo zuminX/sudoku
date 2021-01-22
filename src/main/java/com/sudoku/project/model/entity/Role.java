@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Role implements Serializable {
 
-
   private static final long serialVersionUID = -5419147180433797930L;
 
   /**

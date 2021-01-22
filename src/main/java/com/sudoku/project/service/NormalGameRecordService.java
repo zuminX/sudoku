@@ -20,6 +20,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 普通游戏记录的业务层类
+ */
 @Service
 public class NormalGameRecordService {
 
@@ -39,6 +42,13 @@ public class NormalGameRecordService {
     this.normalGameRecordConvert = normalGameRecordConvert;
   }
 
+  /**
+   * 新增游戏记录
+   *
+   * @param inputMatrix     用户输入的矩阵
+   * @param answerSituation 回答情况
+   * @param sudokuRecordBO  数独记录
+   */
   @Transactional
   public void insertGameRecord(List<List<Integer>> inputMatrix, AnswerSituation answerSituation, SudokuRecordBO sudokuRecordBO) {
     SudokuRecord sudokuRecord = sudokuRecordConvert.convert(sudokuRecordBO);
@@ -55,7 +65,7 @@ public class NormalGameRecordService {
   /**
    * 获取当前用户的游戏信息
    *
-   * @return 用户游戏信息的显示层列表
+   * @return 用户游戏信息列表
    */
   public List<UserGameInformationVO> getUserGameInformation() {
     return getUserGameInformation(SecurityUtils.getCurrentUserId());
@@ -65,7 +75,7 @@ public class NormalGameRecordService {
    * 根据用户ID，获取其游戏信息
    *
    * @param userId 用户ID
-   * @return 用户游戏信息的显示层列表
+   * @return 用户游戏信息列表
    */
   public List<UserGameInformationVO> getUserGameInformation(Integer userId) {
     return normalGameRecordMapper.selectGameInformationByUserId(userId);
@@ -88,7 +98,7 @@ public class NormalGameRecordService {
    * @param userId   用户ID
    * @param page     当前查询页
    * @param pageSize 每页显示的条数
-   * @return 游戏记录的分页信息
+   * @return 普通游戏记录的分页信息
    */
   public Page<NormalGameRecordVO> getHistoryGameRecordById(Integer userId, Integer page, Integer pageSize) {
     return getHistoryGameRecord(userId, page, pageSize);
@@ -100,7 +110,7 @@ public class NormalGameRecordService {
    * @param id       用户ID
    * @param page     当前查询页
    * @param pageSize 每页显示的条数
-   * @return 游戏记录的分页信息
+   * @return 普通游戏记录的分页信息
    */
   private Page<NormalGameRecordVO> getHistoryGameRecord(Integer id, Integer page, Integer pageSize) {
     return PageUtils.getPage(PageParam.<NormalGameRecordResultForHistory>builder()

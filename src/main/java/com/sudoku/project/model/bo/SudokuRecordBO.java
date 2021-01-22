@@ -1,5 +1,6 @@
 package com.sudoku.project.model.bo;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,9 @@ import org.springframework.data.annotation.Transient;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SudokuRecordBO {
+public class SudokuRecordBO implements Serializable {
+
+  private static final long serialVersionUID = 2502730297414700117L;
 
   /**
    * 数独记录的ID

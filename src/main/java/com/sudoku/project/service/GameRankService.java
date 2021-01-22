@@ -16,7 +16,6 @@ import com.sudoku.project.mapper.NormalGameRecordMapper;
 import com.sudoku.project.model.bo.RankItemBO;
 import com.sudoku.project.model.bo.RankItemDataBO;
 import com.sudoku.project.model.entity.User;
-import com.sudoku.project.model.entity.UserGameInformation;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -79,19 +78,6 @@ public class GameRankService {
     String rankingKey = getRankingKey(rankingType, sudokuLevelName);
     Long rank = redisUtils.getZSetRank(rankingKey, user.getUsername());
     return rank == null || rank > SettingParameter.RANKING_NUMBER ? null : rank;
-  }
-
-  /**
-   * 根据用户游戏信息更新对应的排名
-   *
-   * @param userGameInformation 用户游戏信息对象
-   */
-  public void updateCurrentUserRank(UserGameInformation userGameInformation) {
-    String username = SecurityUtils.getCurrentUser().getUsername();
-    Integer sudokuLevelId = userGameInformation.getSudokuLevelId();
-    updateUserRank(RankingType.AVERAGE_SPEND_TIME, sudokuLevelId, username, userGameInformation.getAverageSpendTime());
-    updateUserRank(RankingType.MIN_SPEND_TIME, sudokuLevelId, username, userGameInformation.getMinSpendTime());
-    updateUserRank(RankingType.CORRECT_NUMBER, sudokuLevelId, username, userGameInformation.getCorrectNumber());
   }
 
   /**

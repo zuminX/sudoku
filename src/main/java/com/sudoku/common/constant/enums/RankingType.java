@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
+@AllArgsConstructor
 @ApiModel("排行类型类")
 public enum RankingType {
 

@@ -12,7 +12,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 /**
- * 用户转换器
+ * 用户对象转换器
  */
 @Mapper(imports = SecurityUtils.class)
 public interface UserConvert {

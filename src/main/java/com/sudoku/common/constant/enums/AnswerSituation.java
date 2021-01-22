@@ -12,17 +12,17 @@ import lombok.ToString;
 @AllArgsConstructor
 public enum AnswerSituation {
   /**
+   * 与答案一致
+   */
+  IDENTICAL(0),
+  /**
    * 未完成
    */
   UNFINISHED(1),
   /**
    * 错误
    */
-  ERROR(2),
-  /**
-   * 与答案一致
-   */
-  IDENTICAL(0);
+  ERROR(2);
 
   /**
    * 编号

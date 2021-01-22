@@ -12,5 +12,11 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface RaceInformationMapper extends BaseMapper<RaceInformation> {
 
+  /**
+   * 查询在指定结束日期时间前的竞赛信息
+   *
+   * @param maxEndTime 最大的结束日期时间
+   * @return 竞赛信息列表
+   */
   List<RaceInformationVO> selectAllByEndTimeBefore(@Param("maxEndTime") LocalDateTime maxEndTime);
 }

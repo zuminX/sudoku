@@ -3,9 +3,7 @@ package com.sudoku.project.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sudoku.project.model.entity.SudokuLevel;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -38,21 +36,6 @@ public interface SudokuLevelMapper extends BaseMapper<SudokuLevel> {
    */
   @Cacheable(value = "sudokuLevelIds", keyGenerator = "simpleKG")
   List<Integer> selectId();
-
-  /**
-   * 获取数独等级ID到数独等级名的映射表
-   *
-   * @return 数独等级ID到数独等级名的映射表
-   */
-  @Cacheable(value = "sudokuLevelIdToNameMap", keyGenerator = "simpleKG")
-  default Map<String, String> selectIdToName() {
-    List<SudokuLevel> sudokuLevels = selectAll();
-    //TODO 此处存在bug，redis返回的数据类型为Map<String,String>
-    return sudokuLevels.stream()
-        .collect(
-            Collectors.toMap(sudokuLevel -> String.valueOf(sudokuLevel.getId()), SudokuLevel::getName,
-                (a, b) -> b));
-  }
 
   /**
    * 根据数独等级值查询数独等级

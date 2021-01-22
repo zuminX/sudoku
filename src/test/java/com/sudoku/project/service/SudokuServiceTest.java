@@ -14,7 +14,6 @@ import com.sudoku.common.constant.enums.AnswerSituation;
 import com.sudoku.common.utils.SecurityUtils;
 import com.sudoku.common.utils.sudoku.GameUtils;
 import com.sudoku.common.utils.sudoku.SudokuBuilder;
-import com.sudoku.project.convert.UserAnswerInformationConvert;
 import com.sudoku.project.model.bo.SudokuDataBO;
 import com.sudoku.project.model.bo.SudokuGridInformationBO;
 import com.sudoku.project.model.bo.UserAnswerInformationBO;
@@ -25,7 +24,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -50,7 +48,7 @@ public class SudokuServiceTest {
   @Before
   public void setUp() {
     gameUtils = spy(gameUtils);
-    sudokuService = new SudokuService(gameUtils, Mappers.getMapper(UserAnswerInformationConvert.class));
+    sudokuService = new SudokuService(gameUtils);
 
     mockStatic(SudokuBuilder.class);
     mockStatic(SecurityUtils.class);

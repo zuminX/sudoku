@@ -8,7 +8,9 @@
     <result column="role_id" jdbcType="INTEGER" property="roleId"/>
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_id, role_id
+    id,
+    user_id,
+    role_id
   </sql>
 
   <insert id="batchInsert" parameterType="list">
@@ -24,5 +26,4 @@
     from merge_user_role
     where user_id = #{userId,jdbcType=INTEGER}
   </delete>
-
 </mapper>

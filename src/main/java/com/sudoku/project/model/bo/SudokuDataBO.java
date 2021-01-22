@@ -8,8 +8,8 @@ import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
 @ApiModel("数独数据业务类")
 public class SudokuDataBO implements Serializable {
 
