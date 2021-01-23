@@ -8,9 +8,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 /**
- * 分页对象转换器
+ * 分页对象转换器 componentModel需手动指定为default，否则默认为spring，在测试中会无法注入PageInformationConvert而发生空指针异常
  */
-@Mapper(uses = PageInformationConvert.class)
+@Mapper(uses = PageInformationConvert.class, componentModel = "default")
 @SuppressWarnings("rawtypes")
 public interface PageConvert {
 
