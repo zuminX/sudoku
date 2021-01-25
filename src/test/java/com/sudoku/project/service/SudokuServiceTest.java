@@ -114,7 +114,7 @@ public class SudokuServiceTest {
     List<List<Integer>> userMatrix = SudokuDataUtils.getMatrixList();
     userMatrix.get(8).set(8, null);
 
-    verifyUserAnswerInformation(sudokuService.checkSudokuData(userMatrix), AnswerSituation.UNFINISHED);
+    verifyUserAnswerInformation(sudokuService.checkSudokuData(userMatrix), AnswerSituation.ERROR);
   }
 
   /**

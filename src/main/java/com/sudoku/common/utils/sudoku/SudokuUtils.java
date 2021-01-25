@@ -1,6 +1,8 @@
 package com.sudoku.common.utils.sudoku;
 
+import com.sudoku.common.tools.functional.TriConsumer;
 import com.sudoku.common.utils.PublicUtils;
+import com.sudoku.common.utils.TwoDimensionalListUtils;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -70,13 +72,8 @@ public class SudokuUtils {
    */
   public static int[][] setVacancyGridToZero(int[][] matrix, boolean[][] holes) {
     int[][] cloneMatrix = PublicUtils.deepClone(matrix);
-    for (int i = 0; i < 9; i++) {
-      for (int j = 0; j < 9; j++) {
-        if (SudokuUtils.isHole(holes, i, j)) {
-          cloneMatrix[i][j] = 0;
-        }
-      }
-    }
+    TriConsumer<Integer, Integer, Boolean> setMatrixToZero = (i, j, value) -> cloneMatrix[i][j] = 0;
+    TwoDimensionalListUtils.forEach(PublicUtils.wrap(holes), setMatrixToZero.condition((i, j, value) -> value));
     return cloneMatrix;
   }
 

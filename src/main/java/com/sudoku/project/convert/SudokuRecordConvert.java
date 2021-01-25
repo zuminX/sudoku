@@ -24,7 +24,6 @@ public interface SudokuRecordConvert {
    * @param sudokuRecord 数独记录业务层对象
    * @return 数独记录表对应的实体类对象
    */
-  @Mapping(target = "id", ignore = true)
   @Mapping(target = "sudokuMatrix", expression = "java(PublicUtils.compressionIntArray(sudokuRecord.getSudokuDataBO().getMatrix()))")
   @Mapping(target = "sudokuHoles", expression = "java(PublicUtils.compressionBoolArray(sudokuRecord.getSudokuDataBO().getHoles()))")
   SudokuRecord convert(SudokuRecordBO sudokuRecord);

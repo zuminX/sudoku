@@ -6,13 +6,10 @@ import com.sudoku.common.tools.page.PageParam;
 import com.sudoku.common.tools.page.PageUtils;
 import com.sudoku.common.utils.PublicUtils;
 import com.sudoku.common.utils.SecurityUtils;
+import com.sudoku.common.utils.sudoku.GameUtils;
 import com.sudoku.project.convert.NormalGameRecordConvert;
-import com.sudoku.project.convert.SudokuRecordConvert;
 import com.sudoku.project.mapper.NormalGameRecordMapper;
-import com.sudoku.project.mapper.SudokuRecordMapper;
-import com.sudoku.project.model.bo.SudokuRecordBO;
 import com.sudoku.project.model.entity.NormalGameRecord;
-import com.sudoku.project.model.entity.SudokuRecord;
 import com.sudoku.project.model.result.NormalGameRecordResultForHistory;
 import com.sudoku.project.model.vo.NormalGameRecordVO;
 import com.sudoku.project.model.vo.UserGameInformationVO;
@@ -28,37 +25,39 @@ public class NormalGameRecordService {
 
   private final NormalGameRecordMapper normalGameRecordMapper;
 
-  private final SudokuRecordMapper sudokuRecordMapper;
-
-  private final SudokuRecordConvert sudokuRecordConvert;
-
   private final NormalGameRecordConvert normalGameRecordConvert;
 
-  public NormalGameRecordService(NormalGameRecordMapper normalGameRecordMapper, SudokuRecordMapper sudokuRecordMapper,
-      SudokuRecordConvert sudokuRecordConvert, NormalGameRecordConvert normalGameRecordConvert) {
+  private final GameUtils gameUtils;
+
+  public NormalGameRecordService(NormalGameRecordMapper normalGameRecordMapper, NormalGameRecordConvert normalGameRecordConvert,
+      GameUtils gameUtils) {
     this.normalGameRecordMapper = normalGameRecordMapper;
-    this.sudokuRecordMapper = sudokuRecordMapper;
-    this.sudokuRecordConvert = sudokuRecordConvert;
     this.normalGameRecordConvert = normalGameRecordConvert;
+    this.gameUtils = gameUtils;
   }
 
   /**
-   * 新增游戏记录
+   * 更新游戏记录
    *
    * @param inputMatrix     用户输入的矩阵
    * @param answerSituation 回答情况
-   * @param sudokuRecordBO  数独记录
    */
   @Transactional
-  public void insertGameRecord(List<List<Integer>> inputMatrix, AnswerSituation answerSituation, SudokuRecordBO sudokuRecordBO) {
-    SudokuRecord sudokuRecord = sudokuRecordConvert.convert(sudokuRecordBO);
-    sudokuRecordMapper.insert(sudokuRecord);
+  public void updateGameRecord(List<List<Integer>> inputMatrix, AnswerSituation answerSituation) {
+    normalGameRecordMapper.updateInputMatrixAndAnswerSituationBySudokuRecordId(
+        PublicUtils.compressionIntList(inputMatrix),
+        answerSituation.getCode(),
+        gameUtils.getSudokuRecord().getId());
+  }
 
+  /**
+   * 插入当前游戏的游戏记录
+   */
+  @Transactional
+  public void insertNowGameRecord() {
     NormalGameRecord normalGameRecord = NormalGameRecord.builder()
-        .inputMatrix(PublicUtils.compressionIntList(inputMatrix))
-        .answerSituation(answerSituation.getCode())
         .userId(SecurityUtils.getCurrentUserId())
-        .sudokuRecordId(sudokuRecord.getSudokuLevelId()).build();
+        .sudokuRecordId(gameUtils.getSudokuRecord().getSudokuLevelId()).build();
     normalGameRecordMapper.insert(normalGameRecord);
   }
 

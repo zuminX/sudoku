@@ -52,4 +52,15 @@ public interface NormalGameRecordMapper extends BaseMapper<NormalGameRecord> {
    * @return 该用户的游戏信息
    */
   List<UserGameInformationVO> selectGameInformationByUserId(Integer userId);
+
+  /**
+   * 更新指定数独记录的游戏记录中的输入矩阵和回答情况
+   *
+   * @param inputMatrix     输入矩阵
+   * @param answerSituation 回答情况
+   * @param sudokuRecordId  数独记录ID
+   * @return 影响行数
+   */
+  int updateInputMatrixAndAnswerSituationBySudokuRecordId(@Param("inputMatrix") String inputMatrix,
+      @Param("answerSituation") Integer answerSituation, @Param("sudokuRecordId") Integer sudokuRecordId);
 }

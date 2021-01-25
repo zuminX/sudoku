@@ -20,6 +20,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityUtils {
 
   /**
+   * 私有构造方法，防止实例化
+   */
+  private SecurityUtils() {
+  }
+
+  /**
    * 获取当前登录的用户
    *
    * @return 登录用户对象

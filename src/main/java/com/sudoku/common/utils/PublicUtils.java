@@ -56,6 +56,15 @@ public class PublicUtils {
     return result;
   }
 
+  public static Integer[][] wrap(int[][] list) {
+    return Arrays.stream(list).map(ArrayUtil::wrap).toArray(Integer[][]::new);
+  }
+
+
+  public static Boolean[][] wrap(boolean[][] list) {
+    return Arrays.stream(list).map(ArrayUtil::wrap).toArray(Boolean[][]::new);
+  }
+
   /**
    * 将二维Boolean型List转为二维boolean数组
    *

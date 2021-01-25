@@ -3,7 +3,6 @@ package com.sudoku.common.utils.sudoku;
 import static com.sudoku.common.constant.consist.RedisKeys.SUDOKU_RECORD_PREFIX;
 import static com.sudoku.common.constant.enums.AnswerSituation.ERROR;
 import static com.sudoku.common.constant.enums.AnswerSituation.IDENTICAL;
-import static com.sudoku.common.constant.enums.AnswerSituation.UNFINISHED;
 import static com.sudoku.common.utils.sudoku.SudokuUtils.isNotHole;
 
 import com.sudoku.common.constant.enums.AnswerSituation;
@@ -43,22 +42,18 @@ public class GameUtils {
     int[][] matrix = sudokuDataBO.getMatrix();
     boolean[][] holes = sudokuDataBO.getHoles();
 
-    AnswerSituation situation = IDENTICAL;
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
         if (isNotHole(holes, i, j)) {
           continue;
         }
         Integer userValue = userMatrix.get(i).get(j);
-        if (userValue == null) {
-          return UNFINISHED;
-        }
-        if (situation == IDENTICAL && userValue != matrix[i][j]) {
-          situation = ERROR;
+        if (userValue == null || userValue != matrix[i][j]) {
+          return ERROR;
         }
       }
     }
-    return situation;
+    return IDENTICAL;
   }
 
   /**
@@ -84,6 +79,14 @@ public class GameUtils {
    */
   public void removeSudokuRecord() {
     redisUtils.deleteObject(getSudokuRecordKey());
+  }
+
+  /**
+   * 判断当前数独记录是否为记录模式
+   * @return 若是记录模式返回true，若不是记录模式或当前不存在记录则返回false
+   */
+  public boolean isRecord() {
+    return getSudokuRecord().isRecord();
   }
 
   /**

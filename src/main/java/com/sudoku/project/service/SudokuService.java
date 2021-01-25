@@ -4,6 +4,7 @@ import static com.sudoku.common.utils.PublicUtils.getRandomInt;
 
 import com.sudoku.common.constant.enums.AnswerSituation;
 import com.sudoku.common.utils.PublicUtils;
+import com.sudoku.common.utils.TwoDimensionalListUtils;
 import com.sudoku.common.utils.sudoku.GameUtils;
 import com.sudoku.common.utils.sudoku.SudokuBuilder;
 import com.sudoku.project.model.bo.SudokuDataBO;
@@ -60,19 +61,27 @@ public class SudokuService {
    * @return 用户答题情况
    */
   public UserAnswerInformationBO checkSudokuData(List<List<Integer>> userMatrix) {
+    updateEndTimeForSudokuRecord();
+
     SudokuRecordBO sudokuRecord = gameUtils.getSudokuRecord();
-    SudokuDataBO sudokuDataBO = sudokuRecord.getSudokuDataBO();
-    sudokuRecord.setEndTime(LocalDateTime.now());
+    SudokuDataBO sudokuDataBO = gameUtils.getSudokuRecord().getSudokuDataBO();
 
     AnswerSituation situation = GameUtils.judgeAnswerSituation(userMatrix, sudokuDataBO);
-
-    gameUtils.setSudokuRecord(sudokuRecord);
 
     return UserAnswerInformationBO.builder()
         .situation(situation)
         .matrix(sudokuDataBO.getMatrix())
         .spendTime(PublicUtils.computeAbsDiff(sudokuRecord.getEndTime(), sudokuRecord.getStartTime()))
         .build();
+  }
+
+  /**
+   * 更新Redis中的数独记录的结束时间字段
+   */
+  private void updateEndTimeForSudokuRecord() {
+    SudokuRecordBO sudokuRecord = gameUtils.getSudokuRecord();
+    sudokuRecord.setEndTime(LocalDateTime.now());
+    gameUtils.setSudokuRecord(sudokuRecord);
   }
 
   /**
@@ -111,15 +120,8 @@ public class SudokuService {
    */
   private ArrayList<SudokuGridInformationBO> findErrorGridInformation(SudokuDataBO sudokuDataBO, List<List<Integer>> userMatrix) {
     ArrayList<SudokuGridInformationBO> errorGridInformationList = new ArrayList<>();
-    int[][] matrix = sudokuDataBO.getMatrix();
-    for (int i = 0; i < 9; i++) {
-      for (int j = 0; j < 9; j++) {
-        Integer userValue = userMatrix.get(i).get(j);
-        if (userValue == null || userValue != matrix[i][j]) {
-          errorGridInformationList.add(new SudokuGridInformationBO(i, j, matrix[i][j]));
-        }
-      }
-    }
+    TwoDimensionalListUtils.forEachIfNotEquals(sudokuDataBO.getMatrix(), userMatrix,
+        (i, j, topicValue, userValue) -> errorGridInformationList.add(new SudokuGridInformationBO(i, j, topicValue)));
     return errorGridInformationList;
   }
 

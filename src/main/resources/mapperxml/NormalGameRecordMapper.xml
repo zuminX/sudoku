@@ -120,4 +120,11 @@
     where user_id = #{userId,jdbcType=INTEGER}
     group by sudoku_level_id
   </select>
+
+  <update id="updateInputMatrixAndAnswerSituationBySudokuRecordId">
+    update normal_game_record
+    set input_matrix=#{inputMatrix,jdbcType=CHAR},
+        answer_situation=#{answerSituation,jdbcType=TINYINT}
+    where sudoku_record_id = #{sudokuRecordId,jdbcType=INTEGER}
+  </update>
 </mapper>
