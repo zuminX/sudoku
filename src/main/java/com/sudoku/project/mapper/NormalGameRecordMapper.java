@@ -22,6 +22,16 @@ public interface NormalGameRecordMapper extends BaseMapper<NormalGameRecord> {
   List<NormalGameRecordResultForHistory> findByUserIdOrderByStartTimeDesc(@Param("userId") Integer userId);
 
   /**
+   * 根据用户ID查找其不属于指定数独记录ID的游戏记录，且结果按开始时间降序排序
+   *
+   * @param userId               用户ID
+   * @param ignoreSudokuRecordId 排除的数独记录ID
+   * @return 查询历史普通游戏记录结果的列表
+   */
+  List<NormalGameRecordResultForHistory> findByUserIdOrderByStartTimeDescIgnoreOneSudokuRecord(@Param("userId") Integer userId,
+      @Param("ignoreSudokuRecordId") Integer ignoreSudokuRecordId);
+
+  /**
    * 查询平均花费时间的排名
    *
    * @param limitNumber 最多的排名数

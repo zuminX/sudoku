@@ -27,7 +27,8 @@ public class ResourceService {
    * @return 资源列表
    */
   public Set<String> getUserPermission(User user) {
-    return SecurityUtils.isAdmin(user) ? Collections.singleton(PermissionConstants.ADMIN_PERMISSION)
+    return SecurityUtils.isAdmin(user) ?
+        Collections.singleton(PermissionConstants.ADMIN_PERMISSION)
         : resourceMapper.selectPermsByUserId(user.getId());
   }
 }

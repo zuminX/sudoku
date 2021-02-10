@@ -41,7 +41,6 @@ public class GameUtils {
   public static AnswerSituation judgeAnswerSituation(List<List<Integer>> userMatrix, SudokuDataBO sudokuDataBO) {
     int[][] matrix = sudokuDataBO.getMatrix();
     boolean[][] holes = sudokuDataBO.getHoles();
-
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
         if (isNotHole(holes, i, j)) {

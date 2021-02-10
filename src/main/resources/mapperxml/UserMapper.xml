@@ -98,7 +98,7 @@
         and enabled = #{user.enabled,jdbcType=BOOLEAN}
       </if>
       <if test="user.roleNameList != null and user.roleNameList.size() > 0">
-        role_name in
+        and role_name in
         <foreach close=")" collection="user.roleNameList" item="name" open="(" separator=",">
           #{name,jdbcType=VARCHAR}
         </foreach>

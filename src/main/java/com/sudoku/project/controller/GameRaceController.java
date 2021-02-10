@@ -46,7 +46,7 @@ public class GameRaceController extends BaseController {
 
   @PostMapping("/joinPublicRace")
   @ApiOperation("参加公开数独游戏竞赛")
-  @ApiImplicitParam(name = "raceInformationBody", value = "竞赛内容信息体类", dataTypeClass = RaceInformationBody.class, required = true)
+  @ApiImplicitParam(name = "raceId", value = "竞赛ID", dataTypeClass = Integer.class, required = true)
   public SudokuDataBO joinPublicRace(@RequestParam Integer raceId) {
     return null;
   }

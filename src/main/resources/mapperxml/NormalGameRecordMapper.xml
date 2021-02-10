@@ -69,6 +69,23 @@
     order by start_time desc
   </select>
 
+
+  <select id="findByUserIdOrderByStartTimeDescIgnoreOneSudokuRecord" resultMap="NormalGameRecordResultForHistoryMap">
+    select ngr.input_matrix,
+           ngr.answer_situation,
+           sr.sudoku_matrix,
+           sr.sudoku_holes,
+           sr.start_time,
+           sr.end_time,
+           sl.name
+    from normal_game_record ngr
+           inner join sudoku_record sr on ngr.sudoku_record_id = sr.id
+           inner join sudoku_level sl on sr.sudoku_level_id = sl.id
+    where user_id = #{userId,jdbcType=INTEGER}
+      and sr.id != #{ignoreSudokuRecordId,jdbcType=INTEGER}
+    order by start_time desc
+  </select>
+
   <select id="selectAverageSpendTimeRanking" resultMap="RankItemBOMap">
     WITH tmp as (
       select user_id,

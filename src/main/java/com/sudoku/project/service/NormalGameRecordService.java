@@ -14,6 +14,7 @@ import com.sudoku.project.model.result.NormalGameRecordResultForHistory;
 import com.sudoku.project.model.vo.NormalGameRecordVO;
 import com.sudoku.project.model.vo.UserGameInformationVO;
 import java.util.List;
+import java.util.function.Supplier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,7 +89,13 @@ public class NormalGameRecordService {
    * @return 游戏记录的分页信息
    */
   public Page<NormalGameRecordVO> getHistoryGameRecord(Integer page, Integer pageSize) {
-    return getHistoryGameRecord(SecurityUtils.getCurrentUserId(), page, pageSize);
+    Integer userId = SecurityUtils.getCurrentUserId();
+    if (!gameUtils.isRecord()) {
+      return getHistoryGameRecordById(userId, page, pageSize);
+    }
+    Integer nowSudokuRecordId = gameUtils.getSudokuRecord().getId();
+    return getHistoryGameRecord(page, pageSize,
+        () -> normalGameRecordMapper.findByUserIdOrderByStartTimeDescIgnoreOneSudokuRecord(userId, nowSudokuRecordId));
   }
 
   /**
@@ -100,20 +107,21 @@ public class NormalGameRecordService {
    * @return 普通游戏记录的分页信息
    */
   public Page<NormalGameRecordVO> getHistoryGameRecordById(Integer userId, Integer page, Integer pageSize) {
-    return getHistoryGameRecord(userId, page, pageSize);
+    return getHistoryGameRecord(page, pageSize, () -> normalGameRecordMapper.findByUserIdOrderByStartTimeDesc(userId));
   }
 
   /**
-   * 获取指定用户的历史游戏记录
+   * 获取历史游戏记录
    *
-   * @param id       用户ID
    * @param page     当前查询页
    * @param pageSize 每页显示的条数
+   * @param supplier 查询函数
    * @return 普通游戏记录的分页信息
    */
-  private Page<NormalGameRecordVO> getHistoryGameRecord(Integer id, Integer page, Integer pageSize) {
+  private Page<NormalGameRecordVO> getHistoryGameRecord(Integer page, Integer pageSize,
+      Supplier<List<NormalGameRecordResultForHistory>> supplier) {
     return PageUtils.getPage(PageParam.<NormalGameRecordResultForHistory>builder()
-            .queryFunc(() -> normalGameRecordMapper.findByUserIdOrderByStartTimeDesc(id))
+            .queryFunc(supplier)
             .page(page)
             .pageSize(pageSize)
             .build(),
