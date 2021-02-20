@@ -1,11 +1,15 @@
 package com.sudoku.framework.security;
 
+import cn.hutool.core.util.ArrayUtil;
 import com.sudoku.common.constant.enums.StatusCode;
 import com.sudoku.common.tools.ServletUtils;
 import com.sudoku.framework.security.filter.JwtAuthenticationTokenFilter;
 import com.sudoku.framework.security.handler.CustomizeLogoutSuccessHandler;
 import com.sudoku.project.model.vo.CommonResult;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,6 +17,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,9 +31,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final CustomizeLogoutSuccessHandler logoutSuccessHandler;
+
   private final JwtAuthenticationTokenFilter authenticationTokenFilter;
+
   @Resource
   private UserDetailsService userDetailsService;
+
+  @Value("${management.allow-ips}")
+  private String[] requestActuatorIpList;
 
   public SecurityConfig(CustomizeLogoutSuccessHandler logoutSuccessHandler,
       JwtAuthenticationTokenFilter authenticationTokenFilter) {
@@ -47,13 +57,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   /**
-   * 设置用户服务对象
+   * 解析IP列表
    *
-   * @param auth 身份验证管理器生成器
+   * @param ipList IP列表
+   * @return Spring Security对应的EL表达式
    */
-  @Override
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userDetailsService).passwordEncoder(SecurityConfig.passwordEncoder());
+  private static String resolveIpList(String[] ipList) {
+    return ArrayUtil.isEmpty(ipList) ? "" : IntStream.range(1, ipList.length)
+        .mapToObj(i -> "or hasIpAddress('" + ipList[i] + "')")
+        .collect(Collectors.joining("", "hasIpAddress('" + ipList[0] + "')", ""));
   }
 
   /**
@@ -80,6 +92,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   /**
+   * 设置用户服务对象
+   *
+   * @param auth 身份验证管理器生成器
+   */
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.userDetailsService(userDetailsService).passwordEncoder(SecurityConfig.passwordEncoder());
+  }
+
+  /**
    * 过滤所有的请求，除了configure(WebSecurity web)方法忽略的请求
    *
    * @param security Http安全对象
@@ -93,7 +115,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     cancelSession(security);
     filterRequests(security);
     setJWTFilter(security);
-    security.headers().disable();
+    disableSecurityHeader(security);
   }
 
   /**
@@ -139,15 +161,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   /**
-   * 过滤请求 除登录、验证码图片、注册允许匿名访问 其他均需认证
+   * 过滤请求
    *
    * @param security Http安全对象
    * @throws Exception 异常
    */
   private void filterRequests(HttpSecurity security) throws Exception {
-    security.authorizeRequests()
-        .antMatchers("/security/login", "/security/captchaImage", "/user/register").permitAll()
-        .anyRequest().authenticated();
+    ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry requests = security.authorizeRequests();
+    permitLoginRequest(requests);
+    permitRegisterRequest(requests);
+    authenticateActuatorRequest(requests);
+    authenticateOtherRequest(requests);
   }
 
   /**
@@ -157,6 +181,42 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
    */
   private void setJWTFilter(HttpSecurity security) {
     security.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+  }
+
+  /**
+   * 允许登录、获取验证码图片请求无限制访问
+   *
+   * @param requests 注册表对象
+   */
+  private void permitLoginRequest(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry requests) {
+    requests.antMatchers("/security/login", "/security/captchaImage").permitAll();
+  }
+
+  /**
+   * 允许注册请求无限制访问
+   *
+   * @param requests 注册表对象
+   */
+  private void permitRegisterRequest(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry requests) {
+    requests.antMatchers("/user/register").permitAll();
+  }
+
+  /**
+   * 限制请求Actuator资源的用户IP
+   *
+   * @param requests 注册表对象
+   */
+  private void authenticateActuatorRequest(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry requests) {
+    requests.antMatchers("/actuator/**").access(resolveIpList(requestActuatorIpList));
+  }
+
+  /**
+   * 其他请求都需要认证授权
+   *
+   * @param requests 注册表对象
+   */
+  private void authenticateOtherRequest(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry requests) {
+    requests.anyRequest().authenticated();
   }
 
   /**
@@ -180,5 +240,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         "/v2/api-docs",
         "/v3/api-docs",
         "/webjars/**");
+  }
+
+  /**
+   * 禁用Headers
+   *
+   * @param security Web安全对象
+   * @throws Exception 异常
+   */
+  private void disableSecurityHeader(HttpSecurity security) throws Exception {
+    security.headers().disable();
   }
 }

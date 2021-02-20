@@ -1,10 +1,23 @@
 spring:
   datasource:
-    #  数据源配置
+    #数据源配置
     username: sudoku
     password: root
     url: jdbc:mysql://rm-bp18y14er10ug8pk93o.mysql.rds.aliyuncs.com:3306/sudoku?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
 
+  #应用监控
+  boot:
+    admin:
+      client:
+        url: http://localhost:8088
+        instance:
+          service-base-url: http://localhost:8081
+
 captcha:
   #开启验证码
   enabled: true
+
+#暴露应用状态
+management:
+  #设置允许访问状态的地址
+  allow-ips: 127.0.0.1/32, 47.101.210.178

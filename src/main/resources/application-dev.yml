@@ -1,9 +1,17 @@
 spring:
   datasource:
-    #  数据源配置
+    #数据源配置
     username: root
     password: '${SUDOKU_MYSQL_PASSWORD}'
     url: jdbc:mysql://localhost:3306/sudoku?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+
+  #应用监控
+  boot:
+    admin:
+      client:
+        url: http://localhost:8088
+        instance:
+          service-base-url: http://localhost:8081
 
 logging:
   level:

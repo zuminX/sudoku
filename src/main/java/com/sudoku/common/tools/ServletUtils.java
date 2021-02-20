@@ -28,8 +28,9 @@ public class ServletUtils {
    * @throws IOException IO异常
    */
   public static void returnJsonData(HttpServletResponse response, Object data) throws IOException {
+    response.setContentType("application/json");
+    response.setCharacterEncoding("utf-8");
     PrintWriter writer = response.getWriter();
-    response.setHeader("Content-Type", "application/json;charset=utf-8");
     writer.write(new ObjectMapper().writeValueAsString(data));
     writer.flush();
     writer.close();

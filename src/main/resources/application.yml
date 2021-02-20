@@ -34,6 +34,15 @@ spring:
   cache:
     type: redis
 
+  #应用监控
+  boot:
+    admin:
+      client:
+        username: admin
+        password: 2233-qqaazz
+        instance:
+          name: sudoku-client
+
 #mybatis配置
 mybatis-plus:
   mapper-locations: classpath:mapperxml/*.xml
@@ -86,3 +95,15 @@ xxl:
       #执行器的AppName
       appname: sudoku-executor
     accessToken: zumin
+
+#暴露应用状态
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  #设置允许访问状态的地址
+  allow-ips: 127.0.0.1/32
