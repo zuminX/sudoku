@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sudoku.system.mapper.ResourceMapper">
+  <resultMap id="BaseResultMap" type="com.sudoku.system.model.entity.Resource">
+    <!--@Table `resource`-->
+    <id column="id" jdbcType="INTEGER" property="id"/>
+    <result column="perms" jdbcType="VARCHAR" property="perms"/>
+    <result column="name_zh" jdbcType="VARCHAR" property="nameZh"/>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id,
+    perms,
+    name_zh
+  </sql>
+
+  <select id="selectPermsByUserId" resultType="java.lang.String">
+    select distinct resource.perms, ur.user_id
+    from resource
+           inner join merge_resource_role rr on resource.`id` = rr.resource_id
+           inner join role r on r.`id` = rr.role_id
+           inner join merge_user_role ur on r.id = ur.role_id
+    where user_id = #{userId}
+  </select>
+</mapper>

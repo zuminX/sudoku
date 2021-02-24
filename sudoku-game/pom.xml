@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>sudoku</artifactId>
+    <groupId>com</groupId>
+    <version>1.0.0</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>jar</packaging>
+
+  <artifactId>sudoku-game</artifactId>
+  <name>sudoku-game</name>
+  <description>数独游戏模块</description>
+
+  <dependencies>
+    <!-- 系统模块 -->
+    <dependency>
+      <groupId>com</groupId>
+      <artifactId>sudoku-system</artifactId>
+    </dependency>
+
+    <!-- SpringBoot 热启动工具 -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+      <scope>runtime</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <!-- 健康监控 -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
+    <!-- Spring Boot 应用监控工具客户端 -->
+    <dependency>
+      <groupId>de.codecentric</groupId>
+      <artifactId>spring-boot-admin-starter-client</artifactId>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+    <!-- 开发环境配置 -->
+    <profile>
+      <id>dev</id>
+      <properties>
+        <package.environment>dev</package.environment>
+      </properties>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
+
+    <!-- 生产环境配置 -->
+    <profile>
+      <id>prod</id>
+      <properties>
+        <package.environment>prod</package.environment>
+      </properties>
+    </profile>
+
+    <!-- 测试环境配置 -->
+    <profile>
+      <id>test</id>
+      <properties>
+        <package.environment>test</package.environment>
+      </properties>
+    </profile>
+  </profiles>
+
+  <build>
+    <finalName>sudoku</finalName>
+
+    <!-- 设置配置文件路径 -->
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>application.yml</include>
+          <include>application-${package.environment}.yml</include>
+          <include>**/*.xml</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>../sudoku-system/src/main/resources</directory>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${spring-boot-maven-plugin.version}</version>
+        <configuration>
+          <fork>true</fork>
+          <excludes>
+            <exclude>
+              <groupId>org.springframework.boot</groupId>
+              <artifactId>spring-boot-configuration-processor</artifactId>
+            </exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
