@@ -1,7 +1,6 @@
 package com.sudoku.system.controller;
 
 import com.sudoku.common.constant.enums.StatusCode;
-import com.sudoku.common.core.controller.BaseController;
 import com.sudoku.common.exception.UserException;
 import com.sudoku.common.tools.page.Page;
 import com.sudoku.system.model.body.AddUserBody;
@@ -31,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 @Validated
 @Api(tags = "用户API接口")
-public class UserController extends BaseController {
+public class UserController {
 
   private final UserService userService;
 

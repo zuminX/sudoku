@@ -2,7 +2,6 @@ package com.sudoku.system.controller;
 
 import com.sudoku.common.constant.enums.StatisticsDate;
 import com.sudoku.common.constant.enums.StatusCode;
-import com.sudoku.common.core.controller.BaseController;
 import com.sudoku.common.exception.StatisticsException;
 import com.sudoku.system.model.bo.StatisticsUserDataBO;
 import com.sudoku.system.service.StatisticsUserService;
@@ -26,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/statistics")
 @Validated
 @Api(tags = "统计信息API接口")
-public class StatisticsUserController extends BaseController {
+public class StatisticsUserController {
 
   private final StatisticsUserService statisticsUserService;
 

@@ -1,6 +1,5 @@
 package com.sudoku.system.controller;
 
-import com.sudoku.common.core.controller.BaseController;
 import com.sudoku.system.model.vo.RoleVO;
 import com.sudoku.system.service.RoleService;
 import io.swagger.annotations.Api;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/role")
 @Api(tags = "系统角色API接口")
-public class RoleController extends BaseController {
+public class RoleController {
 
   private final RoleService roleService;
 

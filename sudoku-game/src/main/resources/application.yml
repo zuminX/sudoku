@@ -105,5 +105,4 @@ management:
   endpoint:
     health:
       show-details: always
-  #设置允许访问状态的地址
-  allow-ips: 127.0.0.1/32
+  accessToken: 2233-qqaazz

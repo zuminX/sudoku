@@ -1,6 +1,5 @@
 package com.sudoku.system.controller;
 
-import com.sudoku.common.core.controller.BaseController;
 import com.sudoku.common.core.domain.CommonResult;
 import com.sudoku.system.model.body.LoginBody;
 import com.sudoku.system.model.vo.LoginSuccessVO;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RequestMapping("/security")
 @Api(tags = "登录API接口")
-public class LoginController extends BaseController {
+public class LoginController {
 
   private final LoginService loginService;
   private final CaptchaService captchaService;

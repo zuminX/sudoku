@@ -1,6 +1,5 @@
 package com.sudoku.system.controller;
 
-import com.sudoku.common.core.controller.BaseController;
 import com.sudoku.system.model.vo.CaptchaVO;
 import com.sudoku.system.service.CaptchaService;
 import io.swagger.annotations.Api;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/security")
 @Api(tags = "验证码API接口")
-public class CaptchaController extends BaseController {
+public class CaptchaController {
 
   private final CaptchaService captchaService;
 

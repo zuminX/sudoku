@@ -9,7 +9,6 @@ import com.sudoku.system.security.handler.CustomizeLogoutSuccessHandler;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.annotation.Resource;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -36,9 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Resource
   private UserDetailsService userDetailsService;
-
-  @Value("${management.allow-ips}")
-  private String[] requestActuatorIpList;
 
   public SecurityConfig(CustomizeLogoutSuccessHandler logoutSuccessHandler,
       JwtAuthenticationTokenFilter authenticationTokenFilter) {
@@ -202,12 +198,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   /**
-   * 限制请求Actuator资源的用户IP
+   * 验证请求Actuator资源的用户
    *
    * @param requests 注册表对象
    */
   private void authenticateActuatorRequest(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry requests) {
-    requests.antMatchers("/actuator/**").access(resolveIpList(requestActuatorIpList));
+    requests.antMatchers("/actuator/**").access("@actuatorSecurityValidator.check(request)");
   }
 
   /**
@@ -251,4 +247,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private void disableSecurityHeader(HttpSecurity security) throws Exception {
     security.headers().disable();
   }
+
+
 }

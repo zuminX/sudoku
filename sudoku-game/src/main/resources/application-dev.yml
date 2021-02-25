@@ -11,7 +11,7 @@ spring:
       client:
         url: http://localhost:8088
         instance:
-          service-base-url: http://localhost:8081
+          service-url: http://localhost:8081
 
 logging:
   level:
@@ -20,4 +20,4 @@ logging:
 
 captcha:
   #开启验证码
-  enabled: true
+  enabled: false

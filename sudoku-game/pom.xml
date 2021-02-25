@@ -30,12 +30,6 @@
       <optional>true</optional>
     </dependency>
 
-    <!-- 健康监控 -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
-    </dependency>
-
     <!-- Spring Boot 应用监控工具客户端 -->
     <dependency>
       <groupId>de.codecentric</groupId>
