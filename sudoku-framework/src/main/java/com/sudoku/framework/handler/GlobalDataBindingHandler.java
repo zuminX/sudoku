@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 /**
  * 全局数据绑定处理器类
  */
-@ControllerAdvice
+@ControllerAdvice(basePackages = {"com.sudoku.system.controller", "com.sudoku.game.controller"})
 public class GlobalDataBindingHandler implements DataBindingHandler {
 
   /**

@@ -2,21 +2,21 @@ package com.sudoku.system.controller;
 
 import com.sudoku.common.constant.enums.StatisticsDate;
 import com.sudoku.common.constant.enums.StatusCode;
+import com.sudoku.common.core.domain.StatisticsDateRange;
 import com.sudoku.common.exception.StatisticsException;
 import com.sudoku.system.model.bo.StatisticsUserDataBO;
 import com.sudoku.system.service.StatisticsUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
+import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,34 +33,25 @@ public class StatisticsUserController {
     this.statisticsUserService = statisticsUserService;
   }
 
-  @GetMapping("/user/assignDate")
+  @PostMapping("/user/assignDate")
   @PreAuthorize("@ss.hasPermission('statistics:user:list')")
   @ApiOperation("获取指定日期的用户统计数据")
-  @ApiImplicitParams({
-      @ApiImplicitParam(name = "startDate", value = "开始日期", dataTypeClass = LocalDateTime.class, required = true),
-      @ApiImplicitParam(name = "endDate", value = "结束日期", dataTypeClass = LocalDateTime.class, required = true),
-      @ApiImplicitParam(name = "date", value = "统计日期类", dataTypeClass = StatisticsDate.class, required = true)
-  })
-  public List<StatisticsUserDataBO> getAssignDateUserData(
-      @RequestParam @NotNull(message = "开始日期不能为空") @Past(message = "开始日期必须是过去的时间") LocalDate startDate,
-      @RequestParam @NotNull(message = "结束日期不能为空") LocalDate endDate,
-      @RequestParam StatisticsDate date) {
-    if (startDate.compareTo(endDate) > 0) {
+  @ApiImplicitParam(name = "dateRange", value = "统计日期范围", dataTypeClass = StatisticsDateRange.class, required = true)
+  public List<StatisticsUserDataBO> getAssignDateUserData(@RequestBody @Valid StatisticsDateRange dateRange) {
+    if (dateRange.getStartDate().compareTo(dateRange.getEndDate()) > 0) {
       throw new StatisticsException(StatusCode.STATISTICS_INQUIRY_DATE_INVALID);
     }
-    return statisticsUserService.getStatisticsUserData(startDate, endDate, date);
+    return statisticsUserService.getStatisticsUserData(dateRange);
   }
 
   @GetMapping("/user/recentDate")
   @PreAuthorize("@ss.hasPermission('statistics:user:list')")
   @ApiOperation("获取最近日期的用户统计数据")
-  @ApiImplicitParams({
-      @ApiImplicitParam(name = "date", value = "统计日期类", dataTypeClass = StatisticsDate.class, required = true)
-  })
+  @ApiImplicitParam(name = "date", value = "统计日期类", dataTypeClass = StatisticsDate.class, required = true)
   public List<StatisticsUserDataBO> getRecentDateUserData(@RequestParam StatisticsDate date) {
     LocalDate endDate = LocalDate.now();
     LocalDate startDate = date.minus(endDate, 7L);
-    return getAssignDateUserData(startDate, endDate, date);
+    return getAssignDateUserData(new StatisticsDateRange(startDate, endDate, date));
   }
 
   @GetMapping("/user/total")
@@ -69,5 +60,4 @@ public class StatisticsUserController {
   public Integer getUserTotal() {
     return statisticsUserService.getUserTotal();
   }
-
 }

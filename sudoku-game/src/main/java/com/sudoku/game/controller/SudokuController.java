@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/sudoku")
 @Validated
 @Api(tags = "数独API接口")
-public class SudokuController {
+public class SudokuController extends GameBaseController {
 
   private final SudokuLevelService sudokuLevelService;
 

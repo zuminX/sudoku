@@ -1,35 +1,21 @@
 package com.sudoku.common.core.template;
 
 import com.sudoku.common.constant.enums.StatisticsDate;
+import com.sudoku.common.core.domain.StatisticsDateRange;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
 
 /**
  * 获取统计数据的模板方法
  *
  * @param <T> 统计数据的类型
  */
+@AllArgsConstructor
 public class GetStatisticsDataTemplate<T> {
 
-  private final StatisticsDate statisticsDate;
-
-  private final LocalDate startDate;
-
-  private final LocalDate endDate;
-
-  /**
-   * 该类的构造方法
-   *
-   * @param startDate      开始日期
-   * @param endDate        结束日期
-   * @param statisticsDate 统计日期
-   */
-  public GetStatisticsDataTemplate(LocalDate startDate, LocalDate endDate, StatisticsDate statisticsDate) {
-    this.startDate = startDate;
-    this.endDate = endDate;
-    this.statisticsDate = statisticsDate;
-  }
+  private final StatisticsDateRange dateRange;
 
   /**
    * 获取统计数据
@@ -38,7 +24,8 @@ public class GetStatisticsDataTemplate<T> {
    * @return 统计数据列表
    */
   public List<T> getData(StatisticsDataCallback<T> callback) {
-    LocalDate nowDate = statisticsDate.getFirst(startDate), lastDate = statisticsDate.getFirst(endDate);
+    StatisticsDate statisticsDate = dateRange.getStatisticsDate();
+    LocalDate nowDate = statisticsDate.getFirst(dateRange.getStartDate()), lastDate = statisticsDate.getFirst(dateRange.getEndDate());
     List<T> list = new ArrayList<>();
     while (nowDate.compareTo(lastDate) < 0) {
       LocalDate nextDate = statisticsDate.next(nowDate);

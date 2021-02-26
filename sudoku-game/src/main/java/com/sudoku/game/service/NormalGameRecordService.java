@@ -93,6 +93,7 @@ public class NormalGameRecordService {
     if (!gameUtils.isRecord()) {
       return getHistoryGameRecordById(userId, page, pageSize);
     }
+    //防止显示当前正在进行的游戏
     Integer nowSudokuRecordId = gameUtils.getSudokuRecord().getId();
     return getHistoryGameRecord(page, pageSize,
         () -> normalGameRecordMapper.findByUserIdOrderByStartTimeDescIgnoreOneSudokuRecord(userId, nowSudokuRecordId));

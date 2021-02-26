@@ -50,6 +50,11 @@ public class CaptchaService {
    */
   private int expireTime;
 
+  /**
+   * 是否开启验证码校验
+   */
+  private boolean enabled = true;
+
   public CaptchaService(RedisUtils redisUtils) {
     this.redisUtils = redisUtils;
   }
@@ -73,6 +78,9 @@ public class CaptchaService {
    * @param code 待验证的码
    */
   public void checkCaptcha(String uuid, String code) {
+    if (!enabled) {
+      return;
+    }
     String key = getCaptchaKey(uuid);
     String captcha = redisUtils.getObject(key);
     if (captcha == null) {

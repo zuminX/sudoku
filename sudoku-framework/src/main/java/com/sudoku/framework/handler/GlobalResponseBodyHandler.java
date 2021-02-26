@@ -41,9 +41,6 @@ public class GlobalResponseBodyHandler implements ResponseBodyAdvice<Object> {
   @Override
   public Object beforeBodyWrite(Object body, @NotNull MethodParameter methodParameter, @NotNull MediaType mediaType, @NotNull Class aClass,
       @NotNull ServerHttpRequest serverHttpRequest, @NotNull ServerHttpResponse serverHttpResponse) {
-    if (body instanceof CommonResult) {
-      return body;
-    }
-    return CommonResult.success(body);
+    return body instanceof CommonResult ? body : CommonResult.success(body);
   }
 }

@@ -1,17 +1,16 @@
 package com.sudoku.game.controller;
 
-import com.sudoku.common.constant.enums.StatisticsDate;
 import com.sudoku.common.core.domain.CustomEditorInfo;
 import com.sudoku.common.core.handler.DataBindingHandler;
+import com.sudoku.game.enums.RankingType;
 import com.sudoku.game.model.entity.SudokuLevel;
 import com.sudoku.game.service.SudokuLevelService;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 游戏模块的基础控制器类
@@ -41,7 +40,7 @@ public class GameBaseController implements DataBindingHandler {
   private List<CustomEditorInfo<?>> getCustomEditorInfoList() {
     List<CustomEditorInfo<?>> customEditorInfoList = new ArrayList<>();
     customEditorInfoList.add(getSudokuLevelEditor());
-    customEditorInfoList.add(getStatisticsDateEditor());
+    customEditorInfoList.add(getRankingTypeEditor());
     return customEditorInfoList;
   }
 
@@ -55,12 +54,12 @@ public class GameBaseController implements DataBindingHandler {
   }
 
   /**
-   * 获取统计日期的自定义编辑信息对象
+   * 获取排行类型的自定义编辑信息对象
    *
-   * @return 统计日期的自定义编辑信息对象
+   * @return 排行类型的自定义编辑信息对象
    */
-  private CustomEditorInfo<StatisticsDate> getStatisticsDateEditor() {
-    return new CustomEditorInfo<>(StatisticsDate.class, StatisticsDate::findByName);
+  private CustomEditorInfo<RankingType> getRankingTypeEditor() {
+    return new CustomEditorInfo<>(RankingType.class, RankingType::findByName);
   }
 
 }

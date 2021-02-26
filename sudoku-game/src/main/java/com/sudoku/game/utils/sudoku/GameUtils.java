@@ -81,10 +81,12 @@ public class GameUtils {
 
   /**
    * 判断当前数独记录是否为记录模式
+   *
    * @return 若是记录模式返回true，若不是记录模式或当前不存在记录则返回false
    */
   public boolean isRecord() {
-    return getSudokuRecord().isRecord();
+    SudokuRecordBO sudokuRecord = getSudokuRecord();
+    return sudokuRecord != null && sudokuRecord.isRecord();
   }
 
   /**

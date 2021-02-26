@@ -1,10 +1,9 @@
 package com.sudoku.system.service;
 
-import com.sudoku.common.constant.enums.StatisticsDate;
+import com.sudoku.common.core.domain.StatisticsDateRange;
 import com.sudoku.common.core.template.GetStatisticsDataTemplate;
 import com.sudoku.system.mapper.UserMapper;
 import com.sudoku.system.model.bo.StatisticsUserDataBO;
-import java.time.LocalDate;
 import java.util.List;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -24,14 +23,12 @@ public class StatisticsUserService {
   /**
    * 获取在[startDate,endDate)中的用户统计信息列表
    *
-   * @param startDate 开始日期
-   * @param endDate   结束日期
-   * @param date      统计日期
+   * @param dateRange 统计日期范围
    * @return 用户统计信息列表
    */
   @Cacheable(value = "statisticsUserData", keyGenerator = "simpleKG")
-  public List<StatisticsUserDataBO> getStatisticsUserData(LocalDate startDate, LocalDate endDate, StatisticsDate date) {
-    return new GetStatisticsDataTemplate<StatisticsUserDataBO>(startDate, endDate, date).getData((firstDate, lastDate) -> {
+  public List<StatisticsUserDataBO> getStatisticsUserData(StatisticsDateRange dateRange) {
+    return new GetStatisticsDataTemplate<StatisticsUserDataBO>(dateRange).getData((firstDate, lastDate) -> {
       Integer newUserTotal = userMapper.countNewUserByDateBetween(firstDate, lastDate);
       Integer recentLoginUserTotal = userMapper.countRecentLoginUserByDateBetween(firstDate, lastDate);
       return new StatisticsUserDataBO(newUserTotal, recentLoginUserTotal);
