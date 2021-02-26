@@ -1,0 +1,25 @@
+###
+GET http://{{host}}:{{port}}/gameRank/leaderboard?rankingName=平均花费时间&sudokuLevelName=普通模式&page=1&pageSize=5
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+> ../scripts/assertPass.js
+
+
+###
+GET http://{{host}}:{{port}}/gameRank/rankingName
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+> ../scripts/assertPass.js
+
+
+###
+GET http://{{host}}:{{port}}/statistics/game/total
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+> ../scripts/assertPass.js

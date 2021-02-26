@@ -1,0 +1,6 @@
+GET http://{{host}}:{{port}}/role/roleList
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+> ../scripts/assertPass.js

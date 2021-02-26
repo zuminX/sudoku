@@ -1,0 +1,5 @@
+GET http://{{host}}:{{port}}/security/captchaImage
+Accept: application/json
+Content-Type: application/json
+
+> ../scripts/assertPass.js

@@ -1,0 +1,12 @@
+POST http://{{host}}:{{port}}/security/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}",
+  "code": "f3sa",
+  "uuid": "b8c2467b-d04f-4576-b121-baf59fff56db"
+}
+
+> ../scripts/login.js

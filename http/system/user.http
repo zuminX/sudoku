@@ -1,0 +1,111 @@
+###
+POST http://{{host}}:{{port}}/user/register
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "test{{$timestamp}}",
+  "password": "fakeData",
+  "repeatPassword": "fakeData",
+  "nickname": "test{{$timestamp}}",
+  "code": "f3sa",
+  "uuid": "b8c2467b-d04f-4576-b121-baf59fff56db"
+}
+
+
+###
+GET http://{{host}}:{{port}}/user/userList?page=1&pageSize=5
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+> ../scripts/assertPass.js
+
+
+###
+POST http://{{host}}:{{port}}/user/modifyUser
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+  "id": 2,
+  "username": "test2",
+  "nickname": "test{{$timestamp}}",
+  "createTime": "2020-03-12T10:46:21",
+  "recentLoginTime": "2020-05-04T14:55:59",
+  "enabled": false,
+  "roleNameList": [
+    "ROLE_USER"
+  ]
+}
+
+> ../scripts/assertPass.js
+
+
+###
+POST http://{{host}}:{{port}}/user/addUser
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+  "username": "test{{$timestamp}}",
+  "nickname": "test{{$timestamp}}",
+  "password": "fakeData",
+  "createTime": "2016-01-02T05:21:37",
+  "recentLoginTime": "2020-05-05T13:04:01",
+  "enabled": false,
+  "roleNameList": [
+    "ROLE_USER"
+  ]
+}
+
+> ../scripts/assertPass.js
+
+
+###
+POST http://{{host}}:{{port}}/user/searchUser
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+  "username": "test2",
+  "nickname": "测试用户",
+  "createTimeRange": {
+    "start": "2010-10-19T06:55:30",
+    "end": "2037-05-22T11:52:07"
+  },
+  "recentLoginTimeRange": {
+    "start": "2011-11-25T23:08:42",
+    "end": "2026-11-17T20:15:43"
+  },
+  "enabled": null,
+  "roleNameList": [
+    "ROLE_USER"
+  ],
+  "page": 1,
+  "pageSize": 5
+}
+
+> ../scripts/assertPass.js
+
+
+###
+GET http://{{host}}:{{port}}/user/searchUserByName?name=test&page=1&pageSize=5
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+> ../scripts/assertPass.js
+
+
+
+
+
+
+
+
+
+

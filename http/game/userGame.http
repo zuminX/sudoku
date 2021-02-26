@@ -1,0 +1,34 @@
+###
+GET http://{{host}}:{{port}}/user/gameInformation
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+> ../scripts/assertPass.js
+
+
+###
+GET http://{{host}}:{{port}}/user/historyGameRecord?page=1&pageSize=5
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+> ../scripts/assertPass.js
+
+
+###
+GET http://{{host}}:{{port}}/user/gameInformationById?userId=2
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+> ../scripts/assertPass.js
+
+
+###
+GET http://{{host}}:{{port}}/user/historyGameRecordById?userId=2&page=1&pageSize=5
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+> ../scripts/assertPass.js

@@ -1,0 +1,16 @@
+###
+GET http://{{host}}:{{port}}/sudoku/sudokuLevels
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+> ../scripts/assertPass.js
+
+
+###
+GET http://{{host}}:{{port}}/sudoku/generateSudokuFinal?sudokuLevel=0
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+> ../scripts/assertPass.js

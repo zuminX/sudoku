@@ -1,0 +1,31 @@
+###
+POST http://{{host}}:{{port}}/statistics/user/assignDate
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+  "startDate": "2018-10-26",
+  "endDate": "2021-11-25",
+  "statisticsDate": "日"
+}
+
+> ../scripts/assertPass.js
+
+
+###
+GET http://{{host}}:{{port}}/statistics/user/recentDate?date=日
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+> ../scripts/assertPass.js
+
+
+###
+GET http://{{host}}:{{port}}/statistics/user/total
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+> ../scripts/assertPass.js

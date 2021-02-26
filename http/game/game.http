@@ -1,0 +1,29 @@
+###
+GET http://{{host}}:{{port}}/game/generateTopic?level=0&isRecord=false
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+> ../scripts/generateTopic.js
+
+
+###
+POST http://{{host}}:{{port}}/game/help
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{{sudokuMatrix}}
+
+> ../scripts/assertPass.js
+
+
+###
+POST http://{{host}}:{{port}}/game/check
+Accept: application/json
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{{sudokuMatrix}}
+
+> ../scripts/assertPass.js
