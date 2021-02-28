@@ -36,7 +36,7 @@ public class LoginController {
 
   @PostMapping("/login")
   @ApiOperation("登录")
-  @ApiImplicitParam(name = "loginBody", value = "loginBody", dataTypeClass = LoginBody.class, required = true)
+  @ApiImplicitParam(name = "loginBody", value = "登录用户表单信息", dataTypeClass = LoginBody.class, required = true)
   public CommonResult<LoginSuccessVO> login(@RequestBody @Valid LoginBody loginBody) {
     captchaService.checkCaptcha(loginBody.getUuid(), loginBody.getCode());
     LoginSuccessVO login = loginService.login(loginBody);

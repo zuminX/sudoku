@@ -1,4 +1,4 @@
-package com.sudoku.common.tools;
+package com.sudoku.common.core.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel("时间日期的范围类")
-public class DateTimeRange implements Serializable {
+@ApiModel("日期时间的范围类")
+public class LocalDateTimeRange implements Serializable {
 
   private static final long serialVersionUID = -2310827848773144726L;
 

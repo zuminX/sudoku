@@ -1,7 +1,7 @@
 package com.sudoku.game.model.body;
 
-import com.sudoku.common.tools.DateTimeRange;
-import com.sudoku.common.validator.IsDateTimeRange;
+import com.sudoku.common.core.domain.LocalDateTimeRange;
+import com.sudoku.common.validator.IsLocalDateTimeRange;
 import com.sudoku.game.validator.IsSudokuMatrix;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -37,8 +37,8 @@ public class RaceInformationBody implements Serializable {
   private String description;
 
   @ApiModelProperty("竞赛时间范围")
-  @IsDateTimeRange(startNotNull = true, endTimeNotNull = true)
-  private DateTimeRange raceTimeRange;
+  @IsLocalDateTimeRange(startNotNull = true, endNotNull = true)
+  private LocalDateTimeRange raceTimeRange;
 
   @ApiModelProperty("数独难度ID")
   private Integer sudokuLevelId;

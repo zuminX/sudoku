@@ -1,14 +1,14 @@
 package com.sudoku.common.validator;
 
-import com.sudoku.common.tools.DateTimeRange;
+import com.sudoku.common.core.domain.LocalDateTimeRange;
 import java.time.LocalDateTime;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * 时间日期范围类的验证器类
+ * 日期时间范围类的验证器类
  */
-public class DateTimeRangeValidator implements ConstraintValidator<IsDateTimeRange, DateTimeRange> {
+public class LocalDateTimeRangeValidator implements ConstraintValidator<IsLocalDateTimeRange, LocalDateTimeRange> {
 
   /**
    * 开始时间不能为空
@@ -23,12 +23,12 @@ public class DateTimeRangeValidator implements ConstraintValidator<IsDateTimeRan
   /**
    * 初始化校验器
    *
-   * @param isDateTimeRange 验证时间日期范围类的注解
+   * @param isLocalDateTimeRange 验证日期时间范围类的注解
    */
   @Override
-  public void initialize(IsDateTimeRange isDateTimeRange) {
-    this.startTimeNotNull = isDateTimeRange.startNotNull();
-    this.endTimeNotNull = isDateTimeRange.endTimeNotNull();
+  public void initialize(IsLocalDateTimeRange isLocalDateTimeRange) {
+    this.startTimeNotNull = isLocalDateTimeRange.startNotNull();
+    this.endTimeNotNull = isLocalDateTimeRange.endNotNull();
   }
 
   /**
@@ -38,7 +38,7 @@ public class DateTimeRangeValidator implements ConstraintValidator<IsDateTimeRan
    * @param context 约束校验器上下文对象
    * @return 验证通过返回true，验证失败返回false
    */
-  public boolean isValid(DateTimeRange range, ConstraintValidatorContext context) {
+  public boolean isValid(LocalDateTimeRange range, ConstraintValidatorContext context) {
     if (range == null) {
       return !startTimeNotNull && !endTimeNotNull;
     }

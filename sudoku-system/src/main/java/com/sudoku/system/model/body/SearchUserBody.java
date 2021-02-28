@@ -1,7 +1,7 @@
 package com.sudoku.system.model.body;
 
-import com.sudoku.common.tools.DateTimeRange;
-import com.sudoku.common.validator.IsDateTimeRange;
+import com.sudoku.common.core.domain.LocalDateTimeRange;
+import com.sudoku.common.validator.IsLocalDateTimeRange;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
@@ -26,12 +26,12 @@ public class SearchUserBody implements Serializable {
   private String nickname;
 
   @ApiModelProperty("创建时间范围")
-  @IsDateTimeRange
-  private DateTimeRange createTimeRange;
+  @IsLocalDateTimeRange
+  private LocalDateTimeRange createTimeRange;
 
   @ApiModelProperty("最近登录时间范围")
-  @IsDateTimeRange
-  private DateTimeRange recentLoginTimeRange;
+  @IsLocalDateTimeRange
+  private LocalDateTimeRange recentLoginTimeRange;
 
   @ApiModelProperty("是否启用")
   private Boolean enabled;

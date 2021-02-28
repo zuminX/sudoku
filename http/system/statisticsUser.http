@@ -5,8 +5,10 @@ Content-Type: application/json
 Authorization: {{authToken}}
 
 {
-  "startDate": "2018-10-26",
-  "endDate": "2021-11-25",
+  "dateRange": {
+    "start": "2018-10-26",
+    "end": "2021-11-25"
+  },
   "statisticsDate": "日"
 }
 

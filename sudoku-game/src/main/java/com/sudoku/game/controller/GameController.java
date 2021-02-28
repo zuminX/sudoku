@@ -11,16 +11,21 @@ import com.sudoku.game.service.NormalGameRecordService;
 import com.sudoku.game.service.SudokuRecordService;
 import com.sudoku.game.service.SudokuService;
 import com.sudoku.game.utils.sudoku.GameUtils;
+import com.sudoku.game.validator.IsSudokuMatrix;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import java.util.List;
+import javax.validation.constraints.NotNull;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.constraints.NotNull;
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/game")
@@ -62,14 +67,14 @@ public class GameController extends GameBaseController {
   @PostMapping("/help")
   @ApiOperation("获取当前数独游戏的提示信息")
   @ApiImplicitParam(name = "userMatrix", value = "用户的数独矩阵数据", dataTypeClass = List.class, required = true)
-  public SudokuGridInformationBO getHelp(@RequestBody List<List<Integer>> userMatrix) {
+  public SudokuGridInformationBO getHelp(@RequestBody @IsSudokuMatrix List<List<Integer>> userMatrix) {
     return sudokuService.getHelp(userMatrix);
   }
 
   @PostMapping("/check")
   @ApiOperation("检查用户的数独数据")
   @ApiImplicitParam(name = "userMatrix", value = "用户的数独矩阵数据", dataTypeClass = List.class, required = true)
-  public UserAnswerInformationVO checkSudokuData(@RequestBody List<List<Integer>> userMatrix) {
+  public UserAnswerInformationVO checkSudokuData(@RequestBody @IsSudokuMatrix List<List<Integer>> userMatrix) {
     UserAnswerInformationBO userAnswerInformation = sudokuService.checkSudokuData(userMatrix);
     updateGameRecord(userMatrix, userAnswerInformation.getSituation());
     gameUtils.removeSudokuRecord();

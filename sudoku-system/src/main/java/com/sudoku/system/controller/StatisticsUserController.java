@@ -1,9 +1,8 @@
 package com.sudoku.system.controller;
 
 import com.sudoku.common.constant.enums.StatisticsDate;
-import com.sudoku.common.constant.enums.StatusCode;
+import com.sudoku.common.core.domain.LocalDateRange;
 import com.sudoku.common.core.domain.StatisticsDateRange;
-import com.sudoku.common.exception.StatisticsException;
 import com.sudoku.system.model.bo.StatisticsUserDataBO;
 import com.sudoku.system.service.StatisticsUserService;
 import io.swagger.annotations.Api;
@@ -38,9 +37,6 @@ public class StatisticsUserController {
   @ApiOperation("获取指定日期的用户统计数据")
   @ApiImplicitParam(name = "dateRange", value = "统计日期范围", dataTypeClass = StatisticsDateRange.class, required = true)
   public List<StatisticsUserDataBO> getAssignDateUserData(@RequestBody @Valid StatisticsDateRange dateRange) {
-    if (dateRange.getStartDate().compareTo(dateRange.getEndDate()) > 0) {
-      throw new StatisticsException(StatusCode.STATISTICS_INQUIRY_DATE_INVALID);
-    }
     return statisticsUserService.getStatisticsUserData(dateRange);
   }
 
@@ -51,7 +47,7 @@ public class StatisticsUserController {
   public List<StatisticsUserDataBO> getRecentDateUserData(@RequestParam StatisticsDate date) {
     LocalDate endDate = LocalDate.now();
     LocalDate startDate = date.minus(endDate, 7L);
-    return getAssignDateUserData(new StatisticsDateRange(startDate, endDate, date));
+    return getAssignDateUserData(new StatisticsDateRange(new LocalDateRange(startDate, endDate), date));
   }
 
   @GetMapping("/user/total")

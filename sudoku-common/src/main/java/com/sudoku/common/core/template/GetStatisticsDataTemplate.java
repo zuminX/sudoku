@@ -1,6 +1,7 @@
 package com.sudoku.common.core.template;
 
 import com.sudoku.common.constant.enums.StatisticsDate;
+import com.sudoku.common.core.domain.LocalDateRange;
 import com.sudoku.common.core.domain.StatisticsDateRange;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,7 +26,8 @@ public class GetStatisticsDataTemplate<T> {
    */
   public List<T> getData(StatisticsDataCallback<T> callback) {
     StatisticsDate statisticsDate = dateRange.getStatisticsDate();
-    LocalDate nowDate = statisticsDate.getFirst(dateRange.getStartDate()), lastDate = statisticsDate.getFirst(dateRange.getEndDate());
+    LocalDateRange range = dateRange.getDateRange();
+    LocalDate nowDate = statisticsDate.getFirst(range.getStart()), lastDate = statisticsDate.getFirst(range.getEnd());
     List<T> list = new ArrayList<>();
     while (nowDate.compareTo(lastDate) < 0) {
       LocalDate nextDate = statisticsDate.next(nowDate);

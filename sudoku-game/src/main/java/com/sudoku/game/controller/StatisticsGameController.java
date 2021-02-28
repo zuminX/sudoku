@@ -1,9 +1,8 @@
 package com.sudoku.game.controller;
 
 import com.sudoku.common.constant.enums.StatisticsDate;
-import com.sudoku.common.constant.enums.StatusCode;
+import com.sudoku.common.core.domain.LocalDateRange;
 import com.sudoku.common.core.domain.StatisticsDateRange;
-import com.sudoku.common.exception.StatisticsException;
 import com.sudoku.game.service.StatisticsGameService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -37,9 +36,6 @@ public class StatisticsGameController extends GameBaseController {
   @ApiOperation("获取指定日期的游戏局数")
   @ApiImplicitParam(name = "dateRange", value = "统计日期范围", dataTypeClass = StatisticsDateRange.class, required = true)
   public List<Integer> getAssignDateGameTotal(@RequestBody @Valid StatisticsDateRange dateRange) {
-    if (dateRange.getStartDate().compareTo(dateRange.getEndDate()) > 0) {
-      throw new StatisticsException(StatusCode.STATISTICS_INQUIRY_DATE_INVALID);
-    }
     return statisticsGameService.getGameTotal(dateRange);
   }
 
@@ -50,7 +46,7 @@ public class StatisticsGameController extends GameBaseController {
   public List<Integer> getRecentDateGameTotal(@RequestParam StatisticsDate date) {
     LocalDate endDate = LocalDate.now();
     LocalDate startDate = date.minus(endDate, 7L);
-    return getAssignDateGameTotal(new StatisticsDateRange(startDate, endDate, date));
+    return getAssignDateGameTotal(new StatisticsDateRange(new LocalDateRange(startDate, endDate), date));
   }
 
   @GetMapping("/game/total")

@@ -3,7 +3,7 @@ package com.sudoku.common.validator;
 import static org.junit.Assert.assertEquals;
 import static org.powermock.reflect.Whitebox.setInternalState;
 
-import com.sudoku.common.tools.DateTimeRange;
+import com.sudoku.common.core.domain.LocalDateTimeRange;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,9 +16,9 @@ import org.junit.runners.Parameterized.Parameters;
  * 时间日期范围类的验证器类的测试类
  */
 @RunWith(Parameterized.class)
-public class DateTimeRangeValidatorTest {
+public class LocalLocalDateTimeRangeValidatorTest {
 
-  private final DateTimeRange range;
+  private final LocalDateTimeRange range;
 
   private final boolean startTimeNotNull;
 
@@ -34,7 +34,7 @@ public class DateTimeRangeValidatorTest {
    * @param endTimeNotNull   结束时间不能为空
    * @param expected         预期结果
    */
-  public DateTimeRangeValidatorTest(DateTimeRange range, boolean startTimeNotNull, boolean endTimeNotNull, boolean expected) {
+  public LocalLocalDateTimeRangeValidatorTest(LocalDateTimeRange range, boolean startTimeNotNull, boolean endTimeNotNull, boolean expected) {
     this.range = range;
     this.startTimeNotNull = startTimeNotNull;
     this.endTimeNotNull = endTimeNotNull;
@@ -51,12 +51,12 @@ public class DateTimeRangeValidatorTest {
     LocalDateTime early = LocalDateTime.of(2020, 1, 1, 0, 0), late = LocalDateTime.of(2020, 1, 2, 0, 0);
     return Arrays.asList(new Object[][]{
         {null, false, false, true},
-        {new DateTimeRange(null, null), true, false, false},
-        {new DateTimeRange(null, null), false, true, false},
-        {new DateTimeRange(null, null), false, false, true},
-        {new DateTimeRange(early, null), false, false, true},
-        {new DateTimeRange(early, late), false, false, true},
-        {new DateTimeRange(late, early), false, false, false},
+        {new LocalDateTimeRange(null, null), true, false, false},
+        {new LocalDateTimeRange(null, null), false, true, false},
+        {new LocalDateTimeRange(null, null), false, false, true},
+        {new LocalDateTimeRange(early, null), false, false, true},
+        {new LocalDateTimeRange(early, late), false, false, true},
+        {new LocalDateTimeRange(late, early), false, false, false},
     });
   }
 
@@ -65,10 +65,10 @@ public class DateTimeRangeValidatorTest {
    */
   @Test
   public void testIsValid() {
-    DateTimeRangeValidator dateTimeRangeValidator = new DateTimeRangeValidator();
-    setInternalState(dateTimeRangeValidator, "startTimeNotNull", startTimeNotNull);
-    setInternalState(dateTimeRangeValidator, "endTimeNotNull", endTimeNotNull);
+    LocalDateTimeRangeValidator localDateTimeRangeValidator = new LocalDateTimeRangeValidator();
+    setInternalState(localDateTimeRangeValidator, "startNotNull", startTimeNotNull);
+    setInternalState(localDateTimeRangeValidator, "endNotNull", endTimeNotNull);
 
-    assertEquals(expected, dateTimeRangeValidator.isValid(range, null));
+    assertEquals(expected, localDateTimeRangeValidator.isValid(range, null));
   }
 }

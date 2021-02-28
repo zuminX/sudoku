@@ -3,7 +3,7 @@ package com.sudoku.game.service;
 import com.sudoku.common.constant.consist.SettingParameter;
 import com.sudoku.common.constant.enums.StatusCode;
 import com.sudoku.common.exception.RaceException;
-import com.sudoku.common.tools.DateTimeRange;
+import com.sudoku.common.core.domain.LocalDateTimeRange;
 import com.sudoku.game.convert.RaceInformationConvert;
 import com.sudoku.game.convert.SudokuRecordConvert;
 import com.sudoku.game.mapper.RaceInformationMapper;
@@ -76,7 +76,7 @@ public class RaceInformationService {
    *
    * @param raceTimeRange 竞赛时间范围
    */
-  private void checkRaceTime(DateTimeRange raceTimeRange) {
+  private void checkRaceTime(LocalDateTimeRange raceTimeRange) {
     LocalDateTime start = raceTimeRange.getStart(), end = raceTimeRange.getEnd();
     if (start.plus(SettingParameter.MINIMUM_RACE_DURATION).compareTo(end) > 0
         || LocalDateTime.now().plus(SettingParameter.MINIMUM_RACE_DURATION).compareTo(end) > 0) {

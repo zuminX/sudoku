@@ -49,9 +49,7 @@ public class UserGameController extends GameBaseController {
   @GetMapping("/gameInformationById")
   @PreAuthorize("@ss.hasPermission('sudoku:user:information')")
   @ApiOperation("根据用户ID，获取其游戏信息")
-  @ApiImplicitParams({
-      @ApiImplicitParam(name = "userId", value = "用户ID", dataTypeClass = Integer.class, required = true),
-  })
+  @ApiImplicitParam(name = "userId", value = "用户ID", dataTypeClass = Integer.class, required = true)
   public List<UserGameInformationVO> getUserGameInformationById(@RequestParam Integer userId) {
     return normalGameRecordService.getUserGameInformation(userId);
   }
