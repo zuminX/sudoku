@@ -1,10 +1,10 @@
 package com.sudoku.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.sudoku.common.annotation.ExtCacheable;
 import com.sudoku.system.model.entity.Role;
 import com.sudoku.system.model.vo.RoleVO;
 import java.util.List;
-import org.springframework.cache.annotation.Cacheable;
 
 /**
  * 角色持久层类
@@ -16,7 +16,7 @@ public interface RoleMapper extends BaseMapper<Role> {
    *
    * @return 角色显示层对象列表
    */
-  @Cacheable(value = "roleVoList", keyGenerator = "simpleKG")
+  @ExtCacheable(value = "roleVoList")
   List<RoleVO> selectNameAndNameZh();
 
   /**
@@ -33,6 +33,6 @@ public interface RoleMapper extends BaseMapper<Role> {
    * @param names 角色名列表
    * @return 角色ID列表
    */
-  @Cacheable(value = "rolesByNames", keyGenerator = "simpleKG")
+  @ExtCacheable(value = "rolesByNames")
   List<Integer> selectIdsByNames(List<String> names);
 }

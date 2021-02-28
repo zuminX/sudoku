@@ -1,10 +1,10 @@
 package com.sudoku.game.service;
 
+import com.sudoku.common.annotation.ExtCacheable;
 import com.sudoku.common.core.domain.StatisticsDateRange;
 import com.sudoku.common.core.template.GetStatisticsDataTemplate;
 import com.sudoku.game.mapper.SudokuRecordMapper;
 import java.util.List;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,7 +25,7 @@ public class StatisticsGameService {
    * @param dateRange 统计日期范围
    * @return 游戏局数
    */
-  @Cacheable(value = "statisticsGameData", keyGenerator = "simpleKG")
+  @ExtCacheable(value = "statisticsGameData", ttlOfDays = 1)
   public List<Integer> getGameTotal(StatisticsDateRange dateRange) {
     return new GetStatisticsDataTemplate<Integer>(dateRange).getData(sudokuRecordMapper::countByDateBetween);
   }
@@ -35,7 +35,7 @@ public class StatisticsGameService {
    *
    * @return 游戏总局数
    */
-  @Cacheable(value = "gameTotal", keyGenerator = "simpleKG")
+  @ExtCacheable(value = "gameTotal", ttlOfDays = 1)
   public Integer getGameTotal() {
     return sudokuRecordMapper.count();
   }
