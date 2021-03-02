@@ -6,11 +6,7 @@ import static com.sudoku.common.constant.enums.StatusCode.INVALID_REQUEST_PARAM_
 import cn.hutool.core.util.StrUtil;
 import com.sudoku.common.core.domain.CommonResult;
 import com.sudoku.common.exception.BaseException;
-import com.sudoku.common.exception.CaptchaException;
 import com.sudoku.common.exception.FormParameterConversionException;
-import com.sudoku.common.exception.LoginException;
-import com.sudoku.common.exception.StatisticsException;
-import com.sudoku.common.exception.UserException;
 import java.io.Serializable;
 import java.util.stream.Collectors;
 import javax.validation.ConstraintViolation;
@@ -40,7 +36,7 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(value = Exception.class)
   public CommonResult<Exception> exceptionHandler(Exception e) {
-    log.error("[所有异常处理]", e);
+    log.error("[Exception]", e);
     return CommonResult.error(ERROR);
   }
 
@@ -52,51 +48,7 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(value = BaseException.class)
   public CommonResult<BaseException> baseExceptionHandler(BaseException e) {
-    return simpleExceptionProcess("[基础异常]", e);
-  }
-
-  /**
-   * 处理用户异常
-   *
-   * @param e 用户异常
-   * @return 经过包装的结果对象
-   */
-  @ExceptionHandler(value = UserException.class)
-  public CommonResult<UserException> userExceptionHandler(UserException e) {
-    return simpleExceptionProcess("[用户异常]", e);
-  }
-
-  /**
-   * 处理登录异常
-   *
-   * @param e 登录异常
-   * @return 经过包装的结果对象
-   */
-  @ExceptionHandler(value = LoginException.class)
-  public CommonResult<LoginException> loginExceptionHandler(LoginException e) {
-    return simpleExceptionProcess("[登录异常]", e);
-  }
-
-  /**
-   * 处理验证码异常
-   *
-   * @param e 登录异常
-   * @return 经过包装的结果对象
-   */
-  @ExceptionHandler(value = CaptchaException.class)
-  public CommonResult<CaptchaException> captchaExceptionHandler(CaptchaException e) {
-    return simpleExceptionProcess("[验证码异常]", e);
-  }
-
-  /**
-   * 处理统计异常
-   *
-   * @param e 登录异常
-   * @return 经过包装的结果对象
-   */
-  @ExceptionHandler(value = StatisticsException.class)
-  public CommonResult<StatisticsException> statisticsExceptionHandler(StatisticsException e) {
-    return simpleExceptionProcess("[统计异常]", e);
+    return simpleExceptionProcess("[" + e.getClass().getSimpleName() + "]", e);
   }
 
   /**
@@ -107,7 +59,7 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(value = FormParameterConversionException.class)
   public CommonResult<FormParameterConversionException> formParameterConversionExceptionHandler(FormParameterConversionException e) {
-    log.warn("[表单参数转换异常]", e);
+    log.warn("[FormParameterConversionException]", e);
     return CommonResult.error(e.getStatusCode());
   }
 
@@ -119,7 +71,7 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(value = ConstraintViolationException.class)
   public CommonResult<ConstraintViolationException> constraintViolationExceptionHandler(ConstraintViolationException e) {
-    log.debug("[参数校验异常]", e);
+    log.debug("[FormParameterConversionException]", e);
     return buildInvalidParamErrorCommonResult(
         e.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(";")));
   }
@@ -132,7 +84,7 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(value = BindException.class)
   public CommonResult<java.net.BindException> bindExceptionHandler(BindException e) {
-    log.debug("[参数校验异常]", e);
+    log.debug("[ParameterVerificationException]", e);
     return buildInvalidParamErrorCommonResult(
         e.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(";")));
   }
@@ -145,7 +97,7 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(value = MethodArgumentNotValidException.class)
   public CommonResult<MethodArgumentNotValidException> bindExceptionHandler(MethodArgumentNotValidException e) {
-    log.debug("[参数校验异常]", e);
+    log.debug("[ParameterVerificationException]", e);
     return buildInvalidParamErrorCommonResult(
         e.getBindingResult().getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(
             Collectors.joining(";")));
