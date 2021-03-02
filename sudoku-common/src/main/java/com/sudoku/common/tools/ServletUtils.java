@@ -1,5 +1,6 @@
 package com.sudoku.common.tools;
 
+import cn.hutool.core.convert.Convert;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -43,6 +44,57 @@ public class ServletUtils {
    */
   public static HttpServletRequest getRequest() {
     return getRequestAttributes().getRequest();
+  }
+
+  /**
+   * 获取响应对象
+   *
+   * @return 响应对象
+   */
+  public static HttpServletResponse getResponse() {
+    return getRequestAttributes().getResponse();
+  }
+
+  /**
+   * 获取String参数
+   *
+   * @param name 参数名称
+   * @return 参数
+   */
+  public static String getParameter(String name) {
+    return getRequest().getParameter(name);
+  }
+
+  /**
+   * 获取String参数
+   *
+   * @param name         参数名称
+   * @param defaultValue 默认值
+   * @return 参数
+   */
+  public static String getParameter(String name, String defaultValue) {
+    return Convert.toStr(getRequest().getParameter(name), defaultValue);
+  }
+
+  /**
+   * 获取Integer参数
+   *
+   * @param name 参数名称
+   * @return 参数
+   */
+  public static Integer getParameterToInt(String name) {
+    return Convert.toInt(getRequest().getParameter(name));
+  }
+
+  /**
+   * 获取Integer参数
+   *
+   * @param name         参数名称
+   * @param defaultValue 默认值
+   * @return 参数
+   */
+  public static Integer getParameterToInt(String name, Integer defaultValue) {
+    return Convert.toInt(getRequest().getParameter(name), defaultValue);
   }
 
   /**

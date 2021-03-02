@@ -87,17 +87,10 @@ public class UserService {
   /**
    * 获取系统用户列表
    *
-   * @param page     当前查询页
-   * @param pageSize 每页显示的条数
    * @return 用户详情的分页信息
    */
-  public Page<UserDetailVO> getUserList(Integer page, Integer pageSize) {
-    return PageUtils.getPage(PageParam.<User>builder()
-            .queryFunc(userMapper::selectAllWithRole)
-            .page(page)
-            .pageSize(pageSize)
-            .build(),
-        userConvert::convertUserToUserDetailVO);
+  public Page<UserDetailVO> getUserList() {
+    return PageUtils.getPage(new PageParam<>(userMapper::selectAllWithRole), userConvert::convertUserToUserDetailVO);
   }
 
   /**
@@ -137,29 +130,18 @@ public class UserService {
   public Page<UserDetailVO> searchUser(SearchUserBody searchUserBody) {
     searchUserBody.setUsername(StrUtil.trim(searchUserBody.getUsername()));
     searchUserBody.setNickname(StrUtil.trim(searchUserBody.getNickname()));
-    return PageUtils.getPage(PageParam.<User>builder()
-            .queryFunc(() -> userMapper.selectByConditionWithRole(searchUserBody))
-            .page(searchUserBody.getPage())
-            .pageSize(searchUserBody.getPageSize())
-            .build(),
+    return PageUtils.getPage(new PageParam<>(() -> userMapper.selectByConditionWithRole(searchUserBody)),
         userConvert::convertUserToUserDetailVO);
   }
 
   /**
    * 根据用户名或昵称搜索用户
    *
-   * @param name     名称
-   * @param page     当前查询页
-   * @param pageSize 每页显示的条数
+   * @param name 名称
    * @return 用户详情的分页信息
    */
-  public Page<UserDetailVO> searchUserByName(String name, Integer page, Integer pageSize) {
-    return PageUtils.getPage(PageParam.<User>builder()
-            .queryFunc(() -> userMapper.selectByNameWithRole(name))
-            .page(page)
-            .pageSize(pageSize)
-            .build(),
-        userConvert::convertUserToUserDetailVO);
+  public Page<UserDetailVO> searchUserByName(String name) {
+    return PageUtils.getPage(new PageParam<>(() -> userMapper.selectByNameWithRole(name)), userConvert::convertUserToUserDetailVO);
   }
 
   /**

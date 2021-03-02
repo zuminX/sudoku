@@ -84,49 +84,36 @@ public class NormalGameRecordService {
   /**
    * 获取历史游戏记录
    *
-   * @param page     当前查询页
-   * @param pageSize 每页显示的条数
    * @return 游戏记录的分页信息
    */
-  public Page<NormalGameRecordVO> getHistoryGameRecord(Integer page, Integer pageSize) {
+  public Page<NormalGameRecordVO> getHistoryGameRecord() {
     Integer userId = SecurityUtils.getCurrentUserId();
     if (!gameUtils.isRecord()) {
-      return getHistoryGameRecordById(userId, page, pageSize);
+      return getHistoryGameRecordById(userId);
     }
     //防止显示当前正在进行的游戏
     Integer nowSudokuRecordId = gameUtils.getSudokuRecord().getId();
-    return getHistoryGameRecord(page, pageSize,
-        () -> normalGameRecordMapper.findByUserIdOrderByStartTimeDescIgnoreOneSudokuRecord(userId, nowSudokuRecordId));
+    return getHistoryGameRecord(() -> normalGameRecordMapper.findByUserIdOrderByStartTimeDescIgnoreOneSudokuRecord(userId, nowSudokuRecordId));
   }
 
   /**
    * 根据用户ID，获取其历史游戏记录
    *
    * @param userId   用户ID
-   * @param page     当前查询页
-   * @param pageSize 每页显示的条数
    * @return 普通游戏记录的分页信息
    */
-  public Page<NormalGameRecordVO> getHistoryGameRecordById(Integer userId, Integer page, Integer pageSize) {
-    return getHistoryGameRecord(page, pageSize, () -> normalGameRecordMapper.findByUserIdOrderByStartTimeDesc(userId));
+  public Page<NormalGameRecordVO> getHistoryGameRecordById(Integer userId) {
+    return getHistoryGameRecord(() -> normalGameRecordMapper.findByUserIdOrderByStartTimeDesc(userId));
   }
 
   /**
    * 获取历史游戏记录
    *
-   * @param page     当前查询页
-   * @param pageSize 每页显示的条数
    * @param supplier 查询函数
    * @return 普通游戏记录的分页信息
    */
-  private Page<NormalGameRecordVO> getHistoryGameRecord(Integer page, Integer pageSize,
-      Supplier<List<NormalGameRecordResultForHistory>> supplier) {
-    return PageUtils.getPage(PageParam.<NormalGameRecordResultForHistory>builder()
-            .queryFunc(supplier)
-            .page(page)
-            .pageSize(pageSize)
-            .build(),
-        normalGameRecordConvert::convert);
+  private Page<NormalGameRecordVO> getHistoryGameRecord(Supplier<List<NormalGameRecordResultForHistory>> supplier) {
+    return PageUtils.getPage(new PageParam<>(supplier), normalGameRecordConvert::convert);
   }
 
 }

@@ -13,10 +13,8 @@ import com.sudoku.system.service.CaptchaService;
 import com.sudoku.system.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
-import org.hibernate.validator.constraints.Range;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,13 +51,8 @@ public class UserController {
   @GetMapping("/userList")
   @PreAuthorize("@ss.hasPermission('system:user:list')")
   @ApiOperation("获取用户列表")
-  @ApiImplicitParams({
-      @ApiImplicitParam(name = "page", value = "当前查询页", dataTypeClass = Integer.class, required = true),
-      @ApiImplicitParam(name = "pageSize", value = "每页显示的条数", dataTypeClass = Integer.class, required = true)
-  })
-  public Page<UserDetailVO> getUserList(@RequestParam Integer page,
-      @RequestParam @Range(min = 1, max = 20, message = "每页显示的用户数在1-20个之间") Integer pageSize) {
-    return userService.getUserList(page, pageSize);
+  public Page<UserDetailVO> getUserList() {
+    return userService.getUserList();
   }
 
   @PostMapping("/modifyUser")
@@ -89,14 +82,9 @@ public class UserController {
   @GetMapping("/searchUserByName")
   @PreAuthorize("@ss.hasPermission('system:user:search')")
   @ApiOperation("根据名称搜索用户")
-  @ApiImplicitParams({
-      @ApiImplicitParam(name = "username", value = "名称", dataTypeClass = String.class, required = true),
-      @ApiImplicitParam(name = "page", value = "当前查询页", dataTypeClass = Integer.class, required = true),
-      @ApiImplicitParam(name = "pageSize", value = "每页显示的条数", dataTypeClass = Integer.class, required = true)
-  })
-  public Page<UserDetailVO> searchUserByName(@RequestParam String name, @RequestParam Integer page,
-      @RequestParam @Range(min = 1, max = 20, message = "每页显示的用户数在1-20个之间") Integer pageSize) {
-    return userService.searchUserByName(name, page, pageSize);
+  @ApiImplicitParam(name = "username", value = "名称", dataTypeClass = String.class, required = true)
+  public Page<UserDetailVO> searchUserByName(@RequestParam String name) {
+    return userService.searchUserByName(name);
   }
 
   /**

@@ -4,6 +4,9 @@ import static java.util.stream.Collectors.toList;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sudoku.common.constant.enums.StatusCode;
+import com.sudoku.common.exception.PageException;
+import com.sudoku.common.tools.ServletUtils;
 import java.util.List;
 import java.util.function.Function;
 import org.jetbrains.annotations.NotNull;
@@ -16,14 +19,25 @@ import org.springframework.stereotype.Component;
 public class PageUtils {
 
   /**
+   * 最大分页条数
+   */
+  private static final int MAX_PAGE_SIZE = 20;
+  /**
+   * 每页显示条数的参数名称
+   */
+  private static final String PAGE_SIZE_NAME = "pageSize";
+  /**
    * 默认查询的页数
    */
   private static final Integer DEFAULT_PAGE = 1;
-
   /**
    * 默认每页个数
    */
   private static final Integer DEFAULT_PAGE_SIZE = 5;
+  /**
+   * 当前查询页的参数名称
+   */
+  private static final String PAGE_NAME = "page";
 
   /**
    * 私有构造方法，防止实例化
@@ -100,19 +114,35 @@ public class PageUtils {
      */
     @SuppressWarnings("all")
     public Page<T> getPage(GetPageInfoCallBack<T> callBack) {
-      setStartPage(pageParam.getPage(), pageParam.getPageSize());
+      PageHelper.startPage(getPage(), getPageSize());
       List<T> queryList = pageParam.getQueryFunc().get();
       return PageConvert.INSTANCE.convert(callBack.getPageInfo(queryList));
     }
 
     /**
-     * 设置开始分页
+     * 获取查询页数
      *
-     * @param page     查询的页数
-     * @param pageSize 每页个数
+     * @return 查询页数
      */
-    private void setStartPage(Integer page, Integer pageSize) {
-      PageHelper.startPage(page == null ? DEFAULT_PAGE : page, pageSize == null ? DEFAULT_PAGE_SIZE : pageSize);
+    private int getPage() {
+      Integer page = pageParam.getPage();
+      return page != null ? page : ServletUtils.getParameterToInt(PAGE_NAME, DEFAULT_PAGE);
+    }
+
+    /**
+     * 获取每页个数
+     *
+     * @return 每页个数
+     */
+    private int getPageSize() {
+      Integer pageSize = pageParam.getPageSize();
+      if (pageSize == null) {
+        pageSize = ServletUtils.getParameterToInt(PAGE_SIZE_NAME, DEFAULT_PAGE_SIZE);
+      }
+      if (pageSize <= 0 || pageSize > MAX_PAGE_SIZE) {
+        throw new PageException(StatusCode.PAGE_SIZE_ILLEGAL);
+      }
+      return pageSize;
     }
   }
 }

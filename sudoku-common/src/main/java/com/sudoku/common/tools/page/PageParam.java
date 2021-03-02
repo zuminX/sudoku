@@ -33,4 +33,8 @@ public class PageParam<T> {
    * 每页个数
    */
   private Integer pageSize;
+
+  public PageParam(Supplier<List<T>> queryFunc) {
+    this.queryFunc = queryFunc;
+  }
 }

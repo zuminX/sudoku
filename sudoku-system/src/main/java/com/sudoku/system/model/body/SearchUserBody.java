@@ -38,11 +38,4 @@ public class SearchUserBody implements Serializable {
 
   @ApiModelProperty("角色名列表")
   private List<String> roleNameList;
-
-  @ApiModelProperty("当前查询页")
-  private Integer page;
-
-  @Range(min = 1, max = 20, message = "每页显示的用户数在1-20个之间")
-  @ApiModelProperty("每页显示的条数")
-  private Integer pageSize;
 }

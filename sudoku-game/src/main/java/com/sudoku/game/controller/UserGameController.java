@@ -6,10 +6,8 @@ import com.sudoku.game.model.vo.UserGameInformationVO;
 import com.sudoku.game.service.NormalGameRecordService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
-import org.hibernate.validator.constraints.Range;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,13 +35,8 @@ public class UserGameController extends GameBaseController {
 
   @GetMapping("/historyGameRecord")
   @ApiOperation("获取历史游戏记录")
-  @ApiImplicitParams({
-      @ApiImplicitParam(name = "page", value = "当前查询页", dataTypeClass = Integer.class, required = true),
-      @ApiImplicitParam(name = "pageSize", value = "每页显示的条数", dataTypeClass = Integer.class, required = true)
-  })
-  public Page<NormalGameRecordVO> getHistoryGameRecord(@RequestParam Integer page,
-      @RequestParam @Range(min = 1, max = 20, message = "每页显示的记录数在1-20条之间") Integer pageSize) {
-    return normalGameRecordService.getHistoryGameRecord(page, pageSize);
+  public Page<NormalGameRecordVO> getHistoryGameRecord() {
+    return normalGameRecordService.getHistoryGameRecord();
   }
 
   @GetMapping("/gameInformationById")
@@ -57,14 +50,9 @@ public class UserGameController extends GameBaseController {
   @GetMapping("/historyGameRecordById")
   @PreAuthorize("@ss.hasPermission('sudoku:user:record')")
   @ApiOperation("根据用户ID，获取其历史游戏记录")
-  @ApiImplicitParams({
-      @ApiImplicitParam(name = "userId", value = "用户ID", dataTypeClass = Integer.class, required = true),
-      @ApiImplicitParam(name = "page", value = "当前查询页", dataTypeClass = Integer.class, required = true),
-      @ApiImplicitParam(name = "pageSize", value = "每页显示的条数", dataTypeClass = Integer.class, required = true)
-  })
-  public Page<NormalGameRecordVO> getHistoryGameRecordById(@RequestParam Integer userId, @RequestParam Integer page,
-      @RequestParam @Range(min = 1, max = 20, message = "每页显示的记录数在1-20条之间") Integer pageSize) {
-    return normalGameRecordService.getHistoryGameRecordById(userId, page, pageSize);
+  @ApiImplicitParam(name = "userId", value = "用户ID", dataTypeClass = Integer.class, required = true)
+  public Page<NormalGameRecordVO> getHistoryGameRecordById(@RequestParam Integer userId) {
+    return normalGameRecordService.getHistoryGameRecordById(userId);
   }
 
 }

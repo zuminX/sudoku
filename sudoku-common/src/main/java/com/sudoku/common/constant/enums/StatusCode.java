@@ -60,8 +60,11 @@ public enum StatusCode {
   RACE_ERROR(800, HttpStatus.BAD_REQUEST, "获取数独比赛时发生错误"),
   RACE_SUDOKU_MATRIX_Illegal(801, HttpStatus.FORBIDDEN, "数独竞赛的题目矩阵不合法"),
   RACE_SUDOKU_HOLES_Illegal(802, HttpStatus.FORBIDDEN, "数独竞赛的空缺矩阵不合法"),
-  RACE_DURATION_TOO_SHORT(803, HttpStatus.FORBIDDEN, "数独竞赛的时长过短")
-  ;
+  RACE_DURATION_TOO_SHORT(803, HttpStatus.FORBIDDEN, "数独竞赛的时长过短"),
+
+  //分页异常
+  PAGE_ERROR(900, HttpStatus.BAD_REQUEST, "获取查询分页数据时发生错误"),
+  PAGE_SIZE_ILLEGAL(901, HttpStatus.FORBIDDEN, "设置每页查询数据的条数非法");
 
   /**
    * 编号
