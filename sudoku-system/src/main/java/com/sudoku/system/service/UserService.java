@@ -145,6 +145,16 @@ public class UserService {
   }
 
   /**
+   * 更新头像地址
+   *
+   * @param avatarPath 头像地址
+   */
+  @Transactional
+  public void updateAvatar(String avatarPath) {
+    userMapper.updateAvatarById(avatarPath, SecurityUtils.getCurrentUserId());
+  }
+
+  /**
    * 检查待修改的用户的角色名列表是否为空或管理员。若是，则抛出用户异常
    *
    * @param modifyUserBody 修改的用户对象

@@ -52,6 +52,15 @@ public class UserTokenService {
   }
 
   /**
+   * 设置用户身份信息
+   */
+  public void setLoginUser(LoginUserBO loginUser) {
+    if (loginUser != null && StrUtil.isNotBlank(loginUser.getUuid())) {
+      refreshToken(loginUser);
+    }
+  }
+
+  /**
    * 获取登录用户
    *
    * @param request 请求对象

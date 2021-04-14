@@ -15,9 +15,4 @@ spring:
 
 logging:
   level:
-    #打印sql语句
-    com.sudoku.project.mapper: debug
-
-captcha:
-  #开启验证码
-  enabled: false
+    com.sudoku: debug

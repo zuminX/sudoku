@@ -150,7 +150,7 @@ public class PublicUtilsTest {
   @Test
   public void testComputeDiff() {
     LocalDateTime dateTime1 = LocalDateTime.of(2020, 1, 1, 10, 0, 0), dateTime2 = LocalDateTime.of(2020, 1, 1, 10, 10, 0);
-    assertEquals(-600_000L, PublicUtils.computeDiff(dateTime1, dateTime2));
+    assertEquals(-600_000L, DateUtils.computeDiff(dateTime1, dateTime2));
   }
 
   /**
@@ -159,7 +159,7 @@ public class PublicUtilsTest {
   @Test
   public void testComputeAbsDiff() {
     LocalDateTime dateTime1 = LocalDateTime.of(2020, 1, 1, 10, 0, 0), dateTime2 = LocalDateTime.of(2020, 1, 1, 10, 10, 0);
-    assertEquals(600_000L, PublicUtils.computeAbsDiff(dateTime1, dateTime2));
+    assertEquals(600_000L, DateUtils.computeAbsDiff(dateTime1, dateTime2));
   }
 
   /**

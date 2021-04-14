@@ -77,6 +77,15 @@ public interface UserMapper extends BaseMapper<User> {
   int updateRecentLoginTimeById(@Param("loginTime") LocalDateTime loginTime, @Param("id") Integer id);
 
   /**
+   * 更新指定ID的用户的头像地址
+   *
+   * @param avatar 头像地址
+   * @param id     用户ID
+   * @return 更新的行数
+   */
+  int updateAvatarById(@Param("avatar") String avatar, @Param("id") Integer id);
+
+  /**
    * 统计在[startCreateTime,endCreateTime)天中创建的用户数
    *
    * @param startDate 起始创建时间

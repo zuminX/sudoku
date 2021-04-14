@@ -22,14 +22,6 @@
       <artifactId>sudoku-system</artifactId>
     </dependency>
 
-    <!-- SpringBoot 热启动工具 -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-devtools</artifactId>
-      <scope>runtime</scope>
-      <optional>true</optional>
-    </dependency>
-
     <!-- Spring Boot 应用监控工具客户端 -->
     <dependency>
       <groupId>de.codecentric</groupId>

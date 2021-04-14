@@ -1,0 +1,15 @@
+###
+POST http://{{host}}:{{port}}/user/profile/updateAvatar
+Accept: */*
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Cache-Control: no-cache
+Authorization: {{authToken}}
+
+--WebAppBoundary
+Content-Disposition: form-data; name="avatar"; filename="avatar.png"
+Content-Type: multipart/form-data
+#文件地址
+< C:\Users\Administrator\Pictures\i-wnFQZH7-X3_waifu2x_3x_0n_jpg.png
+--WebAppBoundary--
+
+> ../scripts/assertPass.js

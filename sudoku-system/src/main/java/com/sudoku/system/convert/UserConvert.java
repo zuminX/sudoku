@@ -41,6 +41,7 @@ public interface UserConvert {
    * @return 用户表对应的对象
    */
   @Mapping(target = "id", ignore = true)
+  @Mapping(target = "avatar", ignore = true)
   @Mapping(target = "roles", ignore = true)
   @Mapping(target = "password", expression = "java(SecurityUtils.encodePassword(addUserBody.getPassword()))")
   User convert(AddUserBody addUserBody);

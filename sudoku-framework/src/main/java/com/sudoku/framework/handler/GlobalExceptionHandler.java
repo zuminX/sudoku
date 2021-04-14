@@ -48,7 +48,8 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(value = BaseException.class)
   public CommonResult<BaseException> baseExceptionHandler(BaseException e) {
-    return simpleExceptionProcess("[" + e.getClass().getSimpleName() + "]", e);
+    log.debug("[" + e.getClass().getSimpleName() + "]", e);
+    return CommonResult.error(e.getStatusCode());
   }
 
   /**
@@ -101,19 +102,6 @@ public class GlobalExceptionHandler {
     return buildInvalidParamErrorCommonResult(
         e.getBindingResult().getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(
             Collectors.joining(";")));
-  }
-
-  /**
-   * 简易异常处理
-   *
-   * @param header    日志头
-   * @param exception 异常
-   * @param <T>       异常类型
-   * @return 经过包装的结果对象
-   */
-  private <T extends BaseException> CommonResult<T> simpleExceptionProcess(String header, T exception) {
-    log.debug(header, exception);
-    return CommonResult.error(exception.getStatusCode());
   }
 
   /**

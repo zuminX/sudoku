@@ -49,6 +49,12 @@ public class User implements Serializable {
   private String nickname;
 
   /**
+   * 头像地址
+   */
+  @TableField(value = "avatar")
+  private String avatar;
+
+  /**
    * 创建时间
    */
   @TableField(value = "create_time")

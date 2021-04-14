@@ -5,14 +5,17 @@ import static java.util.stream.Collectors.toList;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.sudoku.common.constant.consist.PermissionConstants;
+import com.sudoku.common.tools.ServletUtils;
 import com.sudoku.system.model.bo.LoginUserBO;
 import com.sudoku.system.model.entity.Role;
 import com.sudoku.system.model.entity.User;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
 /**
  * 安全服务工具类

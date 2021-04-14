@@ -64,7 +64,15 @@ public enum StatusCode {
 
   //分页异常
   PAGE_ERROR(900, HttpStatus.BAD_REQUEST, "获取查询分页数据时发生错误"),
-  PAGE_SIZE_ILLEGAL(901, HttpStatus.FORBIDDEN, "设置每页查询数据的条数非法");
+  PAGE_SIZE_ILLEGAL(901, HttpStatus.FORBIDDEN, "设置每页查询数据的条数非法"),
+
+  //文件异常
+  FILE_ERROR(1000, HttpStatus.BAD_REQUEST, "处理文件时发生错误"),
+  FILE_TYPE_ILLEGAL(1001, HttpStatus.FORBIDDEN, "文件类型非法"),
+  FILE_EXPECT_IMAGE(1002, HttpStatus.BAD_REQUEST, "文件类型非法，期望类型为图像类型"),
+  FILE_EXPECT_MEDIA(1003, HttpStatus.BAD_REQUEST, "文件类型非法，期望类型为媒体类型"),
+  FILE_EMPTY_UPLOAD(1004, HttpStatus.BAD_REQUEST, "上传的文件不能为空"),
+  ;
 
   /**
    * 编号

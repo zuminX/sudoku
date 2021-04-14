@@ -25,6 +25,9 @@ public class UserVO implements Serializable {
   @ApiModelProperty("昵称")
   private String nickname;
 
+  @ApiModelProperty("头像地址")
+  private String avatar;
+
   @ApiModelProperty("角色列表")
   private List<RoleVO> roleList;
 }

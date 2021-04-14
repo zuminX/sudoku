@@ -2,23 +2,15 @@ package com.sudoku.common.utils;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * 公共工具类
  */
 public class PublicUtils {
-
-  /**
-   * +8的时区
-   */
-  private static final ZoneOffset ZONE = ZoneOffset.of("+8");
 
   /**
    * 生成随机数的对象
@@ -146,7 +138,7 @@ public class PublicUtils {
    * @param array 待打乱的数组
    */
   public static void randomizedArray(int[] array) {
-    for (int i = array.length - 1; i >= 0; i--) {
+    for (int i = array.length - 1; i > 0; i--) {
       int random = getRandomInt(0, i);
       int temp = array[i];
       array[i] = array[random];
@@ -160,44 +152,12 @@ public class PublicUtils {
    * @param array 待打乱的数组
    */
   public static void randomizedArray(boolean[][] array) {
-    for (int row = array.length, column = array[0].length, i = row * column - 1; i >= 0; i--) {
+    for (int row = array.length, column = array[0].length, i = row * column - 1; i > 0; i--) {
       int random = getRandomInt(0, i);
       boolean temp = array[i / row][i % column];
       array[i / row][i % column] = array[random / row][random % column];
       array[random / row][random % column] = temp;
     }
-  }
-
-  /**
-   * 获取两个日期时间的差值
-   *
-   * @param dateTime1 日期时间一
-   * @param dateTime2 日期时间二
-   * @return 以ms为单位的差值
-   */
-  public static long computeDiff(@NotNull LocalDateTime dateTime1, @NotNull LocalDateTime dateTime2) {
-    return toTimestamp(dateTime1) - toTimestamp(dateTime2);
-  }
-
-  /**
-   * 获取两个日期时间的绝对差值
-   *
-   * @param dateTime1 日期时间一
-   * @param dateTime2 日期时间二
-   * @return 以ms为单位的差值
-   */
-  public static long computeAbsDiff(@NotNull LocalDateTime dateTime1, @NotNull LocalDateTime dateTime2) {
-    return Math.abs(computeDiff(dateTime1, dateTime2));
-  }
-
-  /**
-   * 将本地日期时间转换时间戳
-   *
-   * @param localDateTime 本地日期时间
-   * @return 对应的时间戳
-   */
-  public static long toTimestamp(@NotNull LocalDateTime localDateTime) {
-    return localDateTime.toInstant(ZONE).toEpochMilli();
   }
 
   /**

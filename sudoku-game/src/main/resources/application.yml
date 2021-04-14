@@ -1,3 +1,7 @@
+sudoku:
+  name: SudokuX
+  profile: D:/sudoku/uploadPath
+
 #服务器开放端口
 server:
   port: 8081
@@ -11,6 +15,13 @@ server:
 spring:
   profiles:
     active: @package.environment@
+  # 文件上传
+  servlet:
+    multipart:
+      # 单个文件大小
+      max-file-size:  10MB
+      # 设置总上传的文件大小
+      max-request-size:  20MB
   #redis配置
   redis:
     host: 127.0.0.1
@@ -83,6 +94,8 @@ captcha:
   lineCount: 100
   #有效期
   expireTime: 5
+  #是否验证码
+  enabled: false
 
 #xxl-job
 xxl:

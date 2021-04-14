@@ -3,7 +3,7 @@ package com.sudoku.game.service;
 import static com.sudoku.common.utils.PublicUtils.getRandomInt;
 
 import com.sudoku.common.constant.enums.AnswerSituation;
-import com.sudoku.common.utils.PublicUtils;
+import com.sudoku.common.utils.DateUtils;
 import com.sudoku.common.utils.TwoDimensionalListUtils;
 import com.sudoku.game.model.bo.SudokuDataBO;
 import com.sudoku.game.model.bo.SudokuGridInformationBO;
@@ -71,7 +71,7 @@ public class SudokuService {
     return UserAnswerInformationBO.builder()
         .situation(situation)
         .matrix(sudokuDataBO.getMatrix())
-        .spendTime(PublicUtils.computeAbsDiff(sudokuRecord.getEndTime(), sudokuRecord.getStartTime()))
+        .spendTime(DateUtils.computeAbsDiff(sudokuRecord.getEndTime(), sudokuRecord.getStartTime()))
         .build();
   }
 

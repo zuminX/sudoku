@@ -9,6 +9,7 @@ CREATE TABLE `user`
     `username`          varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户名',
     `password`          varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
     `nickname`          varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
+    `avatar`            varchar(128)                                                 NULL DEFAULT NULL comment '头像地址',
     `create_time`       datetime                                                     NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `recent_login_time` datetime                                                     NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最近登录时间',
     `enabled`           tinyint                                                      NULL DEFAULT 1 COMMENT '是否启用',
@@ -19,8 +20,8 @@ CREATE TABLE `user`
   ROW_FORMAT = Dynamic;
 
 INSERT INTO `user`
-VALUES (1, 'test1', '$2a$10$VaphyIrQ7C9aELKTx/Wh1.QqGVvBymhd57NrY/OoQhuAjMgNMoEO6', '测试管理员', NOW(), NOW(), 1),
-       (2, 'test2', '$2a$10$VaphyIrQ7C9aELKTx/Wh1.QqGVvBymhd57NrY/OoQhuAjMgNMoEO6', '测试用户', NOW(), NOW(), 1);
+VALUES (1, 'test1', '$2a$10$VaphyIrQ7C9aELKTx/Wh1.QqGVvBymhd57NrY/OoQhuAjMgNMoEO6', '测试管理员', NULL, NOW(), NOW(), 1),
+       (2, 'test2', '$2a$10$VaphyIrQ7C9aELKTx/Wh1.QqGVvBymhd57NrY/OoQhuAjMgNMoEO6', '测试用户', NULL, NOW(), NOW(), 1);
 
 
 DROP TABLE IF EXISTS `merge_user_role`;
@@ -227,7 +228,7 @@ select ngr.`id` as normal_game_record_id,
        u.`id`   as user_id,
        `username`,
        `nickname`,
-       `enabled`
+       `enabled`,
 from normal_game_record ngr
          inner join sudoku_record sr on ngr.sudoku_record_id = sr.id
          inner join user u on ngr.user_id = u.id;

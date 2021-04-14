@@ -7,6 +7,7 @@
     <result column="username" jdbcType="VARCHAR" property="username"/>
     <result column="password" jdbcType="VARCHAR" property="password"/>
     <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+    <result column="avatar" property="avatar"/>
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
     <result column="recent_login_time" jdbcType="TIMESTAMP" property="recentLoginTime"/>
     <result column="enabled" jdbcType="TINYINT" property="enabled"/>
@@ -17,6 +18,7 @@
     username,
     `password`,
     nickname,
+    avatar,
     create_time,
     recent_login_time,
     enabled
@@ -153,4 +155,10 @@
     select count(1)
     from user
   </select>
+
+  <update id="updateAvatarById">
+    update `user`
+    set avatar=#{avatar}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>

@@ -12,7 +12,3 @@ spring:
         url: http://localhost:8088
         instance:
           service-url: http://localhost:8081
-
-captcha:
-  #关闭验证码
-  enabled: false

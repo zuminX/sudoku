@@ -16,11 +16,11 @@ import org.springframework.core.annotation.AliasFor;
 /**
  * 扩展Cacheable注解，使其具有过期时间属性
  */
-@Target({ElementType.TYPE, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
+@Cacheable
 @Inherited
 @Documented
-@Cacheable
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
 public @interface ExtCacheable {
 
   /**
