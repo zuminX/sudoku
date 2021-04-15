@@ -3,67 +3,27 @@ package com.sudoku.common.utils.file;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
-import com.sudoku.common.config.SudokuConfig;
 import com.sudoku.common.constant.enums.StatusCode;
 import com.sudoku.common.exception.FileException;
+import com.sudoku.common.template.OosTemplate;
 import com.sudoku.common.utils.DateUtils;
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 文件工具类
  */
+@Component
 public class FileUtils {
 
-  public static String getAbsolutePath(String fileName) {
-    return getAbsolutePath(SudokuConfig.getProfile(), fileName);
-  }
+  @Autowired
+  private OosTemplate oosTemplate;
 
-  public static String getAbsolutePath(String baseDir, String fileName) {
-    return StrUtil.isBlank(fileName) ? baseDir : baseDir + File.separator + fileName;
-  }
-
-  /**
-   * 以默认配置进行文件上传
-   *
-   * @param file 上传的文件
-   * @return 文件名称
-   * @throws IOException
-   */
-  public static String upload(MultipartFile file) throws IOException {
-    return upload(SudokuConfig.getProfile(), file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
-  }
-
-  /**
-   * 根据文件路径上传
-   *
-   * @param baseDir 相对应用的基目录
-   * @param file    上传的文件
-   * @return 文件名称
-   * @throws IOException
-   */
-  public static String upload(String baseDir, MultipartFile file) throws IOException {
-    return upload(baseDir, file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
-  }
-
-  /**
-   * 文件上传
-   *
-   * @param baseDir          相对应用的基目录
-   * @param file             上传的文件
-   * @param allowedExtension 上传文件类型
-   * @return 文件名
-   * @throws IOException
-   */
-  public static String upload(String baseDir, MultipartFile file, String[] allowedExtension) throws IOException {
-    assertAllowed(file, allowedExtension);
-
-    String fileName = extractFilename(file);
-    File desc = getAbsoluteFile(getAbsolutePath(baseDir, fileName));
-    file.transferTo(desc);
-    return fileName;
+  public static String getAbsolutePath(String dir, String fileName) {
+    return StrUtil.isBlank(fileName) ? dir : dir + '/' + fileName;
   }
 
   /**
@@ -72,17 +32,6 @@ public class FileUtils {
   public static String extractFilename(MultipartFile file) {
     String extension = getExtension(file);
     return DateUtils.plainDateStr() + "/" + UUID.fastUUID() + "." + extension;
-  }
-
-  private static File getAbsoluteFile(String path) throws IOException {
-    File desc = new File(path);
-    if (!desc.getParentFile().exists()) {
-      desc.getParentFile().mkdirs();
-    }
-//    if (!desc.exists()) {
-//      desc.createNewFile();
-//    }
-    return desc;
   }
 
   /**
@@ -123,5 +72,20 @@ public class FileUtils {
   public static String getExtension(MultipartFile file) {
     String extension = FileNameUtil.getSuffix(file.getOriginalFilename());
     return StrUtil.isBlank(extension) ? MimeTypeUtils.getExtension(file.getContentType()) : extension;
+  }
+
+  /**
+   * 文件上传
+   *
+   * @param dir              目录名
+   * @param file             上传的文件
+   * @param allowedExtension 上传文件类型
+   * @return 文件名
+   * @throws IOException
+   */
+  public String upload(String dir, MultipartFile file, String[] allowedExtension) throws IOException {
+    assertAllowed(file, allowedExtension);
+    String fileName = extractFilename(file);
+    return oosTemplate.upload(file, getAbsolutePath(dir, fileName));
   }
 }

@@ -1,6 +1,5 @@
 package com.sudoku.system.controller;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.sudoku.common.config.SudokuConfig;
 import com.sudoku.common.constant.enums.StatusCode;
@@ -31,9 +30,12 @@ public class UserProfileController {
 
   private final UserTokenService tokenService;
 
-  public UserProfileController(UserService userService, UserTokenService tokenService) {
+  private final FileUtils fileUtils;
+
+  public UserProfileController(UserService userService, UserTokenService tokenService, FileUtils fileUtils) {
     this.userService = userService;
     this.tokenService = tokenService;
+    this.fileUtils = fileUtils;
   }
 
   @PostMapping("/updateAvatar")
@@ -44,7 +46,7 @@ public class UserProfileController {
       throw new FileException(StatusCode.FILE_EMPTY_UPLOAD);
     }
     try {
-      String avatarPath = FileUtils.upload(SudokuConfig.getAvatarPath(), avatar, MimeTypeUtils.IMAGE_EXTENSION);
+      String avatarPath = fileUtils.upload(SudokuConfig.getAvatarDir(), avatar, MimeTypeUtils.IMAGE_EXTENSION);
       userService.updateAvatar(avatarPath);
       removeOldAvatar();
       updateCurrentUserAvatar(avatarPath);
@@ -61,7 +63,7 @@ public class UserProfileController {
   private void removeOldAvatar() {
     String oldAvatarPath = SecurityUtils.getCurrentUser().getAvatar();
     if (StrUtil.isNotBlank(oldAvatarPath)) {
-      FileUtil.del(FileUtils.getAbsolutePath(SudokuConfig.getAvatarPath(), oldAvatarPath));
+//      FileUtil.del(FileUtils.getAbsolutePath(SudokuConfig.getAvatarDir(), oldAvatarPath));
     }
   }
 
