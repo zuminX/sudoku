@@ -2,7 +2,7 @@
 POST http://{{host}}:{{port}}/statistics/game/assignTotal
 Accept: application/json
 Content-Type: application/json
-Authorization: {{authToken}}
+AuthorizationX: {{authToken}}
 
 {
   "dateRange": {
@@ -19,7 +19,7 @@ Authorization: {{authToken}}
 GET http://{{host}}:{{port}}/statistics/game/recentTotal?date=日
 Accept: application/json
 Content-Type: application/json
-Authorization: {{authToken}}
+AuthorizationX: {{authToken}}
 
 > ../scripts/assertPass.js
 
@@ -28,6 +28,6 @@ Authorization: {{authToken}}
 GET http://{{host}}:{{port}}/statistics/game/total
 Accept: application/json
 Content-Type: application/json
-Authorization: {{authToken}}
+AuthorizationX: {{authToken}}
 
 > ../scripts/assertPass.js

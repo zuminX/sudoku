@@ -6,18 +6,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * OSS对象存储相关配置
- */
 @Configuration
-public class OssConfig {
+public class OSSConfig {
 
-  @Value("${alicloud.oss.endpoint}")
-  private String endpoint;
   @Value("${alicloud.access-key-id}")
   private String accessKeyId;
   @Value("${alicloud.secret-key-secret}")
   private String secretKeySecret;
+  @Value("${alicloud.oss.endpoint}")
+  private String endpoint;
 
   @Bean
   public OSS oss() {

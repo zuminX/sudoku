@@ -3,7 +3,7 @@ POST http://{{host}}:{{port}}/user/profile/updateAvatar
 Accept: */*
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 Cache-Control: no-cache
-Authorization: {{authToken}}
+AuthorizationX: {{authToken}}
 
 --WebAppBoundary
 Content-Disposition: form-data; name="avatar"; filename="avatar.png"

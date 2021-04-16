@@ -17,7 +17,7 @@ Content-Type: application/json
 GET http://{{host}}:{{port}}/user/userList?page=1&pageSize=5
 Accept: application/json
 Content-Type: application/json
-Authorization: {{authToken}}
+AuthorizationX: {{authToken}}
 
 > ../scripts/assertPass.js
 
@@ -26,7 +26,7 @@ Authorization: {{authToken}}
 POST http://{{host}}:{{port}}/user/modifyUser
 Accept: application/json
 Content-Type: application/json
-Authorization: {{authToken}}
+AuthorizationX: {{authToken}}
 
 {
   "id": 2,
@@ -47,7 +47,7 @@ Authorization: {{authToken}}
 POST http://{{host}}:{{port}}/user/addUser
 Accept: application/json
 Content-Type: application/json
-Authorization: {{authToken}}
+AuthorizationX: {{authToken}}
 
 {
   "username": "test{{$timestamp}}",
@@ -68,7 +68,7 @@ Authorization: {{authToken}}
 POST http://{{host}}:{{port}}/user/searchUser
 Accept: application/json
 Content-Type: application/json
-Authorization: {{authToken}}
+AuthorizationX: {{authToken}}
 
 {
   "username": "test2",
@@ -96,7 +96,7 @@ Authorization: {{authToken}}
 GET http://{{host}}:{{port}}/user/searchUserByName?name=test&page=1&pageSize=5
 Accept: application/json
 Content-Type: application/json
-Authorization: {{authToken}}
+AuthorizationX: {{authToken}}
 
 > ../scripts/assertPass.js
 

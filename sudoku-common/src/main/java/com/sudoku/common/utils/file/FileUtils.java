@@ -5,7 +5,7 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
 import com.sudoku.common.constant.enums.StatusCode;
 import com.sudoku.common.exception.FileException;
-import com.sudoku.common.template.OosTemplate;
+import com.sudoku.common.template.OSSTemplate;
 import com.sudoku.common.utils.DateUtils;
 import java.io.IOException;
 import java.util.Arrays;
@@ -18,9 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Component
 public class FileUtils {
-
-  @Autowired
-  private OosTemplate oosTemplate;
 
   public static String getAbsolutePath(String dir, String fileName) {
     return StrUtil.isBlank(fileName) ? dir : dir + '/' + fileName;
@@ -74,18 +71,4 @@ public class FileUtils {
     return StrUtil.isBlank(extension) ? MimeTypeUtils.getExtension(file.getContentType()) : extension;
   }
 
-  /**
-   * 文件上传
-   *
-   * @param dir              目录名
-   * @param file             上传的文件
-   * @param allowedExtension 上传文件类型
-   * @return 文件名
-   * @throws IOException
-   */
-  public String upload(String dir, MultipartFile file, String[] allowedExtension) throws IOException {
-    assertAllowed(file, allowedExtension);
-    String fileName = extractFilename(file);
-    return oosTemplate.upload(file, getAbsolutePath(dir, fileName));
-  }
 }
